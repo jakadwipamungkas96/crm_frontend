@@ -54,13 +54,15 @@ function Do() {
     const [refreshDt, setRefresh] = useState();
     const [pageSize, setPageSize] = useState(25);
     const [page, setPage] = useState(0);
-    const [isLoading, setLoading] = useState(true);
+    // const [isLoading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
     console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
     
     useEffect(() => {
+        
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
             const url = `http://127.0.0.1:8000/api/delivery_orders/list?page=${page}&size=${pageSize}`;
@@ -69,7 +71,6 @@ function Do() {
                 const response = await axios.get(url);
                 setDataProspek(response.data.data);
                 setDataProspek2(response.data);
-                setLoading(false);
                 setLsDtCustomer(response.data.data);
 
             } catch (error) {
@@ -201,19 +202,51 @@ function Do() {
         setInputs(values => ({...values, [event.target.name]: fileUpload}));
     }
 
+    const CustomBlockingOverlay = ({ isLoading, children }) => {
+        return (
+            <div>
+            {isLoading && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(30, 41, 59, 0.5)',
+                  color: "white",
+                  fontSize: "20px",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1000,
+                }}
+              >
+                <img src="/assets/images/icon_wijaya.png" style={{opacity: 0.8}} alt="" height="50" /><br /><br />
+                <p>Please wait...</p>
+              </div>
+            )}
+            {children}
+          </div>
+        );
+    };
+
     const handleUploadDo = (event) => {
         event.preventDefault();
         const formData = new FormData();
         
         formData.append('fileDo',fileUpload);
-        console.log(formData);
+
+        setLoading(true);
         axios.post('http://127.0.0.1:8000/api/delivery_order/import', formData).then(function(response){
             if (response.data.error == true) {
+                setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
                     buttons: false,
                     timer: 2000,
                 });   
             } else {
+                setLoading(false);
                 swal("Success", 'Data Berhasil disimpan!', "success", {
                     buttons: false,
                     timer: 2000,
@@ -223,7 +256,6 @@ function Do() {
             }
         });
     }
-
     return (
         <div className="page-content">
             <div className="container-fluid">
@@ -349,6 +381,9 @@ function Do() {
                                                 <div className="card-body">
                                                     <div className="row">
                                                         <div className="col-md-12">
+                                                            <CustomBlockingOverlay isLoading={loading}>
+
+                                                            </CustomBlockingOverlay>
                                                             <form>
                                                                 {/* <input type="file" name="fileDo" id="fileDo" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
                                                                 <TextField

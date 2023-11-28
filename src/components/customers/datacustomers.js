@@ -691,101 +691,107 @@ function Datacustomers() {
                                         <div className="card-body" style={{zIndex: 1}}>
                                             <div className="row">
                                                 <div className="col-md-4">
-                                                    <table className="table table-bordered align-middle table-nowrap mb-0">
-                                                        <thead style={{background: "#E2E8F0"}}>
-                                                            <tr>
-                                                                <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Penjualan</th>
-                                                            </tr>
-                                                            <tr style={{padding: "7px", fontSize: "12px"}}>
-                                                                <th scope="col">Tanggal DO</th>
-                                                                <th scope="col">Sales Penjualan</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td className="text-muted">{infoDtPenjualan.tgl_do}</td>
-                                                                <td className="text-muted">{infoDtPenjualan.nama_sales}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Leasing</td>
-                                                                <td className="text-muted">{infoDtPenjualan.nama_leasing == null ? "" : infoDtPenjualan.nama_leasing}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Asuransi</td>
-                                                                <td className="text-muted">{infoDtPenjualan.asuransi == null ? "" : infoDtPenjualan.asuransi}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>DO Asal</td>
-                                                                <td className="text-muted">{infoDtPenjualan.asal_do}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <div style={{ overflowX: 'auto' }}>
+                                                        <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                            <thead style={{background: "#E2E8F0"}}>
+                                                                <tr>
+                                                                    <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Penjualan</th>
+                                                                </tr>
+                                                                <tr style={{padding: "7px", fontSize: "12px"}}>
+                                                                    <th scope="col">Tanggal DO</th>
+                                                                    <th scope="col">Sales Penjualan</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td className="text-muted">{infoDtPenjualan.tgl_do}</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.nama_sales}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Leasing</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.nama_leasing == null ? "" : infoDtPenjualan.nama_leasing}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Asuransi</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.asuransi == null ? "" : infoDtPenjualan.asuransi}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>DO Asal</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.asal_do}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
 
                                                 <div className="col-md-4">
-                                                    <table className="table table-bordered align-middle table-nowrap mb-0">
-                                                        <thead style={{background: "#E2E8F0"}}>
-                                                            <tr>
-                                                                <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Kendaraan <button style={{fontSize: "11px"}} className="btn btn-sm btn-primary"><i className="ri-history-line"></i> History</button></th>
-                                                            </tr>
-                                                            <tr style={{padding: "7px", fontSize: "12px"}}>
-                                                                <th scope="col">VIN</th>
-                                                                <th scope="col">No Polisi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td className="text-muted">{infoDtCar.no_rangka}</td>
-                                                                <td className="text-muted">{infoDtCar.no_pol}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Type</td>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Warna</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td className="text-muted">{infoDtCar.tipe}</td>
-                                                                <td className="text-muted">{infoDtCar.warna}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Nama STNK</td>
-                                                                <td className="text-muted">{infoDtCar.nama_stnk}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <div style={{ overflowX: 'auto' }}>
+                                                        <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                            <thead style={{background: "#E2E8F0"}}>
+                                                                <tr>
+                                                                    <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Kendaraan <button style={{fontSize: "11px"}} className="btn btn-sm btn-primary"><i className="ri-history-line"></i> History</button></th>
+                                                                </tr>
+                                                                <tr style={{padding: "7px", fontSize: "12px"}}>
+                                                                    <th scope="col">VIN</th>
+                                                                    <th scope="col">No Polisi</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td className="text-muted">{infoDtCar.no_rangka}</td>
+                                                                    <td className="text-muted">{infoDtCar.no_pol}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Type</td>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Warna</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td className="text-muted">{infoDtCar.tipe}</td>
+                                                                    <td className="text-muted">{infoDtCar.warna}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Nama STNK</td>
+                                                                    <td className="text-muted">{infoDtCar.nama_stnk}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
 
                                                 <div className="col-md-4">
-                                                    <table className="table table-bordered align-middle table-nowrap mb-0">
-                                                        <thead style={{background: "#E2E8F0"}}>
-                                                            <tr>
-                                                                <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Service</th>
-                                                            </tr>
-                                                            <tr style={{padding: "7px", fontSize: "12px"}}>
-                                                                <th scope="col">Nama Pemakai</th>
-                                                                <th scope="col">Tanggal Service</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td className="text-muted">{infoDtServices.nama_pemakai}</td>
-                                                                <td className="text-muted">{infoDtServices.tgl_service}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Keterangan Service</td>
-                                                                <td className="text-muted">{infoDtServices.keterangan_service}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Lokasi Service</td>
-                                                                <td className="text-muted">{infoDtServices.cabang_name}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>No Telepon Pemakai</td>
-                                                                <td className="text-muted">
-                                                                    {infoDtServices.telepon_pemakai} <button className="btn btn-info btn-sm" onClick={alertNotifSend}><i className="ri-phone-fill"></i></button>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <div style={{ overflowX: 'auto' }}>
+                                                        <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                            <thead style={{background: "#E2E8F0"}}>
+                                                                <tr>
+                                                                    <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Service</th>
+                                                                </tr>
+                                                                <tr style={{padding: "7px", fontSize: "12px"}}>
+                                                                    <th scope="col">Nama Pemakai</th>
+                                                                    <th scope="col">Tanggal Service</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td className="text-muted">{infoDtServices.nama_pemakai}</td>
+                                                                    <td className="text-muted">{infoDtServices.tgl_service}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Keterangan Service</td>
+                                                                    <td className="text-muted">{infoDtServices.keterangan_service}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Lokasi Service</td>
+                                                                    <td className="text-muted">{infoDtServices.cabang_name}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>No Telepon Pemakai</td>
+                                                                    <td className="text-muted">
+                                                                        {infoDtServices.telepon_pemakai} <button className="btn btn-info btn-sm" onClick={alertNotifSend}><i className="ri-phone-fill"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
