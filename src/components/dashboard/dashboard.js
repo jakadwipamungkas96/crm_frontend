@@ -103,6 +103,7 @@ function Dashboard() {
     const [page, setPage] = useState(0);
     const [isLoading, setLoading] = useState(true);
     const token =  CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+    const rulesName = JSON.parse(localStorage.getItem("rules"));
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
     
@@ -297,18 +298,6 @@ function Dashboard() {
     //     series1Ref.current.data.setAll(dataChart);
     // }, [dataChart]);
 
-    // Chartjs
-    const tipeKendaraan = ["Raize", "Avanza", "Veloz", "Kijang Innova", "Yaris Cross"];
-    const topSalesName = ["AGUS SUTISNA", "ARISANDI", "BAYU AJI RAMADHAN", "HERMANTO", "HILMAN"];
-
-    // Labels khusus untuk setiap tipe mobil
-    const labelsByModel = {
-        Raize: 'RAIZE 1.2 G M/T - ONE TONE',
-        Avanza: 'Avanza 1.5 G CVT',
-        Veloz: 'Veloz 1.5 Q CVT',
-        'Kijang Innova': 'Kijang Innova Zenix 2.0 G CVT',
-        'Yaris Cross': 'YARIS CROSS 1.5 HV GR CVT TSS PREMIUM COLOR TWO TONE',
-    };
 
     const options = {
         responsive: true,
@@ -334,38 +323,31 @@ function Dashboard() {
         },
     };
 
-    const qtySold = [100, 150, 200, 230, 250];
-    const dataChartKendaraan = {
-        labels: tipeKendaraan,
-        datasets: [
-          {
-            label: 'Jumlah Terjual',
-            data: qtySold, 
-            backgroundColor: 'rgb(96, 165, 250)',
-            datalabels: {
-                display: true,
-                anchor: 'end',
-                align: 'start',
-                rotation: -90,
-                color: "white",
-                font: {
-                    size: 11, // Atur ukuran font
-                },
-                formatter: (value, context) => {
-                  // Menggunakan labelsByModel untuk mendapatkan label yang sesuai
-                  return tipeKendaraan[context.dataIndex] + '\n' + value + ' Terjual';
-                },
-            },
-          }
-        ],
-    };
 
+    // START CHART TOP 5
+    const [topSalesNameArr, setTopSalesName] = useState([]);
+    useEffect(() => {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        const getTopSales = async () => {
+            const url = `http://127.0.0.1:8000/api/chart/topfive/sales`;
+            try {
+                const response = await axios.get(url);
+                setTopSalesName(response.data.top_sales);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getTopSales();
+    }, []);
+
+    // END CHART TOP 5
+    const topSalesName = topSalesNameArr.nama_sales;
     const dataChartSales = {
         labels: topSalesName,
         datasets: [
           {
             label: 'Jumlah Terjual',
-            data: [50, 75, 100, 125, 150],
+            data: topSalesNameArr.total_penjualan,
             backgroundColor: 'rgb(251, 146, 60)',
             datalabels: {
                 display: true,
@@ -379,6 +361,58 @@ function Dashboard() {
                 formatter: (value, context) => {
                   // Menggunakan labelsByModel untuk mendapatkan label yang sesuai
                   return value + ' DO';
+                },
+            },
+          }
+        ],
+    };
+    
+    
+    const [topCarNameArr, setTopCarName] = useState([]);
+    useEffect(() => {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        const getTopCar = async () => {
+            const url = `http://127.0.0.1:8000/api/chart/topfive/car`;
+            try {
+                const response = await axios.get(url);
+                setTopCarName(response.data.top_car);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getTopCar();
+    }, []);
+
+    const tipeKendaraan = topCarNameArr.nama_car;
+
+    // Labels khusus untuk setiap tipe mobil
+    const labelsByModel = {
+        Raize: 'RAIZE 1.2 G M/T - ONE TONE',
+        Avanza: 'Avanza 1.5 G CVT',
+        Veloz: 'Veloz 1.5 Q CVT',
+        'Kijang Innova': 'Kijang Innova Zenix 2.0 G CVT',
+        'Yaris Cross': 'YARIS CROSS 1.5 HV GR CVT TSS PREMIUM COLOR TWO TONE',
+    };
+    const qtySold = topCarNameArr.total_penjualan;
+    const dataChartKendaraan = {
+        labels: tipeKendaraan,
+        datasets: [
+          {
+            label: 'Jumlah Terjual',
+            data: qtySold, 
+            backgroundColor: 'rgb(59, 130, 246)',
+            datalabels: {
+                display: true,
+                anchor: 'end',
+                align: 'start',
+                rotation: -90,
+                color: "white",
+                font: {
+                    size: 11, // Atur ukuran font
+                },
+                formatter: (value, context) => {
+                  // Menggunakan labelsByModel untuk mendapatkan label yang sesuai
+                  return tipeKendaraan[context.dataIndex] + '\n' + value + ' Terjual';
                 },
             },
           }
@@ -607,7 +641,7 @@ function Dashboard() {
                             <div className="card-body text-muted">
                                 <span className="ribbon-three ribbon-three-secondary"><span style={{fontWeight: 500}}>Top 5</span></span>
                                 <h5 className="fs-14 text-end mb-3">
-                                    <span className="badge badge-label bg-secondary"><i className="mdi mdi-circle-medium"></i> {"Penjualan Kendaraan"}</span>
+                                    <span className="badge badge-label bg-secondary"><i className="mdi mdi-circle-medium"></i> {"Top 5 Model Kendaraan Terjual"}</span>
                                 </h5>
                                 {/* <p className="mb-0"> */}
                                     <Bar options={options} data={dataChartKendaraan} />
@@ -623,7 +657,7 @@ function Dashboard() {
                             <div className="card-body text-muted">
                                 <span className="ribbon-three ribbon-three-danger"><span style={{fontWeight: 500}}>Top 5 Sales</span></span>
                                 <h5 className="fs-14 text-end mb-3">
-                                    <span className="badge badge-label bg-danger"><i className="mdi mdi-circle-medium"></i> {"Penjualan Sales"}</span>
+                                    <span className="badge badge-label bg-danger"><i className="mdi mdi-circle-medium"></i> {"Top 5 Penjualan Sales"}</span>
                                 </h5>
                                 {/* <p className="mb-0"> */}
                                     <Bar options={options} data={dataChartSales} />

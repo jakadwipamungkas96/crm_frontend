@@ -68,25 +68,29 @@ function Datacustomers() {
     const [refreshDt, setRefresh] = useState();
     const [pageSize, setPageSize] = useState(25);
     const [page, setPage] = useState(0);
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
     const cabangName = localStorage.getItem("cabang_name");
+    const rulesName = JSON.parse(localStorage.getItem("rules"));
+    const personName = JSON.parse(localStorage.getItem("person"));
     const cleanedCabangName = cabangName.replace(/"/g, '');
     const idCab = localStorage.getItem("id_cabang");
 
-    console.log(token);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [perPage, setPerPage] = useState(10);
+    const [totalRows, setTotalRows] = useState(0);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
     
     useEffect(() => {
+        setLoading(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${page}&size=${pageSize}`;
+            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${currentPage}&size=${perPage}`;
             try {
 
                 const response = await axios.get(url);
-                setDataProspek(response.data.data);
-                setDataProspek2(response.data);
+                setTotalRows(response.data.totalAll);
                 setLoading(false);
                 setLsDtCustomer(response.data.data);
 
@@ -95,19 +99,18 @@ function Datacustomers() {
             }
         };
         getData();
-    }, [page, pageSize, refreshDt]);
+    }, [currentPage, perPage, refreshDt]);
 
-    const [rowCountState, setRowCountState] = React.useState(
-        dataProspek2?.totalAll || 0
-    );
+    console.log(token);
 
-    React.useEffect(() => {
-        setRowCountState((prevRowCountState) =>
-            dataProspek2?.totalAll !== undefined
-                ? dataProspek2?.totalAll
-                : prevRowCountState
-        );
-    }, [dataProspek2?.totalAll, setRowCountState]);
+    const handlePageChange = (page, totalRows) => {
+        setCurrentPage(page);
+    };
+
+    const handlePerRowsChange = async (newPerPage, page) => {
+        setPageSize(newPerPage);
+        setCurrentPage(page);
+    };
 
     const alertNotifSend = (event) => {
         swal({
@@ -138,22 +141,19 @@ function Datacustomers() {
             },
         }
     };
-
+    
     const columnsLsCustomer = [
         {
             name: 'Aksi',
-            // cell: row => <button onClick={(event) => {
-            //                 handleOpenCardCustomer(row);
-            //             }}
-            //             style={{
-            //                 fontSize: "10px"
-            //             }} type="button" className="btn btn-primary waves-effect waves-light">
-            //                 <i className="ri-file-list-3-fill"></i> List Kendaraan
-            //             </button>,
-            cell: row => <button onClick={(event) => {handleOpenCardCustomer(row);}} style={{fontSize: "12px"}} type="button" className="btn btn-primary btn-md">
-                            <span className="badge bg-success ms-1">{row.total_kendaraan}</span> <strong>Kendaraan</strong>
-                        </button>,
-            width: "150px"
+            cell: row => <>
+                            <button style={{fontSize: "12px"}} type="button" className={`btn btn-secondary btn-sm ${rulesName == 'sales' ? '' : 'd-none'}`}>
+                                <i className="ri-edit-2-line"></i> <strong>Update</strong>
+                            </button>
+                            <button onClick={(event) => {handleOpenCardCustomer(row);}} style={{fontSize: "12px", marginLeft: "10px"}} type="button" className="btn btn-primary btn-sm">
+                                <span className="badge bg-success ms-1">{row.total_kendaraan}</span> <strong>Kendaraan</strong>
+                            </button> 
+                        </>,
+            width: "250px"
         },
         // {
         //     name: 'Total Kendaraan',
@@ -215,24 +215,40 @@ function Datacustomers() {
     const [lsDtKendaraan, setlsDtKendaraan] = useState([]);
     const [lstDtTenggatStnk, setlsTenggatStnk] = useState([]);
     const [totalKendaraan, setTotalKendaraan] = useState(0);
-    const [isCardShow, setIsCardShow] = useState(false);
+    const [isCardShow, setIsCardShow] = useState(false); // Buka customer card
+    const [isCardSales, setCardSales] = useState(false); // Buka sales card
     const [dtCar, setDtCar] = useState([]);
     const [infoDtCar, setInfoDtCar] = useState([]);
     const [infoDtPenjualan, setInfoDtPenjualan] = useState([]);
     const [infoDtServices, setInfoDtServices] = useState([]);
 
     const handleOpenDetailKendaraan = (event) => {
-        setIsCardShow(true);
-        setDtCar(event);
-        console.log(token);
-        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        axios
-            .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin="+event.no_rangka)
-            .then((response) => {
-                setInfoDtCar(response.data.dtKendaraan);
-                setInfoDtPenjualan(response.data.dtPenjualan);
-                setInfoDtServices(response.data.dtService);
-            });
+        if (rulesName == "superadmin") {
+            
+            setIsCardShow(true);
+            setDtCar(event);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+            axios
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin="+event.no_rangka)
+                .then((response) => {
+                    setInfoDtCar(response.data.dtKendaraan);
+                    setInfoDtPenjualan(response.data.dtPenjualan);
+                    setInfoDtServices(response.data.dtService);
+                });
+
+        } else if (rulesName == "sales"){
+            console.log("buka card sales");
+            setCardSales(true);
+            setDtCar(event);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+            axios
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin="+event.no_rangka)
+                .then((response) => {
+                    setInfoDtCar(response.data.dtKendaraan);
+                    setInfoDtPenjualan(response.data.dtPenjualan);
+                    setInfoDtServices(response.data.dtService);
+                });
+        }
     }
     const handleCardShowClose = (event) => {
         setIsCardShow(false);
@@ -552,21 +568,27 @@ function Datacustomers() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            <a href={urlExport} className="btn btn-sm btn-success">Export Excel</a>
+                                            <a href={urlExport} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="card-body" style={{padding: "15px"}}>
-                                <DataTable
-                                    columns={columnsLsCustomer}
-                                    data={displayData}
-                                    pagination
-                                    paginationPerPage={10}
-                                    customStyles={customStyles}
-                                    defaultSortFieldId={1}
-                                    onSearch={handleSearch} // Menambahkan fungsi pencarian
-                                />
+                                {isLoading ? (
+                                    <div className="text-center ">
+                                        <i className="mdi mdi-spin mdi-loading" style={{fontSize: "30px", color: "#991B1B"}}></i> <h6 className="m-0 loading-text">Please wait...</h6>
+                                    </div>
+                                ) : (
+                                    
+                                    <DataTable
+                                        columns={columnsLsCustomer}
+                                        data={displayData}
+                                        pagination
+                                        customStyles={customStyles}
+                                        defaultSortFieldId={1}
+                                        onSearch={handleSearch} // Menambahkan fungsi pencarian
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
@@ -656,7 +678,7 @@ function Datacustomers() {
                                                                 columns={columnsLsKendaraan}
                                                                 data={displayDataKendaraan}
                                                                 pagination
-                                                                paginationPerPage={6}
+                                                                paginationPerPage={5}
                                                                 customStyles={customStyleKendaraan}
                                                                 defaultSortFieldId={1}
                                                                 onSearch={handleSearch} // Menambahkan fungsi pencarian
@@ -670,6 +692,8 @@ function Datacustomers() {
                                 </div>
                             </div>
                         </div>
+                        
+                        {/* Customer Card */}
                         {isCardShow == true ? (
 
                             <div className="row" >
@@ -801,6 +825,128 @@ function Datacustomers() {
                             </div>
 
                         ) : ""}
+
+                        {isCardSales == true ? (
+                            <div className="row">
+                                <div className='col-xl-12 col-md-12'>
+                                    <div className="card overflow-hidden">
+                                        <div className="card-header" style={{border: "none"}}>
+                                            <div className="d-flex align-items-center">
+                                                <div className="flex-grow-1 overflow-hidden">
+                                                    <h5 className="card-title mb-0" style={{fontSize: "17px"}}>SALES CARD 
+                                                        <span className="badge badge-label bg-secondary"><i className="mdi mdi-circle-medium"></i> {personName}</span>
+                                                        <span className="badge badge-label bg-success"><i className="mdi mdi-circle-medium"></i> {"Unit: " + dtCar.no_rangka}</span>
+                                                        <span className="badge badge-label bg-danger" style={{fontSize: "12px"}}><i className="mdi mdi-circle-medium"></i> {"Tanggal STNK: "+dtCar.tgl_stnk}</span>
+                                                    </h5>
+                                                </div>
+                                                <div className="flex-shrink-0">
+                                                    <button type="button" className="btn btn-danger btn-sm"><i className="ri-close-circle-fill"></i> Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="card-body" style={{zIndex: 1}}>
+                                            <div className="row">
+                                                <div className="col-md-4">
+                                                    <div style={{ overflowX: 'auto' }}>
+                                                        <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                            <thead style={{background: "#E2E8F0"}}>
+                                                                <tr>
+                                                                    <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Penjualan</th>
+                                                                </tr>
+                                                                <tr style={{padding: "7px", fontSize: "12px"}}>
+                                                                    <th scope="col">Tanggal DO</th>
+                                                                    <th scope="col">Sales Penjualan</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td className="text-muted">{infoDtPenjualan.tgl_do}</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.nama_sales}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Leasing</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.nama_leasing == null ? "" : infoDtPenjualan.nama_leasing}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>Asuransi</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.asuransi == null ? "" : infoDtPenjualan.asuransi}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{background: "#E2E8F0", fontWeight: "600"}}>DO Asal</td>
+                                                                    <td className="text-muted">{infoDtPenjualan.asal_do}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-md-8">
+                                                    <div style={{ overflowX: 'auto' }}>
+                                                        <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                            <thead style={{background: "#E2E8F0"}}>
+                                                                <tr>
+                                                                    <th colSpan={7} style={{padding: "7px", fontSize: "12px"}}>Informasi Kendaraan</th>
+                                                                </tr>
+                                                                <tr style={{padding: "7px", fontSize: "12px"}}>
+                                                                    <th scope="col">Nama Pemilik</th>
+                                                                    <th scope="col">Nama STNK</th>
+                                                                    <th scope="col">Tanggal STNK</th>
+                                                                    <th scope="col">VIN</th>
+                                                                    <th scope="col">Tipe Kendaraan</th>
+                                                                    <th scope="col">No Polisi</th>
+                                                                    <th scope="col">Warna</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td className="text-muted">{infoDtCar.nama_pemilik}</td>
+                                                                    <td className="text-muted">{infoDtCar.nama_stnk}</td>
+                                                                    <td className="text-muted">{infoDtCar.tgl_stnk}</td>
+                                                                    <td className="text-muted">{infoDtCar.no_rangka}</td>
+                                                                    <td className="text-muted">{infoDtCar.tipe}</td>
+                                                                    <td className="text-muted">{infoDtCar.no_pol}</td>
+                                                                    <td className="text-muted">{infoDtCar.warna}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div style={{ overflowX: 'auto' }}>
+                                                        <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                            <thead style={{background: "#E2E8F0"}}>
+                                                                <tr>
+                                                                    <th colSpan={6} style={{padding: "7px", fontSize: "12px"}}>
+                                                                        Informasi Service Terakhir
+                                                                    </th>
+                                                                </tr>
+                                                                <tr style={{padding: "7px", fontSize: "12px"}}>
+                                                                    <th scope="col">Nama Pemakai</th>
+                                                                    <th scope="col">No Telepon</th>
+                                                                    <th scope="col">Keterangan</th>
+                                                                    <th scope="col">Tanggal</th>
+                                                                    <th scope="col">Lokasi Service</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td className="text-muted">Alberto</td>
+                                                                    <td className="text-muted">+628123456789</td>
+                                                                    <td className="text-muted">Ganti Oli</td>
+                                                                    <td className="text-muted">11 November 2023</td>
+                                                                    <td className="text-muted">
+                                                                        <span className="badge badge-label bg-secondary badge-sm"><i className="lab las la-map-marker"></i> Wijaya Padalarang</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : ""}
+                        
                     </DialogContent>
             </Dialog>
             {/* End Modal Customer Card */}

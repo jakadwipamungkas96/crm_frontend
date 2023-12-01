@@ -56,22 +56,23 @@ function Do() {
     const [page, setPage] = useState(0);
     // const [isLoading, setLoading] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
     console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
     
     useEffect(() => {
-        
+        setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
             const url = `http://127.0.0.1:8000/api/delivery_orders/list?page=${page}&size=${pageSize}`;
             try {
-
                 const response = await axios.get(url);
                 setDataProspek(response.data.data);
                 setDataProspek2(response.data);
                 setLsDtCustomer(response.data.data);
+                setLoadingTable(false);
 
             } catch (error) {
                 console.log(error);
@@ -337,15 +338,22 @@ function Do() {
                                         </div>
                                     </div>
                                 </div>
-                                <DataTable
-                                    columns={columnsLsCustomer}
-                                    data={displayData}
-                                    pagination
-                                    paginationPerPage={10}
-                                    customStyles={customStyles}
-                                    defaultSortFieldId={1}
-                                    onSearch={handleSearch} // Menambahkan fungsi pencarian
-                                />
+                                {loadingTable ? (
+                                    <div className="text-center ">
+                                        <i className="mdi mdi-spin mdi-loading" style={{fontSize: "30px", color: "#991B1B"}}></i> <h6 className="m-0 loading-text">Please wait...</h6>
+                                    </div>
+                                ) : (
+
+                                    <DataTable
+                                        columns={columnsLsCustomer}
+                                        data={displayData}
+                                        pagination
+                                        paginationPerPage={10}
+                                        customStyles={customStyles}
+                                        defaultSortFieldId={1}
+                                        onSearch={handleSearch} // Menambahkan fungsi pencarian
+                                    />
+                                ) }
                             </div>
                         </div>
                     </div>

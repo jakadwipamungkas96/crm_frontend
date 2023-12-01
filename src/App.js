@@ -319,14 +319,20 @@ function App() {
                     <NavLink className="nav-link menu-link"exact to="/datacustomers" activeclassname="active"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
                   </li>
                   {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact to="/ulangtahun" activeclassname="active"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
-                  <li className="menu-title"><span data-key="t-menu">List</span></li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link menu-link"exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link menu-link"exact to="/so" activeclassname="active"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
-                  </li>
-                  <li className="menu-title"><span data-key="t-menu">Menu</span></li>
+                  {rulesName != "sales" ? (
+                    <>
+                      <li className="menu-title"><span data-key="t-menu">List</span></li>
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link"exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
+                      </li>
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link"exact to="/so" activeclassname="active"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
+                      </li>
+                      <li className="menu-title"><span data-key="t-menu">Menu</span></li>
+                    </>
+                  ) : (
+                    ""
+                  )}
                   {/* {rulesName == "administrator" ? (
                       <li className="nav-item">
                         <a className="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse"

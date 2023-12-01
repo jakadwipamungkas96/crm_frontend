@@ -6,10 +6,11 @@ import CryptoJS from 'crypto-js';
 const Login = () => {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
+    const [isLoading, setLoading] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-    
+        setLoading(true);
         const data = {
             username: username,
             password: password
@@ -17,7 +18,7 @@ const Login = () => {
     
         axios.post('http://127.0.0.1:8000/api/login', data)
         .then(response => {
-
+            setLoading(false);
             swal("Success", "Berhasil Login", "success", {
                 buttons: false,
                 timer: 2000,
@@ -47,9 +48,9 @@ const Login = () => {
             localStorage.setItem('rules', JSON.stringify(response.data.rules));
             localStorage.setItem('cabang_name', JSON.stringify(response.data.cabang_name));
             
-            if (response.data.rules == "superadmin") {
+            // if (response.data.rules == "superadmin") {
                 window.location.href = "/dashboard";
-            }
+            // }
             // window.location.href = "/dashboard";
 
         })
@@ -137,7 +138,20 @@ const Login = () => {
                                                     </div>
 
                                                     <div className="mt-0" style={{textAlign: "right"}}>
-                                                        <button className="btn btn-danger w-25" type="submit">Masuk</button>
+                                                        {isLoading ? (
+                                                            <button type="button" class="btn btn-outline-warning btn-load">
+                                                                <span class="d-flex align-items-center">
+                                                                    <span class="flex-grow-1 me-2">
+                                                                        Loading...
+                                                                    </span>
+                                                                    <span class="spinner-grow flex-shrink-0" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </span>
+                                                                </span>
+                                                            </button>
+                                                        ) : (
+                                                            <button className="btn btn-danger w-25" type="submit">Masuk</button>
+                                                        )}
                                                     </div>
 
                                                 </form>
