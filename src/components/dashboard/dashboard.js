@@ -78,6 +78,79 @@ function Dashboard() {
     // Format tanggal dengan format "DD/MM/YYYY"
     const tanggalFormat = tanggal + ' ' + namaBulan[hariIni.getMonth()] + ' ' + tahunHariIni;
 
+    const tahunlist = [];
+
+    // Fungsi untuk mengupdate daftar tahun
+    const [bulan, setBulan] = React.useState(bulanHariIni);
+    const [tahun, setTahun] = React.useState(tahunHariIni);
+
+    const handleChange = (event) => {
+        setBulan(event.target.value);
+    };
+    const handleChange2 = (event) => {
+        setTahun(event.target.value);
+    };
+
+    const tahunSaatIni = new Date().getFullYear();
+
+    for (let tahun = tahunSaatIni; tahun >= 2018; tahun--) {
+        tahunlist.push({
+            value: tahun.toString(),
+            label: tahun.toString(),
+        });
+    }
+
+    const bulanlist = [
+        {
+            value: "1",
+            label: "Januari",
+        },
+        {
+            value: "2",
+            label: "Februari",
+        },
+        {
+            value: "3",
+            label: "Maret",
+        },
+        {
+            value: "4",
+            label: "April",
+        },
+        {
+            value: "5",
+            label: "Mei",
+        },
+        {
+            value: "6",
+            label: "Juni",
+        },
+        {
+            value: "7",
+            label: "July",
+        },
+        {
+            value: "8",
+            label: "Agustus",
+        },
+        {
+            value: "9",
+            label: "September",
+        },
+        {
+            value: "10",
+            label: "Oktober",
+        },
+        {
+            value: "11",
+            label: "November",
+        },
+        {
+            value: "12",
+            label: "Desember",
+        },
+    ];
+    
     const [listUltah, setListUltah] = useState([]);
     const [totalUltah, setTotalUltah] = useState("");
 
@@ -214,91 +287,6 @@ function Dashboard() {
         { field: "tgl_do", headerName: "Tanggal DO", minWidth: 150 }
     ];
 
-    // Amchart
-    // const series1Ref = useRef(null);
-    // const xAxisRef = useRef(null);
-    // let dataChart = [
-    //     {
-    //       category: "Rush 1.5 GR A/T",
-    //       value1: 100
-    //     },
-    //     {
-    //       category: "RAIZE 1.0T S CVT - TWO TONE",
-    //       value1: 150
-    //     },
-    //     {
-    //       category: "Veloz 1.5 Q CVT",
-    //       value1: 200
-    //     },
-    //     {
-    //       category: "Kijang Innova Zenix 2.0 G CVT",
-    //       value1: 230
-    //     }
-    //   ];
-
-    // useLayoutEffect(() => {
-    //     let root = am5.Root.new("chartdiv");
-    
-    //     root.setThemes([am5themes_Animated.new(root)]);
-    
-    //     let chart = root.container.children.push(
-    //       am5xy.XYChart.new(root, {
-    //         panY: false,
-    //         layout: root.verticalLayout
-    //       })
-    //     );
-    
-    //     // Create Y-axis
-    //     let yAxis = chart.yAxes.push(
-    //       am5xy.ValueAxis.new(root, {
-    //         renderer: am5xy.AxisRendererY.new(root, {})
-    //       })
-    //     );
-    
-    //     // Create X-Axis
-    //     let xAxis = chart.xAxes.push(
-    //       am5xy.CategoryAxis.new(root, {
-    //         renderer: am5xy.AxisRendererX.new(root, {}),
-    //         categoryField: "category"
-    //       })
-    //     );
-    
-    //     // Create series
-    //     let series1 = chart.series.push(
-    //       am5xy.ColumnSeries.new(root, {
-    //         name: "Kendaraan",
-    //         xAxis: xAxis,
-    //         yAxis: yAxis,
-    //         valueYField: "value1",
-    //         categoryXField: "category",
-    //         tooltip: am5.Tooltip.new(root, {
-    //             labelText: "{valueY} Kendaraan",
-    //         })
-    //       })
-    //     );
-    
-    //     // Add legend
-    //     // let legend = chart.children.push(am5.Legend.new(root, {}));
-    //     // legend.data.setAll(chart.series.values);
-    
-    //     // Add cursor
-    //     chart.set("cursor", am5xy.XYCursor.new(root, {}));
-    
-    //     xAxisRef.current = xAxis;
-    //     series1Ref.current = series1;
-    
-    //     return () => {
-    //       root.dispose();
-    //     };
-    // }, []);
-
-    // // This code will only run when props.data changes
-    // useLayoutEffect(() => {
-    //     xAxisRef.current.data.setAll(dataChart);
-    //     series1Ref.current.data.setAll(dataChart);
-    // }, [dataChart]);
-
-
     const options = {
         responsive: true,
         plugins: {
@@ -329,7 +317,7 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getTopSales = async () => {
-            const url = `http://127.0.0.1:8000/api/chart/topfive/sales`;
+            const url = `http://127.0.0.1:8000/api/chart/topfive/sales?bulan=${bulan}&tahun=${tahun}`;
             try {
                 const response = await axios.get(url);
                 setTopSalesName(response.data.top_sales);
@@ -338,7 +326,7 @@ function Dashboard() {
             }
         };
         getTopSales();
-    }, []);
+    }, [bulan, tahun]);
 
     // END CHART TOP 5
     const topSalesName = topSalesNameArr.nama_sales;
@@ -351,16 +339,16 @@ function Dashboard() {
             backgroundColor: 'rgb(251, 146, 60)',
             datalabels: {
                 display: true,
-                anchor: 'end', // Menempatkan label di dalam batang
-                align: 'start', // Posisi label di atas batang
-                rotation: -90, // Memutar label tegak lurus
+                // anchor: 'end', // Menempatkan label di dalam batang
+                align: 'middle', // Posisi label di atas batang
+                rotation: 0, // Memutar label tegak lurus
                 color: "white",
                 font: {
                     size: 11, // Atur ukuran font
                 },
                 formatter: (value, context) => {
                   // Menggunakan labelsByModel untuk mendapatkan label yang sesuai
-                  return value + ' DO';
+                  return value + '';
                 },
             },
           }
@@ -372,7 +360,7 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getTopCar = async () => {
-            const url = `http://127.0.0.1:8000/api/chart/topfive/car`;
+            const url = `http://127.0.0.1:8000/api/chart/topfive/car?bulan=${bulan}&tahun=${tahun}`;
             try {
                 const response = await axios.get(url);
                 setTopCarName(response.data.top_car);
@@ -381,7 +369,7 @@ function Dashboard() {
             }
         };
         getTopCar();
-    }, []);
+    }, [bulan, tahun]);
 
     const tipeKendaraan = topCarNameArr.nama_car;
 
@@ -403,16 +391,17 @@ function Dashboard() {
             backgroundColor: 'rgb(59, 130, 246)',
             datalabels: {
                 display: true,
-                anchor: 'end',
-                align: 'start',
-                rotation: -90,
+                // anchor: 'end',
+                align: 'middle',
+                // rotation: -90,
                 color: "white",
                 font: {
                     size: 11, // Atur ukuran font
                 },
                 formatter: (value, context) => {
-                  // Menggunakan labelsByModel untuk mendapatkan label yang sesuai
-                  return tipeKendaraan[context.dataIndex] + '\n' + value + ' Terjual';
+                    // Menggunakan labelsByModel untuk mendapatkan label yang sesuai
+                    //   return tipeKendaraan[context.dataIndex] + '\n' + value + ' Terjual';
+                    return value + '';
                 },
             },
           }
@@ -563,37 +552,8 @@ function Dashboard() {
                 </div>
 
                 <div className="row">
-                    <div className='col-xl-12 col-md-12'>
-                        <div className="card overflow-hidden">
-                            <div className="card-body" style={{zIndex: 1}}>
-                                <div className="d-flex align-items-center">
-                                    <div className="flex-grow-1 overflow-hidden">
-                                        <form action="">
-                                            <div className="row">
-                                                <div className="col-lg-1 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Start Date</label>
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" />
-                                                </div>
-                                                <div className="col-lg-1 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>End Date</label>
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" />
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row">
                     <div className="col-xl-6 col-md-6">
-                        <div className="card card-animate overflow-hidden" onClick={showListUltah}>
+                        <div className="card card-animate overflow-hidden" style={{cursor: "pointer"}} onClick={showListUltah}>
                             <div className="position-absolute start-0" style={{zIndex: 0}}>
                                 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
                                     <path id="Shape 8" className="s0" d="m189.5-25.8c0 0 20.1 46.2-26.7 71.4 0 0-60 15.4-62.3 65.3-2.2 49.8-50.6 59.3-57.8 61.5-7.2 2.3-60.8 0-60.8 0l-11.9-199.4z" />
@@ -613,7 +573,7 @@ function Dashboard() {
                         </div>
                     </div>
                     <div className="col-xl-6 col-md-6">
-                        <div className="card card-animate overflow-hidden" onClick={showListStnk}>
+                        <div className="card card-animate overflow-hidden" style={{cursor: "pointer"}} onClick={showListStnk}>
                             <div className="position-absolute start-0" style={{zIndex: 0}}>
                                 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
                                     <path id="Shape 8" className="s0" d="m189.5-25.8c0 0 20.1 46.2-26.7 71.4 0 0-60 15.4-62.3 65.3-2.2 49.8-50.6 59.3-57.8 61.5-7.2 2.3-60.8 0-60.8 0l-11.9-199.4z" />
@@ -634,14 +594,55 @@ function Dashboard() {
                     </div>
                 </div>
 
-                <div className="row">
+                <div className="row bg-white">
+                    <div className='col-xl-12 col-md-12 mt-2'>
+                        <div className="card overflow-hidden" style={{background: "#132649", color: "#ffffff"}}>
+                            <div className="card-body" style={{zIndex: 1}}>
+                                <div className="d-flex align-items-center">
+                                    <div className="flex-grow-1 overflow-hidden">
+                                        <form action="">
+                                            <div className="row">
+                                                <div className="col-lg-1 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Bulan</label>
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
+                                                    <select type="date" onChange={handleChange} value={bulan} className="form-select form-select-md" id="nameInput" name="bulan" placeholder="Enter your name" >
+                                                        {bulanlist.map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-lg-1 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tahun</label>
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
+                                                    <select type="date" onChange={handleChange2} value={tahun} className="form-select form-select-md" id="nameInput" name="tahun" placeholder="Enter your name" >
+                                                        {tahunlist.map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {/* {'Berdasarkan Tipe Kendaraan'} */}
                     <div className="col-xl-6">
                         <div className="card ribbon-box border shadow-none mb-lg-0">
                             <div className="card-body text-muted">
                                 <span className="ribbon-three ribbon-three-secondary"><span style={{fontWeight: 500}}>Top 5</span></span>
                                 <h5 className="fs-14 text-end mb-3">
-                                    <span className="badge badge-label bg-secondary"><i className="mdi mdi-circle-medium"></i> {"Top 5 Model Kendaraan Terjual"}</span>
+                                    <span className="badge badge-label bg-light text-black"><i className="mdi mdi-circle-medium"></i> {"Top 5 Model Kendaraan Terjual"}</span>
+                                    <a href=""><span className="badge bg-secondary" style={{marginLeft: "5px"}}><i className="mdi mdi-car"></i> {"Show All"}</span></a>
                                 </h5>
                                 {/* <p className="mb-0"> */}
                                     <Bar options={options} data={dataChartKendaraan} />

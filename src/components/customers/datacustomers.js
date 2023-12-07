@@ -6,6 +6,7 @@ import swal from 'sweetalert';
 
 // React DataTable
 import DataTable from 'react-data-table-component';
+import TextField from "@mui/material/TextField";
 
 // Modal Dialog
 import Dialog from "@mui/material/Dialog";
@@ -146,7 +147,8 @@ function Datacustomers() {
         {
             name: 'Aksi',
             cell: row => <>
-                            <button style={{fontSize: "12px"}} type="button" className={`btn btn-secondary btn-sm ${rulesName == 'sales' ? '' : 'd-none'}`}>
+                            {/* <button style={{fontSize: "12px"}} type="button" className={`btn btn-secondary btn-sm ${rulesName == 'sales' ? '' : 'd-none'}`}> */}
+                            <button style={{fontSize: "12px"}} type="button" className={`btn btn-secondary btn-sm`}>
                                 <i className="ri-edit-2-line"></i> <strong>Update</strong>
                             </button>
                             <button onClick={(event) => {handleOpenCardCustomer(row);}} style={{fontSize: "12px", marginLeft: "10px"}} type="button" className="btn btn-primary btn-sm">
@@ -170,27 +172,31 @@ function Datacustomers() {
             name: 'Nama Customer',
             selector: row => row.nama_customer,
             sortable: true,
-            width: "250px"
+            width: "300px"
         },
         {
             name: 'No Telepon',
             selector: row => row.telp,
             sortable: true,
+            width: "200px"
         },
         {
             name: 'Email',
             selector: row => row.email,
             sortable: true,
+            width: "150px"
         },
         {
             name: 'Alamat',
             selector: row => row.alamat_nik,
             sortable: true,
+            width: "300px"
         },
         {
             name: 'Kecamatan',
             selector: row => row.kecamatan,
             sortable: true,
+            width: "200px"
         }
     ];
 
@@ -312,6 +318,12 @@ function Datacustomers() {
                             <i className="ri-file-list-3-fill"></i> Detail
                         </button>,
                         width: "110px"
+        },
+        {
+            name: 'Status UNIT',
+            selector: row => row.status_unit,
+            sortable: true,
+            width: "150px"
         },
         {
             name: 'VIN',
@@ -491,6 +503,81 @@ function Datacustomers() {
     ];
 
     const urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
+    const urlDownloadForm = `http://127.0.0.1:8000/api/template_form_update_data_customer`;
+
+    const [importExcel, setimportExcel] = React.useState(false);
+    const [fileUpload, setFileUp] = React.useState([]);
+    const [inputsImport, setInputs] = React.useState([]);
+
+    const hChangeInputFile = (event) => {
+        console.log(event.target.files[0]);
+        console.log(event.target.name);
+        setFileUp(event.target.files[0]);
+        setInputs(values => ({...values, [event.target.name]: fileUpload}));
+    }
+
+    const handleOpenFormImport = (event) => {
+        setimportExcel(true);
+    }
+
+    const closeImport = (event) => {
+        setimportExcel(false);
+    }
+
+    const CustomBlockingOverlay = ({ isLoading, children }) => {
+        return (
+            <div>
+            {isLoading && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(30, 41, 59, 0.5)',
+                  color: "white",
+                  fontSize: "20px",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1000,
+                }}
+              >
+                <img src="/assets/images/icon_wijaya.png" style={{opacity: 0.8}} alt="" height="50" /><br /><br />
+                <p>Please wait...</p>
+              </div>
+            )}
+            {children}
+          </div>
+        );
+    };
+
+    const handleUploadDataCustomer = (event) => {
+        event.preventDefault();
+        const formData = new FormData();
+        
+        formData.append('fileCust',fileUpload);
+
+        setLoading(true);
+        axios.post('http://127.0.0.1:8000/api/customers/datacustomers/import_update', formData).then(function(response){
+            if (response.data.error == true) {
+                setLoading(false);
+                swal("Error", 'Data tidak boleh kosong!', "error", {
+                    buttons: false,
+                    timer: 2000,
+                });   
+            } else {
+                setLoading(false);
+                swal("Success", 'Data Berhasil disimpan!', "success", {
+                    buttons: false,
+                    timer: 2000,
+                });
+
+                window.location.href = "/datacustomers";
+            }
+        });
+    }
 
     return (
         <div className="page-content">
@@ -569,6 +656,7 @@ function Datacustomers() {
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
                                             <a href={urlExport} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
+                                            <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{marginLeft: "5px", cursor: "pointer"}}><i className="ri-edit-2-line"></i> Multi Update</a>
                                         </div>
                                     </div>
                                 </div>
@@ -637,7 +725,7 @@ function Datacustomers() {
                                                                 <p className="card-text mb-2 text-muted" style={{fontSize: "13px"}}><i className="ri-cake-2-line"></i> {nameCustomer.tgl_ultah == "" ? (<span className="badge bg-dark-subtle text-body badge-border">Tanggal Kosong</span>) : nameCustomer.tgl_ultah} 
                                                                  {currentDateFormatted == nameCustomer.tgl_ultah_cek ? (<span className="badge bg-primary">Hari ini berulang tahun</span>) : ""}</p>
                                                                 <p className="card-text mb-2" style={{fontSize: "13px"}}>
-                                                                    {nameCustomer.alamat_stnk == null ? (<span className="badge bg-dark-subtle text-body badge-border">Alamat Kosong</span>) : nameCustomer.alamat_stnk}
+                                                                    {nameCustomer.alamat_nik == null ? (<span className="badge bg-dark-subtle text-body badge-border">Alamat Kosong</span>) : nameCustomer.alamat_nik}
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -1050,6 +1138,75 @@ function Datacustomers() {
                     </DialogContent>
             </Dialog>
             {/* End Modal STNK */}
+
+            {/* Start Import  */}
+            <Dialog
+                open={importExcel}
+                TransitionComponent={Transition}
+                keepMounted
+                maxWidth="xl"
+                onClose={closeImport}
+                aria-describedby="alert-dialog-slide-description"
+                style={{ width: "100%", margin: "0 auto" }}
+            >
+                <DialogContent style={{
+                    background: "#ecf0f1"
+                }}>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="card">
+                                <div className="row g-0">
+                                    <div className="col-md-12">
+                                        <div className="card-header" style={{border: "none"}}>
+                                            <div className="d-flex align-items-center">
+                                                <div className="flex-grow-1 overflow-hidden">
+                                                    <h5 className="card-title mb-0" style={{fontSize: "17px"}}>Multi Update Data Customer </h5>
+                                                </div>
+                                                <div className="flex-shrink-0">
+                                                    <a href={urlDownloadForm} className="btn btn-sm btn-icon btn-success p-2" style={{width: "100%", cursor: "pointer"}}><i className="ri-file-excel-fill"></i> Download Template Form</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <CustomBlockingOverlay isLoading={isLoading}>
+    
+                                                    </CustomBlockingOverlay>
+                                                    <form>
+                                                        {/* <input type="file" name="fileCust" id="fileCust" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
+                                                        <TextField
+                                                            id="outlined-select-currency-native"
+                                                            defaultValue=""
+                                                            label=""
+                                                            helperText="Pilih File"
+                                                            onChange={hChangeInputFile}
+                                                            sx={{width: "50%"}}
+                                                            size= "small"
+                                                            name="fileCust"
+                                                            type="file"
+                                                            style={{width: "500px"}}
+                                                            required
+                                                        >
+                                                        </TextField><br></br>
+                                                        <button
+                                                            className="btn btn-primary btn-sm mt-2"
+                                                            onClick={handleUploadDataCustomer}
+                                                        >
+                                                            Proses Import
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            {/* End Import */}
         </div>
     );
 }
