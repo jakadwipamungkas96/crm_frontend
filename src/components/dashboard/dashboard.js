@@ -176,6 +176,7 @@ function Dashboard() {
     const [page, setPage] = useState(0);
     const [isLoading, setLoading] = useState(true);
     const token =  CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+    // console.log(token);
     const rulesName = JSON.parse(localStorage.getItem("rules"));
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);

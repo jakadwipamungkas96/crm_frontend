@@ -530,7 +530,7 @@ function App() {
                     </li>
                   ) : ""} */}
 
-                  {rulesName == "administrator" ? (
+                  {rulesName == "superadmin" ? (
                     <li className="nav-item">
                       <a className="nav-link menu-link" href="#sidebarDtUserManagement" data-bs-toggle="collapse"
                           role="button" aria-expanded="false" aria-controls="sidebarDtUserManagement">
