@@ -226,6 +226,10 @@ function Datacustomers() {
     const [infoDtPenjualan, setInfoDtPenjualan] = useState([]);
     const [infoDtServices, setInfoDtServices] = useState([]);
 
+    const handleCloseSalesCard = (event) => {
+        setCardSales(false);
+    }
+
     const handleOpenDetailKendaraan = (event) => {
         if (rulesName == "superadmin") {
             
@@ -243,6 +247,17 @@ function Datacustomers() {
         } else if (rulesName == "sales"){
             console.log("buka card sales");
             setCardSales(true);
+            setDtCar(event);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+            axios
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin="+event.no_rangka)
+                .then((response) => {
+                    setInfoDtCar(response.data.dtKendaraan);
+                    setInfoDtPenjualan(response.data.dtPenjualan);
+                    setInfoDtServices(response.data.dtService);
+                });
+        } else if (rulesName == "administrator") {
+            setIsCardShow(true);
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
@@ -625,6 +640,13 @@ function Datacustomers() {
         setupdTelpCust(event.telp);
         setupdEmailCust(event.email);
         setupdAlamatNikCust(event.alamat_nik);
+        setInputUpdCust((values) => ({
+            ...values,
+            ["single_id"]: event.single_id,
+            ["alamat_nik"]: event.alamat_nik,
+            ["telp_customer"]: event.telp,
+            ["email_customer"]: event.email,
+        }));
         // Konversi tanggal input ke objek Date
         const dateObj = new Date(event.tgl_ultah);
         // Dapatkan tahun, bulan, dan tanggal dari objek Date
@@ -645,10 +667,35 @@ function Datacustomers() {
 
     const handleChooseVin = (event) => {
         getDetailbyVin(event.target.value);
+        setInputUpdCust((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
     }
-
+    console.log(token)
     const handleSubmitUpdateCust = (event) => {
         console.log(inputsUpdCust);
+        event.preventDefault();
+        setLoading(true);
+        axios
+            .post("http://127.0.0.1:8000/api/customers/datacustomers/single_update", inputsUpdCust)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    setLoading(false);
+                    swal("Error", 'Data tidak boleh kosong!', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });   
+                } else {
+                    setLoading(false);
+                    swal("Success", 'Data Berhasil disimpan!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+    
+                    window.location.href = "/datacustomers";
+                }
+            });
     }
 
     const [updNoDoTam, setupdNoDoTam] = useState('');
@@ -664,6 +711,9 @@ function Datacustomers() {
     const [updNikbdoStnk, setupdNikbdoStnk] = useState('');
     const [updKetType, setupdKetType] = useState('');
     const [updType, setupdType] = useState('');
+    const [updWarna, setupdWarna] = useState('');
+    const [updLeasing, setupdLeasing] = useState('');
+    const [updAsuransi, setupdAsuransi] = useState('');
     
     const handleChangeDoTam = (event) => {
         setupdNoDoTam(event.target.value);
@@ -769,8 +819,31 @@ function Datacustomers() {
         }));
     }
 
+    const handleChangeWarna = (event) => {
+        setupdWarna(event.target.value);
+        setInputUpdCust((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeLeasing = (event) => {
+        setupdLeasing(event.target.value);
+        setInputUpdCust((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeAsuransi = (event) => {
+        setupdAsuransi(event.target.value);
+        setInputUpdCust((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
     function getDetailbyVin(vin) {
-        console.log(vin);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
             .get("http://127.0.0.1:8000/api/delivery_orders/detail/vin?vin="+vin)
@@ -788,6 +861,9 @@ function Datacustomers() {
                     setupdNikbdoStnk('');
                     setupdKetType('');
                     setupdType('');
+                    setupdWarna('');
+                    setupdLeasing('');
+                    setupdAsuransi('');
                 } else {
                     setupdNoDoTam(response.data.data.no_do_tam);
                     setupdNoDo(response.data.data.no_do);
@@ -803,6 +879,29 @@ function Datacustomers() {
                     setupdNikbdoStnk(response.data.data.nikbdo_stnk);
                     setupdKetType(response.data.data.ket_type);
                     setupdType(response.data.data.type);
+                    setupdWarna(response.data.data.warna);
+                    setupdLeasing(response.data.data.leasing);
+                    setupdAsuransi(response.data.data.asuransi);
+
+                    setInputUpdCust((values) => ({
+                        ...values,
+                        ["no_do_tam"]: response.data.data.no_do_tam,
+                        ["no_do"]: response.data.data.no_do,
+                        ["tgl_do"]: response.data.data.tgl_do,
+                        ["tgl_spk"]: response.data.data.tgl_spk,
+                        ["no_spk"]: response.data.data.no_spk,
+                        ["kode"]: response.data.data.kode,
+                        ["nama_spk"]: response.data.data.nama_spk,
+                        ["nama_stnk"]: response.data.data.nama_stnk,
+                        ["tgl_aju_afi"]: response.data.data.tgl_aju_afi,
+                        ["nikbdo_spk"]: response.data.data.nikbdo_spk,
+                        ["nikbdo_stnk"]: response.data.data.nikbdo_stnk,
+                        ["ket_type"]: response.data.data.ket_type,
+                        ["type"]: response.data.data.type,
+                        ["warna"]: response.data.data.warna,
+                        ["leasing"]: response.data.data.leasing,
+                        ["asuransi"]: response.data.data.asuransi,
+                    }));
                 }
             });
     }
@@ -1154,7 +1253,7 @@ function Datacustomers() {
                                                     </h5>
                                                 </div>
                                                 <div className="flex-shrink-0">
-                                                    <button type="button" className="btn btn-danger btn-sm"><i className="ri-close-circle-fill"></i> Close</button>
+                                                    <button type="button" onClick={handleCloseSalesCard} className="btn btn-danger btn-sm"><i className="ri-close-circle-fill"></i> Close</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1242,12 +1341,12 @@ function Datacustomers() {
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    <td className="text-muted">Alberto</td>
-                                                                    <td className="text-muted">+628123456789</td>
-                                                                    <td className="text-muted">Ganti Oli</td>
-                                                                    <td className="text-muted">11 November 2023</td>
+                                                                    <td className="text-muted">{infoDtServices.nama_pemakai}</td>
+                                                                    <td className="text-muted">{infoDtServices.telepon_pemakai}</td>
+                                                                    <td className="text-muted">{infoDtServices.keterangan_service}</td>
+                                                                    <td className="text-muted">{infoDtServices.tgl_service}</td>
                                                                     <td className="text-muted">
-                                                                        <span className="badge badge-label bg-secondary badge-sm"><i className="lab las la-map-marker"></i> Wijaya Padalarang</span>
+                                                                       {infoDtServices.cabang_name == null ? ("") : (<span className="badge badge-label bg-secondary badge-sm"><i className="lab las la-map-marker"></i> {infoDtServices.cabang_name}</span>)} 
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -1465,7 +1564,7 @@ function Datacustomers() {
                                         <div className="row">
                                             <div className="col-lg-6 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" readOnly value={updSingleID} id="nama_customer" placeholder="Nama Customer" />
+                                                    <input type="text" className="form-control form-control-sm" readOnly value={updSingleID} id="single_id" placeholder="Nama Customer" />
                                                     <label htmlFor="nama_customer">Single ID</label>
                                                 </div>
                                             </div>
@@ -1477,25 +1576,25 @@ function Datacustomers() {
                                             </div>
                                             <div className="col-lg-4 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="email" className="form-control form-control-sm" onChange={handleChangeEmailCust} value={updEmailCust !== null ? updEmailCust : ''} id="email_customer" placeholder="Email" />
+                                                    <input type="email" className="form-control form-control-sm" onChange={handleChangeEmailCust} name="email_customer" value={updEmailCust !== null ? updEmailCust : ''} id="email_customer" placeholder="Email" />
                                                     <label htmlFor="email_customer">Email</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-4 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="number" className="form-control form-control-sm" onChange={handleChangeTelpCust} value={updTelpCust !== null ? updTelpCust : ''} id="telp_customer" placeholder="No Telepon" />
+                                                    <input type="number" className="form-control form-control-sm" onChange={handleChangeTelpCust} value={updTelpCust !== null ? updTelpCust : ''} name="telp_customer" id="telp_customer" placeholder="No Telepon" />
                                                     <label htmlFor="telp_customer">No Telepon</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-4 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglLahir} value={updTglLahir !== null ? updTglLahir : ''} id="tgl_lahir_customer" placeholder="Tanggal Lahir" />
+                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglLahir} value={updTglLahir !== null ? updTglLahir : ''} name="tgl_lahir_customer" id="tgl_lahir_customer" placeholder="Tanggal Lahir" />
                                                     <label htmlFor="tgl_lahir_customer">Tanggal Lahir</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-12 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeAlamatNikCust} value={updAlamatNikCust !== null ? updAlamatNikCust : ''} id="alamat_nik" placeholder="Email" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeAlamatNikCust} value={updAlamatNikCust !== null ? updAlamatNikCust : ''} name="alamat_nik" id="alamat_nik" placeholder="Email" />
                                                     <label htmlFor="alamat_nik">Alamat NIK</label>
                                                 </div>
                                             </div>
@@ -1513,7 +1612,7 @@ function Datacustomers() {
                                         <div className="row">
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <select type="text" className="form-control form-control-sm" onChange={handleChooseVin} id="no_rangka" placeholder="Pilih VIN">
+                                                    <select type="text" className="form-control form-control-sm" onChange={handleChooseVin} name="no_rangka" id="no_rangka" placeholder="Pilih VIN">
                                                         <option value="">-- Pilih No Rangka --</option>
                                                         {lsDtKendaraan.map((vlcar, idcar) => (
                                                             <option key={idcar} value={vlcar.no_rangka}>{vlcar.no_rangka + " (" + vlcar.status_unit + ")"}</option>
@@ -1524,80 +1623,98 @@ function Datacustomers() {
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeDoTam} value={updNoDoTam !== null ? updNoDoTam : ''} id="no_do_tam" placeholder="No DO TAM" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeDoTam} value={updNoDoTam !== null ? updNoDoTam : ''} name="no_do_tam" id="no_do_tam" placeholder="No DO TAM" />
                                                     <label htmlFor="no_do_tam">No DO TAM</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeDo} value={updNoDo !== null ? updNoDo : ''} id="no_do" placeholder="No DO" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeDo} value={updNoDo !== null ? updNoDo : ''} name="no_do" id="no_do" placeholder="No DO" />
                                                     <label htmlFor="no_do">No DO</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglDo} value={updTglDO !== null ? updTglDO : ''} id="tgl_do" placeholder="Tanggal DO" />
+                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglDo} value={updTglDO !== null ? updTglDO : ''} name="tgl_do" id="tgl_do" placeholder="Tanggal DO" />
                                                     <label htmlFor="tgl_do">Tanggal DO</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNoSpk} value={updNoSpk !== null ? updNoSpk : ''} id="no_spk" placeholder="No SPK" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNoSpk} value={updNoSpk !== null ? updNoSpk : ''} name="no_spk" id="no_spk" placeholder="No SPK" />
                                                     <label htmlFor="no_spk">No SPK</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglSpk} value={updTglSpk !== null ? updTglSpk : ''} id="tgl_spk" placeholder="Tanggal SPK" />
+                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglSpk} value={updTglSpk !== null ? updTglSpk : ''} name="tgl_spk" id="tgl_spk" placeholder="Tanggal SPK" />
                                                     <label htmlFor="tgl_spk">Tanggal SPK</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeKode} value={updKode !== null ? updKode : ''} id="kode" placeholder="Kode" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeKode} value={updKode !== null ? updKode : ''} name="kode" id="kode" placeholder="Kode" />
                                                     <label htmlFor="kode">Kode</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNamaSpk} value={updNamaSpk !== null ? updNamaSpk : ''} id="nama_spk" placeholder="Nama SPK" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNamaSpk} value={updNamaSpk !== null ? updNamaSpk : ''} name="nama_spk" id="nama_spk" placeholder="Nama SPK" />
                                                     <label htmlFor="nama_spk">Nama SPK</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNamaStnk} value={updNamaStnk !== null ? updNamaStnk : ''} id="nama_stnk" placeholder="Nama STNK" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNamaStnk} value={updNamaStnk !== null ? updNamaStnk : ''} name="nama_stnk" id="nama_stnk" placeholder="Nama STNK" />
                                                     <label htmlFor="nama_stnk">Nama Customer (STNK)</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglAjuAfi} value={updTglAjuAfi !== null ? updTglAjuAfi : ''} id="tgl_aju_afi" placeholder="Tanggal AJU AFI" />
+                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeTglAjuAfi} value={updTglAjuAfi !== null ? updTglAjuAfi : ''} name="tgl_aju_afi" id="tgl_aju_afi" placeholder="Tanggal AJU AFI" />
                                                     <label htmlFor="tgl_aju_afi">Tanggal Aju Afi</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNikbdoSpk} value={updNikbdoSpk !== null ? updNikbdoSpk : ''} id="nikbdo_spk" placeholder="NIK/NIB SPK" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNikbdoSpk} value={updNikbdoSpk !== null ? updNikbdoSpk : ''} name="nikbdo_spk" id="nikbdo_spk" placeholder="NIK/NIB SPK" />
                                                     <label htmlFor="nikbdo_spk">NIK/NIB SPK</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNikbdoStnk} value={updNikbdoStnk !== null ? updNikbdoStnk : ''} id="nikbdo_stnk" placeholder="NIK/NIB STNK" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeNikbdoStnk} value={updNikbdoStnk !== null ? updNikbdoStnk : ''} name="nikbdo_stnk" id="nikbdo_stnk" placeholder="NIK/NIB STNK" />
                                                     <label htmlFor="nikbdo_stnk">NIK/NIB STNK</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeKetType} value={updKetType !== null ? updKetType : ''} id="ket_type" placeholder="Ket Type" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeKetType} value={updKetType !== null ? updKetType : ''} name="ket_type" id="ket_type" placeholder="Ket Type" />
                                                     <label htmlFor="ket_type">Ket Type</label>
                                                 </div>
                                             </div>
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeType} value={updType !== null ? updType : ''} id="type" placeholder="Type" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeType} value={updType !== null ? updType : ''} name="type" id="type" placeholder="Type" />
                                                     <label htmlFor="type">Type</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-2 mb-2">
+                                                <div className="form-floating">
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeWarna} value={updWarna !== null ? updWarna : ''} name="warna" id="warna" placeholder="Warna" />
+                                                    <label htmlFor="warna">Warna</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-2 mb-2">
+                                                <div className="form-floating">
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeLeasing} value={updLeasing !== null ? updLeasing : ''} name="leasing" id="leasing" placeholder="Leasing" />
+                                                    <label htmlFor="leasing">Leasing</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-2 mb-2">
+                                                <div className="form-floating">
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeAsuransi} value={updAsuransi !== null ? updAsuransi : ''} name="asuransi" id="asuransi" placeholder="Asuransi" />
+                                                    <label htmlFor="Asuransi">Asuransi</label>
                                                 </div>
                                             </div>
                                         </div>

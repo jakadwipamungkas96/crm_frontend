@@ -1,4 +1,5 @@
 import React, { useEffect, useState,  useLayoutEffect, useRef } from "react";
+import { NavLink } from "react-router-dom";
 
 import axios from 'axios';
 import TableContainer from "@mui/material/TableContainer";
@@ -471,8 +472,13 @@ function Dashboard() {
         };
         getStnk();
     }, []);
+    
     const showListStnk = (event) => {
         setopenstnk(true);
+    }
+
+    const handleShowAll = (event) => {
+        window.location.href = "/car/list";
     }
 
     const closestnk = (event) => {
@@ -643,7 +649,7 @@ function Dashboard() {
                                 <span className="ribbon-three ribbon-three-secondary"><span style={{fontWeight: 500}}>Top 5</span></span>
                                 <h5 className="fs-14 text-end mb-3">
                                     <span className="badge badge-label bg-light text-black"><i className="mdi mdi-circle-medium"></i> {"Top 5 Model Kendaraan Terjual"}</span>
-                                    <a href=""><span className="badge bg-secondary" style={{marginLeft: "5px"}}><i className="mdi mdi-car"></i> {"Show All"}</span></a>
+                                    <NavLink to="/car/list">Go to Car List</NavLink>
                                 </h5>
                                 {/* <p className="mb-0"> */}
                                     <Bar options={options} data={dataChartKendaraan} />

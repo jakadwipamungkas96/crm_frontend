@@ -11,6 +11,7 @@ import Dashboard from './components/dashboard/dashboard';
 import CryptoJS from 'crypto-js';
 import Do from './components/delivery_orders/do';
 import So from './components/service_orders/so';
+import Carlist from './components/car/carlist';
 
 function App() {
   useEffect(() => {
@@ -165,6 +166,11 @@ function App() {
   const id_cabang = JSON.parse(localStorage.getItem("id_cabang"));
   const usrCabangName = JSON.parse(localStorage.getItem("cabang_name"));
 
+  const avaProfile = 'assets/images/users/user-dummy-img.jpg';
+  const logoWL = 'assets/images/logo_wijaya_white.png';
+  // Menghapus segment kedua dari path
+  var domain = window.location.protocol + '//' + window.location.host;
+
   // Variable
   const checkToken = () => {
     const token =  localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
@@ -229,19 +235,19 @@ function App() {
                   <div className="navbar-brand-box horizontal-logo">
                       <a href="index.html" className="logo logo-dark">
                           <span className="logo-sm">
-                              <img src="assets/images/logo_wijaya_white.png" alt="" height="17" />
+                              <img src={domain + "/" + logoWL} alt="" height="17" />
                           </span>
                           <span className="logo-lg">
-                              <img src="assets/images/logo_wijaya_white.png" alt="" height="17" />
+                              <img src={domain + "/" + logoWL} alt="" height="17" />
                           </span>
                       </a>
 
                       <a href="index.html" className="logo logo-light">
                           <span className="logo-sm">
-                              <img src="assets/images/logo_wijaya_white.png" alt="" height="17" />
+                              <img src={domain + "/" + logoWL} alt="" height="17" />
                           </span>
                           <span className="logo-lg">
-                              <img src="assets/images/logo_wijaya_white.png" alt="" height="17" />
+                              <img src={domain + "/" + logoWL} alt="" height="17" />
                           </span>
                       </a>
                   </div>
@@ -262,7 +268,7 @@ function App() {
                     <button type="button" className="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span className="d-flex align-items-center">
-                            <img className="rounded-circle header-profile-user" src="assets/images/users/user-dummy-img.jpg" alt="Header Avatar" />
+                            <img className="rounded-circle header-profile-user" src={domain + "/" + avaProfile} alt="Header Avatar" />
                             <span className="text-start ms-xl-2">
                                 <span className="d-none d-xl-inline-block ms-1 fw-semibold user-name-text">{personName}</span>
                                 <span className="d-none d-xl-block ms-1 fs-13 user-name-sub-text">{rulesName}</span>
@@ -285,18 +291,18 @@ function App() {
               <div className="navbar-brand-box">
                 <a href="index.html" className="logo logo-dark">
                     <span className="logo-sm">
-                        <img src="assets/images/logo_wijaya_white.png" alt="" height="22" />
+                        <img src={domain + "/" + logoWL} alt="" height="22" />
                     </span>
                     <span className="logo-lg">
-                        <img src="assets/images/logo_wijaya_white.png" alt="" height="17" />
+                        <img src={domain + "/" + logoWL} alt="" height="17" />
                     </span>
                 </a>
                 <a href="index.html" className="logo logo-light">
                     <span className="logo-sm">
-                        <img src="assets/images/logo_wijaya_white.png" alt="" height="22" />
+                        <img src={domain + "/" + logoWL} alt="" height="22" />
                     </span>
                     <span className="logo-lg">
-                        <img src="assets/images/logo_wijaya_white.png" alt="" height="17" />
+                        <img src={domain + "/" + logoWL} alt="" height="17" />
                     </span>
                 </a>
                 <button type="button" className="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
@@ -310,30 +316,30 @@ function App() {
                 <div id="two-column-menu">
                 </div>
                 <ul className="navbar-nav" id="navbar-nav">
-                  <li className="menu-title mb-2" style={{background: "rgb(229, 231, 235)", color: "#000"}}><span><img src="assets/images/icon_wijaya.png" alt="" height="20" /> {usrCabangName}</span></li>
+                  <li className="menu-title mb-2" style={{background: "rgb(229, 231, 235)", color: "#000"}}><span><img src={domain + "/assets/images/icon_wijaya.png"} alt="" height="20" /> {usrCabangName}</span></li>
                   <li className="nav-item">
-                    <NavLink className="nav-link menu-link"exact to="/dashboard" activeclassname="active"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
+                    <NavLink className="nav-link menu-link" exact to="/dashboard" activeclassname="active"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
                   </li>
                   <li className="menu-title"><span data-key="t-menu">Customers</span></li>
                   <li className="nav-item">
-                    <NavLink className="nav-link menu-link"exact to="/datacustomers" activeclassname="active"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
+                    <NavLink className="nav-link menu-link" exact to="/datacustomers" activeclassname="active"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
                   </li>
                   {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact to="/ulangtahun" activeclassname="active"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
+                    <li className="menu-title"><span data-key="t-menu">List</span></li>
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link" exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
+                      </li>
                   {rulesName != "sales" ? (
                     <>
-                      <li className="menu-title"><span data-key="t-menu">List</span></li>
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link"exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact to="/so" activeclassname="active"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
                       </li>
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link"exact to="/so" activeclassname="active"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
-                      </li>
-                      <li className="menu-title"><span data-key="t-menu">Menu</span></li>
                     </>
                   ) : (
                     ""
                   )}
                   {/* {rulesName == "administrator" ? (
+                      <li className="menu-title"><span data-key="t-menu">Menu</span></li>
                       <li className="nav-item">
                         <a className="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse"
                             role="button" aria-expanded="false" aria-controls="sidebarDashboards">
@@ -552,11 +558,12 @@ function App() {
         <div className="vertical-overlay"></div>
         <div className="main-content">
           <Routes>
-            <Route exact path="/dashboard" element={<Dashboard />}></Route>
-            <Route exact path="/datacustomers" element={<DataCustomers />}></Route>
-            <Route exact path="/ulangtahun" element={<Ulangtahun />}></Route>
-            <Route exact path="/do" element={<Do />}></Route>
-            <Route exact path="/so" element={<So />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/datacustomers" element={<DataCustomers />}></Route>
+            <Route path="/ulangtahun" element={<Ulangtahun />}></Route>
+            <Route path="/do" element={<Do />}></Route>
+            <Route path="/so" element={<So />}></Route>
+            <Route path="/car/list" element={<Carlist />}></Route>
           </Routes>
         </div>
       </div>
