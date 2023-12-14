@@ -26,6 +26,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.8.0",
+    "react-select2-wrapper": "^1.0.4-beta6",
     "react-waves-effect": "^1.5.1",
     "styled-components": "^6.1.1",
     "sweetalert": "^2.1.2",

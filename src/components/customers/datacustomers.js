@@ -132,12 +132,18 @@ function Datacustomers() {
                 minHeight: '50px', // override the row height
             },
         },
-        headCells: {
+        // headCells: {
+        //     style: {
+        //         background: "#DC2626",
+        //         color: "white",
+        //         textAlign: "center"
+        //     },
+        // }
+        headRow: {
             style: {
-                background: "#DC2626",
-                color: "white",
-                textAlign: "center"
-            },
+                background: "linear-gradient(to right, #141e30, #243b55)", // Warna latar belakang untuk thead
+                color: "white",      // Warna teks untuk thead
+            }
         }
     };
     
@@ -146,7 +152,7 @@ function Datacustomers() {
             name: 'Aksi',
             cell: row => <>
                             {/* <button style={{fontSize: "12px"}} type="button" className={`btn btn-secondary btn-sm ${rulesName == 'sales' ? '' : 'd-none'}`}> */}
-                            <button style={{fontSize: "12px"}} type="button" onClick={(event) => {handleOpenEditCust(row);}} className={`btn btn-secondary btn-sm`}>
+                            <button style={{fontSize: "12px"}} type="button" onClick={(event) => {handleOpenEditCust(row);}} className={`btn btn-secondary btn-sm ${rulesName != 'sa' ? '' : 'd-none'}`}>
                                 <i className="ri-edit-2-line"></i> <strong>Update</strong>
                             </button>
                             <button onClick={(event) => {handleOpenCardCustomer(row);}} style={{fontSize: "12px", marginLeft: "10px"}} type="button" className="btn btn-primary btn-sm">
@@ -221,6 +227,7 @@ function Datacustomers() {
     const [totalKendaraan, setTotalKendaraan] = useState(0);
     const [isCardShow, setIsCardShow] = useState(false); // Buka customer card
     const [isCardSales, setCardSales] = useState(false); // Buka sales card
+    const [isCardSa, setCardSa] = useState(false); // Buka sa card
     const [dtCar, setDtCar] = useState([]);
     const [infoDtCar, setInfoDtCar] = useState([]);
     const [infoDtPenjualan, setInfoDtPenjualan] = useState([]);
@@ -228,6 +235,10 @@ function Datacustomers() {
 
     const handleCloseSalesCard = (event) => {
         setCardSales(false);
+    }
+
+    const handleCloseSaCard = (event) => {
+        setCardSa(false);
     }
 
     const handleOpenDetailKendaraan = (event) => {
@@ -258,6 +269,17 @@ function Datacustomers() {
                 });
         } else if (rulesName == "administrator") {
             setIsCardShow(true);
+            setDtCar(event);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+            axios
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin="+event.no_rangka)
+                .then((response) => {
+                    setInfoDtCar(response.data.dtKendaraan);
+                    setInfoDtPenjualan(response.data.dtPenjualan);
+                    setInfoDtServices(response.data.dtService);
+                });
+        } else if (rulesName == "sa") {
+            setCardSa(true);
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
@@ -309,12 +331,18 @@ function Datacustomers() {
                 minHeight: '50px', // override the row height
             },
         },
-        headCells: {
+        // headCells: {
+        //     style: {
+        //         background: "#DC2626",
+        //         color: "white",
+        //         textAlign: "center"
+        //     },
+        // }
+        headRow: {
             style: {
-                background: "#DC2626",
-                color: "white",
-                textAlign: "center"
-            },
+                background: "linear-gradient(to right, #141e30, #243b55)", // Warna latar belakang untuk thead
+                color: "white",      // Warna teks untuk thead
+            }
         }
     };
 
@@ -600,6 +628,7 @@ function Datacustomers() {
     const [updTelpCust, setupdTelpCust] = useState('');
     const [updTglLahir, setupdTglLahir] = useState('');
     const [updSingleID, setupdSingleID] = useState('');
+    const [updNoRangka, setupdNoRangka] = useState('');
 
     const handleChangeAlamatNikCust = (event) => {
         setupdAlamatNikCust(event.target.value);
@@ -663,16 +692,43 @@ function Datacustomers() {
 
     const handleCloseEditCust = (event) => {
         setFormUpdateCust(false);
+        setupdNoDoTam('');
+        setupdNoDo('');
+        setupdTglDO('');
+        setupdNoSpk('');
+        setupdKode('');
+        setupdNamaSpk('');
+        setupdNamaStnk('');
+        setupdTglAjuAfi('');
+        setupdNikbdoSpk('');
+        setupdNikbdoStnk('');
+        setupdKetType('');
+        setupdType('');
+        setupdWarna('');
+        setupdLeasing('');
+        setupdAsuransi('');
+        setInputUpdCust([]);
+        handleChooseVin("");
+        getDetailbyVin("");
+        setupdNoRangka('');
     }
 
     const handleChooseVin = (event) => {
-        getDetailbyVin(event.target.value);
-        setInputUpdCust((values) => ({
-            ...values,
-            [event.target.name]: event.target.value,
-        }));
+        if (event != "") {
+            setupdNoRangka(event.target.value);
+            getDetailbyVin(event.target.value);
+            setInputUpdCust((values) => ({
+                ...values,
+                [event.target.name]: event.target.value,
+            }));
+        } else {
+            
+            setInputUpdCust((values) => ({
+                ...values,
+                ["no_rangka"]: "",
+            }));
+        }
     }
-    console.log(token)
     const handleSubmitUpdateCust = (event) => {
         console.log(inputsUpdCust);
         event.preventDefault();
@@ -980,8 +1036,12 @@ function Datacustomers() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            <a href={urlExport} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
-                                            <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{marginLeft: "5px", cursor: "pointer"}}><i className="ri-edit-2-line"></i> Multi Update</a>
+                                            {rulesName == 'sa' ? ("") : (
+                                                <>
+                                                    <a href={urlExport} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
+                                                    <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{marginLeft: "5px", cursor: "pointer"}}><i className="ri-edit-2-line"></i> Multi Update</a>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -1359,6 +1419,125 @@ function Datacustomers() {
                                 </div>
                             </div>
                         ) : ""}
+
+                        {isCardSa == true ? (
+                            <div className="row">
+                                <div className='col-xl-12 col-md-12'>
+                                    <div className="card overflow-hidden">
+                                        <div className="card-header" style={{border: "none"}}>
+                                            <div className="d-flex align-items-center">
+                                                <div className="flex-grow-1 overflow-hidden">
+                                                    <h5 className="card-title mb-0" style={{fontSize: "17px"}}>SA CARD 
+                                                        <span className="badge badge-label bg-secondary"><i className="mdi mdi-circle-medium"></i> {"VIN: 123456789012345"}</span>
+                                                    </h5>
+                                                </div>
+                                                <div className="flex-shrink-0">
+                                                    <button type="button" onClick={handleCloseSaCard} className="btn btn-danger btn-sm"><i className="ri-close-circle-fill"></i> Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="card-body" style={{zIndex: 1}}>
+                                            <div className="row">
+                                                <div className="col-md-4">
+                                                    <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                        <thead style={{background: "#E2E8F0"}}>
+                                                            <tr>
+                                                                <th className="text-uppercase" colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Revenue / Unit</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Jasa</td>
+                                                                <td className="text-muted">Rp. 450.000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Part</td>
+                                                                <td className="text-muted">Rp. 432.000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>MAT / Bahan</td>
+                                                                <td className="text-muted">Rp. 400.000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600"}}>Oli</td>
+                                                                <td className="text-muted">Rp. 400.000</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div className="col-md-4">
+                                                    <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                        <thead style={{background: "#E2E8F0"}}>
+                                                            <tr>
+                                                                <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>SARAN UPSELLING</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>1</td>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>UP GRADE TMO SW</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>2</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>3</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>4</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>5</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div className="col-md-4">
+                                                    <table className="table table-bordered align-middle table-nowrap mb-0">
+                                                        <thead style={{background: "#E2E8F0"}}>
+                                                            <tr>
+                                                                <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>SARAN CROSS-SELLING</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>1</td>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>UP GRADE TMO SW</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>2</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>3</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>4</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>5</td>
+                                                                <td className="text-muted">LUIS MILLA</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                        : ""}
                         
                     </DialogContent>
             </Dialog>
@@ -1612,7 +1791,7 @@ function Datacustomers() {
                                         <div className="row">
                                             <div className="col-lg-2 mb-2">
                                                 <div className="form-floating">
-                                                    <select type="text" className="form-control form-control-sm" onChange={handleChooseVin} name="no_rangka" id="no_rangka" placeholder="Pilih VIN">
+                                                    <select type="text" className="form-control form-control-sm" value={updNoRangka} onChange={handleChooseVin} name="no_rangka" id="no_rangka" placeholder="Pilih VIN">
                                                         <option value="">-- Pilih No Rangka --</option>
                                                         {lsDtKendaraan.map((vlcar, idcar) => (
                                                             <option key={idcar} value={vlcar.no_rangka}>{vlcar.no_rangka + " (" + vlcar.status_unit + ")"}</option>

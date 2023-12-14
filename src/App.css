@@ -51,3 +51,7 @@
 .loading-text {
   animation: fadeInOut 2s infinite;
 }
+
+.css-13cymwt-control {
+  height: 58px !important;
+}

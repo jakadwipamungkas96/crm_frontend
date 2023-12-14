@@ -4483,14 +4483,14 @@ code {
 }
 
 :root[data-topbar=dark] {
-    --vz-header-bg: #132649;
+    --vz-header-bg: #141e30;
     --vz-header-item-color: rgba(255, 255, 255, 0.85);
     --vz-header-item-bg: #1b3460;
     --vz-header-item-sub-color: #b0c4d9;
-    --vz-topbar-user-bg: #223558;
+    --vz-topbar-user-bg: #233447;
     --vz-topbar-search-bg: rgba(255, 255, 255, 0.05);
     --vz-topbar-search-color: #fff;
-    --vz-header-border: #132649
+    --vz-header-border: #141e30
 }
 
 :root {

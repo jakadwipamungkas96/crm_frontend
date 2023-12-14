@@ -12,6 +12,7 @@ import CryptoJS from 'crypto-js';
 import Do from './components/delivery_orders/do';
 import So from './components/service_orders/so';
 import Carlist from './components/car/carlist';
+import Services from './components/services/services';
 
 function App() {
   useEffect(() => {
@@ -326,9 +327,11 @@ function App() {
                   </li>
                   {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact to="/ulangtahun" activeclassname="active"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
                     <li className="menu-title"><span data-key="t-menu">List</span></li>
+                  {rulesName != "sa" ? (
                       <li className="nav-item">
                         <NavLink className="nav-link menu-link" exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
                       </li>
+                  ) : ("") }
                   {rulesName != "sales" ? (
                     <>
                       <li className="nav-item">
@@ -564,6 +567,7 @@ function App() {
             <Route path="/do" element={<Do />}></Route>
             <Route path="/so" element={<So />}></Route>
             <Route path="/car/list" element={<Carlist />}></Route>
+            <Route path="/services/input" element={<Services />}></Route>
           </Routes>
         </div>
       </div>

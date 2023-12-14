@@ -114,12 +114,18 @@ function Do() {
                 minHeight: '50px', // override the row height
             },
         },
-        headCells: {
+        // headCells: {
+        //     style: {
+        //         background: "#DC2626",
+        //         color: "white",
+        //         textAlign: "center"
+        //     },
+        // }
+        headRow: {
             style: {
-                background: "#DC2626",
-                color: "white",
-                textAlign: "center"
-            },
+                background: "linear-gradient(to right, #141e30, #243b55)", // Warna latar belakang untuk thead
+                color: "white",      // Warna teks untuk thead
+            }
         }
     };
 
@@ -270,40 +276,6 @@ function Do() {
                                     <li className="breadcrumb-item"><a href="#">List</a></li>
                                     <li className="breadcrumb-item active">Delivery Orders</li>
                                 </ol>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className='col-xl-12 col-md-12'>
-                        <div className="card overflow-hidden">
-                            <div className="card-body" style={{zIndex: 1}}>
-                                <div className="d-flex align-items-center">
-                                    <div className="flex-grow-1 overflow-hidden">
-                                        <form action="">
-                                            <div className="row">
-                                                <div className="col-lg-1 mt-2">
-                                                    {/* <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Start Date</label> */}
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                </div>
-                                                <div className="col-lg-1 mt-2">
-                                                    {/* <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>End Date</label> */}
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div className="flex-shrink-0">
-                                        <div id="" style={{background: "#CBD5E1", fontSize: "10px"}} className='p-2'>
-                                            Tanggal: <b>{tanggalFormat}</b>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

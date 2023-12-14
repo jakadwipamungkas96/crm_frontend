@@ -55,6 +55,7 @@ const Login = () => {
 
         })
         .catch(error => {
+            setLoading(false);
             swal("Error", "Kombinasi username dan password salah", "error", {
                 buttons: false,
                 timer: 2000,

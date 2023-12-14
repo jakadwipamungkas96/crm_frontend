@@ -603,7 +603,7 @@ function Dashboard() {
 
                 <div className="row bg-white">
                     <div className='col-xl-12 col-md-12 mt-2'>
-                        <div className="card overflow-hidden" style={{background: "#132649", color: "#ffffff"}}>
+                        <div className="card overflow-hidden" style={{background: "linear-gradient(to right, #141e30, #243b55)", color: "#ffffff"}}>
                             <div className="card-body" style={{zIndex: 1}}>
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">

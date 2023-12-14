@@ -58,6 +58,7 @@ function So() {
     const [loading, setLoading] = useState(false);
     const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+    const rulesName = JSON.parse(localStorage.getItem("rules"));
     console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
@@ -115,12 +116,18 @@ function So() {
                 minHeight: '50px', // override the row height
             },
         },
-        headCells: {
+        // headCells: {
+        //     style: {
+        //         background: "#DC2626",
+        //         color: "white",
+        //         textAlign: "center"
+        //     },
+        // }
+        headRow: {
             style: {
-                background: "#DC2626",
-                color: "white",
-                textAlign: "center"
-            },
+                background: "linear-gradient(to right, #141e30, #243b55)", // Warna latar belakang untuk thead
+                color: "white",      // Warna teks untuk thead
+            }
         }
     };
 
@@ -135,7 +142,25 @@ function So() {
             name: 'Nama Customer',
             selector: row => row.nama_customer,
             sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Tanggal WO',
+            selector: row => row.tgl_wo,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Kategori WO',
+            selector: row => row.category_wo,
+            sortable: true,
             width: '300px',
+        },
+        {
+            name: 'No Rangka',
+            selector: row => row.no_rangka,
+            sortable: true,
+            width: '200px',
         },
         {
             name: 'No Polisi',
@@ -146,18 +171,6 @@ function So() {
         {
             name: 'Model',
             selector: row => row.model,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Tanggal WO',
-            selector: row => row.tgl_wo,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'No Rangka',
-            selector: row => row.no_rangka,
             sortable: true,
             width: '200px',
         },
@@ -188,6 +201,10 @@ function So() {
         const badgeHTML = statusValues.map(status => `<span className="badge">${status}</span>`).join(' ');
         
         return badgeHTML;
+    }
+
+    const linkToInputServices = () => {
+        window.location.href = "/services/input";
     }
 
     // Import Excel
@@ -283,40 +300,6 @@ function So() {
                 </div>
 
                 <div className="row">
-                    <div className='col-xl-12 col-md-12'>
-                        <div className="card overflow-hidden">
-                            <div className="card-body" style={{zIndex: 1}}>
-                                <div className="d-flex align-items-center">
-                                    <div className="flex-grow-1 overflow-hidden">
-                                        <form action="">
-                                            <div className="row">
-                                                <div className="col-lg-1 mt-2">
-                                                    {/* <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Start Date</label> */}
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                </div>
-                                                <div className="col-lg-1 mt-2">
-                                                    {/* <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>End Date</label> */}
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div className="flex-shrink-0">
-                                        <div id="" style={{background: "#CBD5E1", fontSize: "10px"}} className='p-2'>
-                                            Tanggal: <b>{tanggalFormat}</b>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row">
                     <div className="col-lg-12">
                         <div className="card">
                             <div className="card-header">
@@ -341,7 +324,10 @@ function So() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            <button className="btn btn-sm btn-info" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
+                                            {rulesName == 'sa' ? (
+                                                <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Service</button>
+                                             ) : ""}
+                                                <button className="btn btn-sm btn-info" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
                                         </div>
                                     </div>
                                 </div>
