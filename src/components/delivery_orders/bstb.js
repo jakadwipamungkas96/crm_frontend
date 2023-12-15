@@ -34,7 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const drawerWidth = 240;
 
-function Do() {
+function Bstb() {
     const classes = useStyles();
     
     const hariIni = new Date();
@@ -131,6 +131,18 @@ function Do() {
 
     const columnsLsCustomer = [
         {
+            name: 'Aksi',
+            cell: row => <button onClick={(event) => {
+                            handleOpenFrmBstb(row);
+                        }}
+                        style={{
+                            fontSize: "10px"
+                        }} type="button" className="btn btn-info waves-effect waves-light">
+                            <i className="ri-file-list-3-fill"></i> Add BSTB
+                        </button>,
+                        width: "150px"
+        },
+        {
             name: 'Cabang',
             selector: row => row.cabang_name,
             sortable: true,
@@ -190,14 +202,6 @@ function Do() {
     }
 
     // Import Excel
-    const [importExcel, setimportExcel] = React.useState(false);
-    const showFormImport = (event) => {
-        setimportExcel(true);
-    }
-
-    const closeImport = (event) => {
-        setimportExcel(false);
-    }
 
     const [fileUpload, setFileUp] = React.useState([]);
     const [inputsImport, setInputs] = React.useState([]);
@@ -263,18 +267,78 @@ function Do() {
             }
         });
     }
+
+    const [inputsBstb, setInputBstb] = useState([]);
+    const [bstbTglDec, setbstbTglDec] = useState('');
+    const [bstbDelivCar, setbstbDelivCar] = useState('');
+    const [bstbTcare, setbstbTcare] = useState('');
+    const [bstbTintouch, setbstbTintouch] = useState('');
+
+    
+    const [inputBSTB, setinputBSTB] = React.useState(false);
+    const [bstbNamaCustomer, setbstbNamaCustomer] = useState('');
+
+    const handleOpenFrmBstb = (event) => {
+        setinputBSTB(true);
+        setbstbNamaCustomer(event.nama_customer);
+    }
+
+    const closeBstb = (event) => {
+        setinputBSTB(false);
+        setbstbTglDec('');
+        setbstbDelivCar('');
+        setbstbTcare('');
+        setbstbTintouch('');
+    }
+
+    const handleChangeInputTglDec = (event) => {
+        setbstbTglDec(event.target.value);
+        setInputBstb((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+    
+    const handleChangeInputDelivCar = (event) => {
+        setbstbDelivCar(event.target.value);
+        setInputBstb((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputTcare = (event) => {
+        setbstbTcare(event.target.value);
+        setInputBstb((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputTintouch = (event) => {
+        setbstbTintouch(event.target.value);
+        setInputBstb((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleSubmitBstb = () => {
+        console.log("kesini");
+    }
+
     return (
         <div className="page-content">
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12">
                         <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 className="mb-sm-0">Delivery Orders</h4>
+                            <h4 className="mb-sm-0">BSTB</h4>
 
                             <div className="page-title-right">
                                 <ol className="breadcrumb m-0">
                                     <li className="breadcrumb-item"><a href="#">List</a></li>
-                                    <li className="breadcrumb-item active">Delivery Orders</li>
+                                    <li className="breadcrumb-item active">BSTB</li>
                                 </ol>
                             </div>
                         </div>
@@ -306,7 +370,7 @@ function Do() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
+                                            {/* <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button> */}
                                         </div>
                                     </div>
                                 </div>
@@ -333,11 +397,11 @@ function Do() {
 
                 {/* Start Import  */}
                 <Dialog
-                        open={importExcel}
+                        open={inputBSTB}
                         TransitionComponent={Transition}
                         keepMounted
                         maxWidth="xl"
-                        onClose={closeImport}
+                        onClose={closeBstb}
                         aria-describedby="alert-dialog-slide-description"
                         style={{ width: "100%", margin: "0 auto" }}
                     >
@@ -352,7 +416,7 @@ function Do() {
                                                 <div className="card-header" style={{border: "none"}}>
                                                     <div className="d-flex align-items-center">
                                                         <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Import Data Delivery Order </h5>
+                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>Form Input Data by BSTB </h5>
                                                         </div>
                                                         <div className="flex-shrink-0">
                                                         </div>
@@ -361,31 +425,50 @@ function Do() {
                                                 <div className="card-body">
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <CustomBlockingOverlay isLoading={loading}>
+                                                            <form action="#">
+                                                                <div className="row">
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="text" className="form-control form-control-sm" readOnly value={bstbNamaCustomer} id="nama_customer" placeholder="Nama Customer" />
+                                                                            <label htmlFor="nama_customer">Nama Customer</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="date" className="form-control form-control-sm" onChange={handleChangeInputTglDec} value={bstbTglDec} id="tgl_dec" placeholder="Tanggal DEC" />
+                                                                            <label htmlFor="tgl_dec">Tanggal DEC</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="text" className="form-control form-control-sm" onChange={handleChangeInputDelivCar} value={bstbDelivCar} id="tgl_dec" placeholder="Tanggal DEC" />
+                                                                            <label htmlFor="tgl_dec">Delivered Car ?</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="text" className="form-control form-control-sm" onChange={handleChangeInputTcare} value={bstbTcare} id="tgl_dec" placeholder="Tanggal DEC" />
+                                                                            <label htmlFor="tgl_dec">Car T-Care ?</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="text" className="form-control form-control-sm" onChange={handleChangeInputTintouch} value={bstbTintouch} id="tgl_dec" placeholder="Tanggal DEC" />
+                                                                            <label htmlFor="tgl_dec">Car T-intouch ?</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row">
+                                                                    <div className="col-lg-6">
 
-                                                            </CustomBlockingOverlay>
-                                                            <form>
-                                                                {/* <input type="file" name="fileDo" id="fileDo" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
-                                                                <TextField
-                                                                    id="outlined-select-currency-native"
-                                                                    defaultValue=""
-                                                                    label=""
-                                                                    helperText="Pilih File"
-                                                                    onChange={hChangeInputFile}
-                                                                    sx={{width: "50%"}}
-                                                                    size= "small"
-                                                                    name="fileDo"
-                                                                    type="file"
-                                                                    style={{width: "500px"}}
-                                                                    required
-                                                                >
-                                                                </TextField><br></br>
-                                                                <button
-                                                                    className="btn btn-primary btn-sm mt-2"
-                                                                    onClick={handleUploadDo}
-                                                                >
-                                                                    Proses Import
-                                                                </button>
+                                                                    </div>
+                                                                    <div className="col-lg-6">
+                                                                        <div className="text-end">
+                                                                            <button onClick={handleSubmitBstb} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                                            <button onClick={closeBstb} className="btn btn-danger btn-label btn-sm"style={{marginLeft: "5px"}}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -403,4 +486,4 @@ function Do() {
     );
 }
 
-export default Do;
+export default Bstb;

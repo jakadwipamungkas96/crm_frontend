@@ -1448,19 +1448,19 @@ function Datacustomers() {
                                                         <tbody>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600"}}>Jasa</td>
-                                                                <td className="text-muted">Rp. 450.000</td>
+                                                                <td className="text-muted">Rp. -</td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600"}}>Part</td>
-                                                                <td className="text-muted">Rp. 432.000</td>
+                                                                <td className="text-muted">Rp. -</td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600"}}>MAT / Bahan</td>
-                                                                <td className="text-muted">Rp. 400.000</td>
+                                                                <td className="text-muted">Rp. -</td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600"}}>Oli</td>
-                                                                <td className="text-muted">Rp. 400.000</td>
+                                                                <td className="text-muted">Rp. -</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -1480,19 +1480,19 @@ function Datacustomers() {
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>2</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>3</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>4</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>5</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -1512,19 +1512,19 @@ function Datacustomers() {
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>2</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>3</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>4</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{background: "#E2E8F0", fontWeight: "600", fontSize: "12px"}}>5</td>
-                                                                <td className="text-muted">LUIS MILLA</td>
+                                                                <td className="text-muted"></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>

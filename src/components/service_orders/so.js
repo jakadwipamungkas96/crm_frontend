@@ -325,9 +325,11 @@ function So() {
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
                                             {rulesName == 'sa' ? (
-                                                <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Service</button>
+                                                <>
+                                                    <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Service</button>
+                                                </>
                                              ) : ""}
-                                                <button className="btn btn-sm btn-info" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
+                                                <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
                                         </div>
                                     </div>
                                 </div>

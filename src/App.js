@@ -13,6 +13,8 @@ import Do from './components/delivery_orders/do';
 import So from './components/service_orders/so';
 import Carlist from './components/car/carlist';
 import Services from './components/services/services';
+import Attacklist from './components/service_orders/attacklist';
+import Bstb from './components/delivery_orders/bstb';
 
 function App() {
   useEffect(() => {
@@ -331,7 +333,24 @@ function App() {
                       <li className="nav-item">
                         <NavLink className="nav-link menu-link" exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
                       </li>
+                  ) : (
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                      </li>
+                  ) }
+
+                  {rulesName == "crc" ? (
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact to="/list/bstb" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">BSTB</span></NavLink>
+                    </li>
                   ) : ("") }
+
+                  {rulesName == "superadmin" ? (
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                    </li>
+                  ) : ("") }
+                  
                   {rulesName != "sales" ? (
                     <>
                       <li className="nav-item">
@@ -568,6 +587,8 @@ function App() {
             <Route path="/so" element={<So />}></Route>
             <Route path="/car/list" element={<Carlist />}></Route>
             <Route path="/services/input" element={<Services />}></Route>
+            <Route path="/services/attacklist" element={<Attacklist />}></Route>
+            <Route path="/list/bstb" element={<Bstb />}></Route>
           </Routes>
         </div>
       </div>

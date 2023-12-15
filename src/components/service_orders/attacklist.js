@@ -34,7 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const drawerWidth = 240;
 
-function Do() {
+function Attacklist() {
     const classes = useStyles();
     
     const hariIni = new Date();
@@ -58,6 +58,7 @@ function Do() {
     const [loading, setLoading] = useState(false);
     const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+    const rulesName = JSON.parse(localStorage.getItem("rules"));
     console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
@@ -66,8 +67,9 @@ function Do() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/delivery_orders/list?page=${page}&size=${pageSize}`;
+            const url = `http://127.0.0.1:8000/api/service_order/list?page=${page}&size=${pageSize}`;
             try {
+
                 const response = await axios.get(url);
                 setDataProspek(response.data.data);
                 setDataProspek2(response.data);
@@ -129,7 +131,23 @@ function Do() {
         }
     };
 
+    const handleOpenDetailKendaraan = (event) => {
+        console.log(event);
+    }
+
     const columnsLsCustomer = [
+        {
+            name: 'Aksi',
+            cell: row => <button onClick={(event) => {
+                            handleOpenDetailKendaraan(row);
+                        }}
+                        style={{
+                            fontSize: "10px"
+                        }} type="button" className="btn btn-info waves-effect waves-light">
+                            <i className="ri-file-list-3-fill"></i> Followup
+                        </button>,
+                        width: "150px"
+        },
         {
             name: 'Cabang',
             selector: row => row.cabang_name,
@@ -140,19 +158,19 @@ function Do() {
             name: 'Nama Customer',
             selector: row => row.nama_customer,
             sortable: true,
-            width: '300px',
+            width: '250px',
         },
         {
-            name: 'Model Type',
-            selector: row => row.model_type,
-            sortable: true,
-            width: '300px',
-        },
-        {
-            name: 'Tanggal DO',
-            selector: row => row.tgl_do,
+            name: 'Tanggal WO',
+            selector: row => row.tgl_wo,
             sortable: true,
             width: '200px',
+        },
+        {
+            name: 'Kategori WO',
+            selector: row => row.category_wo,
+            sortable: true,
+            width: '300px',
         },
         {
             name: 'No Rangka',
@@ -161,8 +179,20 @@ function Do() {
             width: '200px',
         },
         {
-            name: 'No Mesin',
-            selector: row => row.no_mesin,
+            name: 'No Polisi',
+            selector: row => row.no_polisi,
+            sortable: true,
+            width: '100px',
+        },
+        {
+            name: 'Model',
+            selector: row => row.model,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Tahun Kendaraan',
+            selector: row => row.tahun_kendaraan,
             sortable: true,
             width: '200px',
         }
@@ -187,6 +217,10 @@ function Do() {
         const badgeHTML = statusValues.map(status => `<span className="badge">${status}</span>`).join(' ');
         
         return badgeHTML;
+    }
+
+    const linkToInputServices = () => {
+        window.location.href = "/services/input";
     }
 
     // Import Excel
@@ -238,14 +272,13 @@ function Do() {
         );
     };
 
-    const handleUploadDo = (event) => {
+    const handleUploadSo = (event) => {
         event.preventDefault();
         const formData = new FormData();
         
-        formData.append('fileDo',fileUpload);
-
+        formData.append('fileSo',fileUpload);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/delivery_order/import', formData).then(function(response){
+        axios.post('http://127.0.0.1:8000/api/service_order/import', formData).then(function(response){
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -259,22 +292,24 @@ function Do() {
                     timer: 2000,
                 });
 
-                window.location.href = "/do";
+                window.location.href = "/so";
             }
         });
     }
+
     return (
         <div className="page-content">
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12">
                         <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 className="mb-sm-0">Delivery Orders</h4>
+                            <h4 className="mb-sm-0">Attacklist</h4>
 
                             <div className="page-title-right">
                                 <ol className="breadcrumb m-0">
                                     <li className="breadcrumb-item"><a href="#">List</a></li>
-                                    <li className="breadcrumb-item active">Delivery Orders</li>
+                                    <li className="breadcrumb-item"><a href="#">Services</a></li>
+                                    <li className="breadcrumb-item active">Attacklist</li>
                                 </ol>
                             </div>
                         </div>
@@ -288,7 +323,7 @@ function Do() {
                                 {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        <h5 className="card-title mb-0">Master Data Delivery Orders</h5> 
+                                        <h5 className="card-title mb-0">Attacklist</h5> 
                                     </div>
                                 </div>
                             </div>
@@ -306,7 +341,11 @@ function Do() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
+                                            {rulesName == 'sa' || rulesName == 'superadmin' ? (
+                                                <>
+                                                    <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Attacklist</button>
+                                                </>
+                                             ) : ""}
                                         </div>
                                     </div>
                                 </div>
@@ -325,6 +364,7 @@ function Do() {
                                         defaultSortFieldId={1}
                                         onSearch={handleSearch} // Menambahkan fungsi pencarian
                                     />
+
                                 ) }
                             </div>
                         </div>
@@ -352,7 +392,7 @@ function Do() {
                                                 <div className="card-header" style={{border: "none"}}>
                                                     <div className="d-flex align-items-center">
                                                         <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Import Data Delivery Order </h5>
+                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Import Data Service Order </h5>
                                                         </div>
                                                         <div className="flex-shrink-0">
                                                         </div>
@@ -362,7 +402,6 @@ function Do() {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <CustomBlockingOverlay isLoading={loading}>
-
                                                             </CustomBlockingOverlay>
                                                             <form>
                                                                 {/* <input type="file" name="fileDo" id="fileDo" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
@@ -382,7 +421,7 @@ function Do() {
                                                                 </TextField><br></br>
                                                                 <button
                                                                     className="btn btn-primary btn-sm mt-2"
-                                                                    onClick={handleUploadDo}
+                                                                    onClick={handleUploadSo}
                                                                 >
                                                                     Proses Import
                                                                 </button>
@@ -403,4 +442,4 @@ function Do() {
     );
 }
 
-export default Do;
+export default Attacklist;
