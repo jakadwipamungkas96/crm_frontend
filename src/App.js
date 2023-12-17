@@ -341,7 +341,7 @@ function App() {
 
                   {rulesName == "crc" ? (
                     <li className="nav-item">
-                      <NavLink className="nav-link menu-link" exact to="/list/bstb" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">BSTB</span></NavLink>
+                      <NavLink className="nav-link menu-link" exact to="/list/bstb" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">DEC Tracking by BSTB</span></NavLink>
                     </li>
                   ) : ("") }
 

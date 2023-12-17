@@ -137,7 +137,7 @@ function Bstb() {
                         }}
                         style={{
                             fontSize: "10px"
-                        }} type="button" className="btn btn-info waves-effect waves-light">
+                        }} type="button" className={`btn btn-info waves-effect waves-light ${row.tgl_dec != "" ? 'disabled' : ''}`}>
                             <i className="ri-file-list-3-fill"></i> Add BSTB
                         </button>,
                         width: "150px"
@@ -145,6 +145,24 @@ function Bstb() {
         {
             name: 'Cabang',
             selector: row => row.cabang_name,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'No Rangka',
+            selector: row => row.no_rangka,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Tanggal DO',
+            selector: row => row.tgl_do,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Tanggal DEC',
+            selector: row => row.tgl_dec,
             sortable: true,
             width: '200px',
         },
@@ -159,18 +177,6 @@ function Bstb() {
             selector: row => row.model_type,
             sortable: true,
             width: '300px',
-        },
-        {
-            name: 'Tanggal DO',
-            selector: row => row.tgl_do,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'No Rangka',
-            selector: row => row.no_rangka,
-            sortable: true,
-            width: '200px',
         },
         {
             name: 'No Mesin',
@@ -268,11 +274,20 @@ function Bstb() {
         });
     }
 
-    const [inputsBstb, setInputBstb] = useState([]);
+    const [inputsDec, setInputsDec] = useState([]);
     const [bstbTglDec, setbstbTglDec] = useState('');
     const [bstbDelivCar, setbstbDelivCar] = useState('');
     const [bstbTcare, setbstbTcare] = useState('');
     const [bstbTintouch, setbstbTintouch] = useState('');
+    const [bstbHybrid, setbstbHybrid] = useState('');
+    const [bstbServicePertama, setbstbServicePertama] = useState('');
+    const [bstbAsuransi, setbstbAsuransi] = useState('');
+    const [bstbNamaAsuransi, setbstbNamaAsuransi] = useState('');
+    const [bstbAllRisk, setbstbAllRisk] = useState('');
+    const [bstbComb, setbstbComb] = useState('');
+    const [bstbTlo, setbstbTlo] = useState('');
+
+    const [isAsuransi, setIsAsuransi] = useState(false);
 
     
     const [inputBSTB, setinputBSTB] = React.useState(false);
@@ -281,10 +296,21 @@ function Bstb() {
     const handleOpenFrmBstb = (event) => {
         setinputBSTB(true);
         setbstbNamaCustomer(event.nama_customer);
+        setbstbTglDec(formatDateInput(event.tgl_dec));
+        setInputsDec((values) => ({
+            ...values,
+            ["no_rangka"]: event.no_rangka,
+            ["tgl_dec"]: event.tgl_dec,
+            ["coverage_allrisk"]: 0,
+            ["coverage_combination"]: 0,
+            ["coverage_tlo"]: 0,
+            ["hybrid"]: '',
+            ["service_pertama"]: '',
+        }));
     }
 
     const closeBstb = (event) => {
-        setinputBSTB(false);
+        setInputsDec(false);
         setbstbTglDec('');
         setbstbDelivCar('');
         setbstbTcare('');
@@ -293,7 +319,7 @@ function Bstb() {
 
     const handleChangeInputTglDec = (event) => {
         setbstbTglDec(event.target.value);
-        setInputBstb((values) => ({
+        setInputsDec((values) => ({
             ...values,
             [event.target.name]: event.target.value,
         }));
@@ -301,7 +327,7 @@ function Bstb() {
     
     const handleChangeInputDelivCar = (event) => {
         setbstbDelivCar(event.target.value);
-        setInputBstb((values) => ({
+        setInputsDec((values) => ({
             ...values,
             [event.target.name]: event.target.value,
         }));
@@ -309,7 +335,7 @@ function Bstb() {
 
     const handleChangeInputTcare = (event) => {
         setbstbTcare(event.target.value);
-        setInputBstb((values) => ({
+        setInputsDec((values) => ({
             ...values,
             [event.target.name]: event.target.value,
         }));
@@ -317,14 +343,110 @@ function Bstb() {
 
     const handleChangeInputTintouch = (event) => {
         setbstbTintouch(event.target.value);
-        setInputBstb((values) => ({
+        setInputsDec((values) => ({
             ...values,
             [event.target.name]: event.target.value,
         }));
     }
 
-    const handleSubmitBstb = () => {
-        console.log("kesini");
+    const handleChangeInputServicePertama = (event) => {
+        setbstbServicePertama(event.target.value);
+        setInputsDec((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputAsuransi = (event) => {
+        console.log(event.target.value);
+        setbstbAsuransi(event.target.value);
+        if (event.target.value == "Ya") {
+            setIsAsuransi(true);
+            setInputsDec((values) => ({
+                ...values,
+                [event.target.name]: event.target.value,
+            }));
+        } else {
+            setIsAsuransi(false);
+        }
+    }
+
+    const handleChangeInputHybrid = (event) => {
+        setbstbHybrid(event.target.value);
+        setInputsDec((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputNamaAsuransi = (event) => {
+        setbstbNamaAsuransi(event.target.value);
+        setInputsDec((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputAllRisk = (event) => {
+        setbstbAllRisk(event.target.value);
+        setInputsDec((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputComb = (event) => {
+        setbstbComb(event.target.value);
+        setInputsDec((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputTlo = (event) => {
+        setbstbTlo(event.target.value);
+        setInputsDec((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleSubmitBstb = (event) => {
+        event.preventDefault();
+        setLoading(true);
+        axios
+            .post("http://127.0.0.1:8000/api/services/dectracking/save", inputsDec)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    setLoading(false);
+                    swal("Error", 'Data tidak boleh kosong!', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });   
+                } else {
+                    setLoading(false);
+                    swal("Success", 'Data Berhasil disimpan!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+    
+                    window.location.href = "/list/bstb";
+                }
+            });
+    }
+
+    function formatDateInput(inputDate) {
+        // Konversi tanggal input ke objek Date
+        const dateObj = new Date(inputDate);
+        // Dapatkan tahun, bulan, dan tanggal dari objek Date
+        const year = dateObj.getFullYear();
+        const month = ('0' + (dateObj.getMonth() + 1)).slice(-2); // Tambahkan 1 karena bulan dimulai dari 0
+        const day = ('0' + dateObj.getDate()).slice(-2);
+        
+        // Gabungkan tahun, bulan, dan tanggal sesuai dengan format yang diinginkan
+        const formattedDate = `${year}-${month}-${day}`;
+
+        return formattedDate;
     }
 
     return (
@@ -358,7 +480,7 @@ function Bstb() {
                             </div>
                             <div className="card-body" style={{padding: "15px"}}>
                                 <div className="d-flex align-items-center">
-                                    <div className="flex-grow-1 overflow-hidden">
+                                    <div className="flex-grow-1 overflow-hidden p-2">
                                         <input
                                             className="form-control form-control-sm"
                                             type="text"
@@ -382,7 +504,8 @@ function Bstb() {
 
                                     <DataTable
                                         columns={columnsLsCustomer}
-                                        data={displayData}
+                                        // data={displayData}
+                                        data={displayData.map(item => ({ ...item, key: item.id }))}
                                         pagination
                                         paginationPerPage={10}
                                         customStyles={customStyles}
@@ -435,41 +558,128 @@ function Bstb() {
                                                                     </div>
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
-                                                                            <input type="date" className="form-control form-control-sm" onChange={handleChangeInputTglDec} value={bstbTglDec} id="tgl_dec" placeholder="Tanggal DEC" />
+                                                                            <input type="date" className="form-control form-control-sm" required onChange={handleChangeInputTglDec} value={bstbTglDec} id="tgl_dec" name="tgl_dec" placeholder="Tanggal DEC" />
                                                                             <label htmlFor="tgl_dec">Tanggal DEC</label>
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
-                                                                            <input type="text" className="form-control form-control-sm" onChange={handleChangeInputDelivCar} value={bstbDelivCar} id="tgl_dec" placeholder="Tanggal DEC" />
-                                                                            <label htmlFor="tgl_dec">Delivered Car ?</label>
+                                                                            <select type="text" className="form-control form-control-sm" required onChange={handleChangeInputDelivCar} value={bstbDelivCar} id="deliver" name="deliver" placeholder="Pertanyaan 1">
+                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="Ya">Ya</option>
+                                                                                <option value="Tidak">Tidak</option>
+                                                                            </select>
+                                                                            <label htmlFor="deliver">Apakah mobil sudah terkirim ?</label>
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
-                                                                            <input type="text" className="form-control form-control-sm" onChange={handleChangeInputTcare} value={bstbTcare} id="tgl_dec" placeholder="Tanggal DEC" />
-                                                                            <label htmlFor="tgl_dec">Car T-Care ?</label>
+                                                                            <select type="text" className="form-control form-control-sm" required onChange={handleChangeInputTcare} value={bstbTcare} id="tcare" name="tcare" placeholder="Pertanyaan 2">
+                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="Ya">Ya</option>
+                                                                                <option value="Tidak">Tidak</option>
+                                                                            </select>
+                                                                            <label htmlFor="tcare">Apakah sales menjelaskan T-Care ?</label>
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
-                                                                            <input type="text" className="form-control form-control-sm" onChange={handleChangeInputTintouch} value={bstbTintouch} id="tgl_dec" placeholder="Tanggal DEC" />
-                                                                            <label htmlFor="tgl_dec">Car T-intouch ?</label>
+                                                                            <select type="text" className="form-control form-control-sm" required onChange={handleChangeInputTintouch} value={bstbTintouch} id="tintouch" name="tintouch" placeholder="Pertanyaan 3">
+                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="Ya">Ya</option>
+                                                                                <option value="Tidak">Tidak</option>
+                                                                            </select>
+                                                                            <label htmlFor="tintouch">Apakah sales T-intouch ?</label>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div className="row">
-                                                                    <div className="col-lg-6">
-
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <select type="text" className="form-control form-control-sm" onChange={handleChangeInputHybrid} value={bstbHybrid} id="hybrid" name="hybrid" placeholder="Pertanyaan 5">
+                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="Ya">Ya</option>
+                                                                                <option value="Tidak">Tidak</option>
+                                                                            </select>
+                                                                            <label htmlFor="Hybrid">Apakah mobil hybrid ? </label>
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="col-lg-6">
-                                                                        <div className="text-end">
-                                                                            <button onClick={handleSubmitBstb} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
-                                                                            <button onClick={closeBstb} className="btn btn-danger btn-label btn-sm"style={{marginLeft: "5px"}}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <select type="text" className="form-control form-control-sm" onChange={handleChangeInputServicePertama} value={bstbServicePertama} id="service_pertama" name="service_pertama" placeholder="Pertanyaan 6">
+                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="Ya">Ya</option>
+                                                                                <option value="Tidak">Tidak</option>
+                                                                            </select>
+                                                                            <label htmlFor="service_pertama">Apakah sales sudah membantu tanggal booking service pertama ? </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <select type="text" className="form-control form-control-sm" onChange={handleChangeInputAsuransi} value={bstbAsuransi} id="asuransi" name="asuransi" placeholder="Pertanyaan 6">
+                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="Ya">Ya</option>
+                                                                                <option value="Tidak">Tidak</option>
+                                                                            </select>
+                                                                            <label htmlFor="asuransi">Apakah mobil menggunakan asuransi ?</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            {isAsuransi ? (
+                                                                                <>
+                                                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeInputNamaAsuransi} value={bstbNamaAsuransi} name="nama_asuransi" id="nama_asuransi" placeholder="Pertanyaan 3" />
+                                                                                    <label htmlFor="nama_asuransi">Nama Asuransi</label>
+                                                                                </>
+                                                                            ) : ""}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-1 mb-2">
+                                                                        {isAsuransi ? ( <span className="text-muted">Coverage Asuransi</span> ) : ("") }
+                                                                    </div>
+                                                                    <div className="col-lg-1 mb-2">
+                                                                        <div className="form-floating">
+                                                                            {isAsuransi ? (
+                                                                                <>  
+                                                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeInputAllRisk} value={bstbAllRisk} name="coverage_allrisk" id="coverage_allrisk" placeholder="All Risk" />
+                                                                                    <label htmlFor="coverage_allrisk">All Risk</label>
+                                                                                </>
+                                                                            ) : ""}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-2 mb-2">
+                                                                        <div className="form-floating">
+                                                                            {isAsuransi ? (
+                                                                                <>
+                                                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeInputComb} value={bstbComb} name="coverage_combination" id="coverage_combination" placeholder="Combination" />
+                                                                                    <label htmlFor="coverage_combination">Combination</label>
+                                                                                </>
+                                                                            ) : ""}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-2 mb-2">
+                                                                        <div className="form-floating">
+                                                                            {isAsuransi ? (
+                                                                                <>
+                                                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeInputTlo} value={bstbTlo} name="coverage_tlo" id="coverage_tlo" placeholder="TLO" />
+                                                                                    <label htmlFor="coverage_tlo">TLO</label>
+                                                                                </>
+                                                                            ) : ""}
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="card-footer">
+                                                    <div className="row mt-3">
+                                                        <div className="col-lg-6">
+
+                                                        </div>
+                                                        <div className="col-lg-6">
+                                                            <div className="text-end">
+                                                                <button onClick={handleSubmitBstb} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                                <button onClick={closeBstb} className="btn btn-danger btn-label btn-sm"style={{marginLeft: "5px"}}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

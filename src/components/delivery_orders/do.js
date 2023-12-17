@@ -49,8 +49,6 @@ function Do() {
     // Format tanggal dengan format "DD/MM/YYYY"
     const tanggalFormat = tanggal + ' ' + namaBulan[hariIni.getMonth()] + ' ' + tahunHariIni;
 
-    const [dataProspek, setDataProspek] = useState([]);
-    const [dataProspek2, setDataProspek2] = useState([]);
     const [refreshDt, setRefresh] = useState();
     const [pageSize, setPageSize] = useState(25);
     const [page, setPage] = useState(0);
@@ -58,6 +56,7 @@ function Do() {
     const [loading, setLoading] = useState(false);
     const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+    const rulesName = JSON.parse(localStorage.getItem("rules"));
     console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
@@ -69,8 +68,6 @@ function Do() {
             const url = `http://127.0.0.1:8000/api/delivery_orders/list?page=${page}&size=${pageSize}`;
             try {
                 const response = await axios.get(url);
-                setDataProspek(response.data.data);
-                setDataProspek2(response.data);
                 setLsDtCustomer(response.data.data);
                 setLoadingTable(false);
 
@@ -80,18 +77,6 @@ function Do() {
         };
         getData();
     }, [page, pageSize, refreshDt]);
-
-    const [rowCountState, setRowCountState] = React.useState(
-        dataProspek2?.totalAll || 0
-    );
-
-    React.useEffect(() => {
-        setRowCountState((prevRowCountState) =>
-            dataProspek2?.totalAll !== undefined
-                ? dataProspek2?.totalAll
-                : prevRowCountState
-        );
-    }, [dataProspek2?.totalAll, setRowCountState]);
 
     const alertNotifSend = (event) => {
         swal({
@@ -306,7 +291,9 @@ function Do() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
+                                            {rulesName != 'crc' || rulesName != 'sales' ? (
+                                                <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
+                                            ) : ("")}
                                         </div>
                                     </div>
                                 </div>

@@ -110,7 +110,7 @@ const Login = () => {
                                     <div className="col-lg-6">
                                         <div className="p-lg-5 p-4">
                                             <div>
-                                                <span className="text-uppercase" style={{fontWeight: "bold", fontSize: "20px"}}>DIS Wijaya Toyota </span>
+                                                <span className="text-uppercase" style={{fontWeight: "bold", fontSize: "20px"}}>SID Wijaya Toyota </span>
                                                 <p className="text-muted">Database Single ID Wijaya Toyota</p>
                                             </div>
 
