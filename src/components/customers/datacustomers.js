@@ -195,12 +195,6 @@ function Datacustomers() {
             selector: row => row.alamat_nik,
             sortable: true,
             width: "300px"
-        },
-        {
-            name: 'Kecamatan',
-            selector: row => row.kecamatan,
-            sortable: true,
-            width: "200px"
         }
     ];
 
@@ -541,8 +535,12 @@ function Datacustomers() {
         },
         
     ];
-
-    const urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
+    // const urlExport = '';
+    // if (rulesName == 'sales') {
+    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&nama_sales=${personName}&rules=${rulesName}`;
+    // } else {
+    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
+    // }
     const urlDownloadForm = `http://127.0.0.1:8000/api/template_form_update_data_customer`;
 
     const [importExcel, setimportExcel] = React.useState(false);
@@ -1038,7 +1036,7 @@ function Datacustomers() {
                                         <div id="" className='p-2'>
                                             {rulesName == 'sa' ? ("") : (
                                                 <>
-                                                    <a href={urlExport} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
+                                                    <a href={`http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
                                                     <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{marginLeft: "5px", cursor: "pointer"}}><i className="ri-edit-2-line"></i> Multi Update</a>
                                                 </>
                                             )}

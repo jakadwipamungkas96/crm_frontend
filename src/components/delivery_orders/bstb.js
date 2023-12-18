@@ -310,7 +310,7 @@ function Bstb() {
     }
 
     const closeBstb = (event) => {
-        setInputsDec(false);
+        setinputBSTB(false);
         setbstbTglDec('');
         setbstbDelivCar('');
         setbstbTcare('');
@@ -474,7 +474,7 @@ function Bstb() {
                                 {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        <h5 className="card-title mb-0">Master Data Delivery Orders</h5> 
+                                        <h5 className="card-title mb-0">Master Data DEC Tracking by BSTB</h5> 
                                     </div>
                                 </div>
                             </div>

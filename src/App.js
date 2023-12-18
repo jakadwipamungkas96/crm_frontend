@@ -329,14 +329,15 @@ function App() {
                   </li>
                   {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact to="/ulangtahun" activeclassname="active"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
                     <li className="menu-title"><span data-key="t-menu">List</span></li>
-                  {rulesName != "sa" ? (
+                  {rulesName != "mra" ? (
                       <li className="nav-item">
                         <NavLink className="nav-link menu-link" exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
                       </li>
                   ) : (
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
-                      </li>
+                      // <li className="nav-item">
+                      //   <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                      // </li>
+                      ""
                   ) }
 
                   {rulesName == "crc" ? (
@@ -347,7 +348,7 @@ function App() {
 
                   {rulesName == "superadmin" ? (
                     <li className="nav-item">
-                      <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                      <NavLink className="nav-link menu-link d-none" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
                     </li>
                   ) : ("") }
                   
@@ -567,7 +568,7 @@ function App() {
                       <div className="collapse menu-dropdown" id="sidebarDtUserManagement">
                           <ul className="nav nav-sm flex-column">
                               <li className="nav-item">
-                                  <a href="#" className="nav-link"> List User </a>
+                                  <a href="#" className="nav-link"> List User</a>
                               </li>
                           </ul>
                       </div>
