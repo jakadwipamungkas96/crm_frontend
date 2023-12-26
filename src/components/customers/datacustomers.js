@@ -355,7 +355,7 @@ function Datacustomers() {
         },
         {
             name: 'Status UNIT',
-            selector: row => row.status_unit,
+            selector: row => `${row.status_unit} ${row.status_unit != "external" ? '('+row.cabang+')' : ''}`,
             sortable: true,
             width: "150px"
         },
@@ -387,7 +387,7 @@ function Datacustomers() {
             name: 'Service Terakhir',
             selector: row => row.last_service,
             sortable: true,
-            width: "150px"
+            width: "200px"
         },
         {
             name: 'Tanggal DO',
@@ -960,6 +960,30 @@ function Datacustomers() {
             });
     }
 
+    const [dialogHistory, setOpenDialogHistory] = useState(false);
+    const [noRangkaHistory, setNoRangkaHistory] = useState('');
+    const [lsHistoryService, setLsHistoryService]   = useState([]);
+
+    const openHistoryService = (event) => {
+        setNoRangkaHistory(event);
+        setOpenDialogHistory(true);
+        getHistory(event);
+    }
+
+    function getHistory(no_rangka) {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        axios
+            .get("http://127.0.0.1:8000/api/services/history?no_rangka="+no_rangka)
+            .then((response) => {
+                console.log(response);
+                setLsHistoryService(response.data.dtService);
+            });
+    }
+
+    const closeHistoryService = () => {
+        setOpenDialogHistory(false);
+    }
+
     function formatDateInput(inputDate) {
         // Konversi tanggal input ke objek Date
         const dateObj = new Date(inputDate);
@@ -1258,7 +1282,7 @@ function Datacustomers() {
                                                         <table className="table table-bordered align-middle table-nowrap mb-0">
                                                             <thead style={{background: "#E2E8F0"}}>
                                                                 <tr>
-                                                                    <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Service</th>
+                                                                    <th colSpan={2} style={{padding: "7px", fontSize: "12px"}}>Informasi Service <button onClick={(event) => {openHistoryService(infoDtCar.no_rangka);}} style={{fontSize: "11px"}} className="btn btn-sm btn-primary"><i className="ri-history-line"></i> History</button></th>
                                                                 </tr>
                                                                 <tr style={{padding: "7px", fontSize: "12px"}}>
                                                                     <th scope="col">Nama Pemakai</th>
@@ -1281,7 +1305,7 @@ function Datacustomers() {
                                                                 <tr>
                                                                     <td style={{background: "#E2E8F0", fontWeight: "600"}}>No Telepon Pemakai</td>
                                                                     <td className="text-muted">
-                                                                        {infoDtServices.telepon_pemakai} <button className="btn btn-info btn-sm" onClick={alertNotifSend}><i className="ri-phone-fill"></i></button>
+                                                                        {infoDtServices.telepon_pemakai} <a href={'https://wa.me/'+infoDtServices.telepon_pemakai} className="btn btn-info btn-sm" onClick={alertNotifSend}><i className="ri-phone-fill"></i></a>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -1590,6 +1614,77 @@ function Datacustomers() {
                     </DialogContent>
             </Dialog>
             {/* End Modal Ultah */}
+
+            {/* Start History Service */}
+            <Dialog
+                    open={dialogHistory}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{border: "none"}}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{fontSize: "17px"}}>History Service {noRangkaHistory}</h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
+                                                        <button type="button" className="btn btn-danger btn-sm" onClick={closeHistoryService}><i className="ri-close-circle-fill"></i> Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12 mt-2 p-3">
+                                                        <div class="card" style={{maxHeight: "300px", overflowY: "auto"}}>
+                                                            {lsHistoryService.map((val, idx) => (
+                                                                <div key={idx}>
+                                                                    <div class="align-items-center d-flex"style={{marginBottom: "5px"}}>
+                                                                        <div class="live-preview  col-md-12">
+                                                                            <div class="list-group">
+                                                                                <a href="javascript:void(0);" class="list-group-item list-group-item-action">
+                                                                                    <div class="float-end">
+                                                                                        <span class="badge bg-success">{val.status_wo}</span>
+                                                                                    </div>
+                                                                                    <div class="d-flex mb-2 align-items-center">
+                                                                                        <div class="flex-shrink-0">
+                                                                                            <i className="avatar-sm rounded-circle bx bx-car" style={{fontSize: "40px"}}></i>
+                                                                                        </div>
+                                                                                        <div class="flex-grow-1 ms-3">
+                                                                                            <h5 class="list-title fs-15 mb-1">{val.nama_pemakai + ' - ' + val.telepon_pemakai}</h5>
+                                                                                            <p class="list-text mb-0 fs-12">{val.tgl_service}</p>
+                                                                                            <p class="list-text mb-0 fs-12">Lokasi Service: <b>{val.cabang_name}</b></p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <p class="list-text mb-0">{val.keterangan_service}</p>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+            </Dialog>
+            {/* End History Service */}
 
             {/* Start Modal STNK */}
             <Dialog

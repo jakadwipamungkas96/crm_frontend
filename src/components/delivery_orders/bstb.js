@@ -279,6 +279,7 @@ function Bstb() {
     const [bstbDelivCar, setbstbDelivCar] = useState('');
     const [bstbTcare, setbstbTcare] = useState('');
     const [bstbTintouch, setbstbTintouch] = useState('');
+    const [bstbTenor, setbstbTenor] = useState('');
     const [bstbHybrid, setbstbHybrid] = useState('');
     const [bstbServicePertama, setbstbServicePertama] = useState('');
     const [bstbAsuransi, setbstbAsuransi] = useState('');
@@ -343,6 +344,14 @@ function Bstb() {
 
     const handleChangeInputTintouch = (event) => {
         setbstbTintouch(event.target.value);
+        setInputsDec((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputTenor = (event) => {
+        setbstbTenor(event.target.value);
         setInputsDec((values) => ({
             ...values,
             [event.target.name]: event.target.value,
@@ -612,9 +621,23 @@ function Bstb() {
                                                                             <label htmlFor="service_pertama">Apakah sales sudah membantu tanggal booking service pertama ? </label>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="col-lg-6 mb-2">
+                                                                    <div className="col-lg-3 mb-2">
                                                                         <div className="form-floating">
-                                                                            <select type="text" className="form-control form-control-sm" onChange={handleChangeInputAsuransi} value={bstbAsuransi} id="asuransi" name="asuransi" placeholder="Pertanyaan 6">
+                                                                            <select type="text" className="form-control form-control-sm" onChange={handleChangeInputTenor} value={bstbTenor} id="tenor" name="tenor" placeholder="Pertanyaan 7">
+                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="0">0</option>
+                                                                                <option value="1">1</option>
+                                                                                <option value="2">2</option>
+                                                                                <option value="3">3</option>
+                                                                                <option value="4">4</option>
+                                                                                <option value="5">5</option>
+                                                                            </select>
+                                                                            <label htmlFor="tenor">Tenor ? </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-3 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <select type="text" className="form-control form-control-sm" onChange={handleChangeInputAsuransi} value={bstbAsuransi} id="asuransi" name="asuransi" placeholder="Pertanyaan 8">
                                                                                 <option value="" selected>-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>

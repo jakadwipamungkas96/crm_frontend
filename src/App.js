@@ -15,6 +15,7 @@ import Carlist from './components/car/carlist';
 import Services from './components/services/services';
 import Attacklist from './components/service_orders/attacklist';
 import Bstb from './components/delivery_orders/bstb';
+import Servicepertama from './components/service_orders/servicepertama';
 
 function App() {
   useEffect(() => {
@@ -340,6 +341,15 @@ function App() {
                       ""
                   ) }
 
+                  {rulesName == "sales" ? (
+                    <>
+                      <li className="menu-title"><span data-key="t-menu">Service</span></li>
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link" exact to="/input/servicepertama" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
+                      </li>
+                    </>
+                  ) : ("") }
+
                   {rulesName == "crc" ? (
                     <li className="nav-item">
                       <NavLink className="nav-link menu-link" exact to="/list/bstb" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">DEC Tracking by BSTB</span></NavLink>
@@ -590,6 +600,7 @@ function App() {
             <Route path="/services/input" element={<Services />}></Route>
             <Route path="/services/attacklist" element={<Attacklist />}></Route>
             <Route path="/list/bstb" element={<Bstb />}></Route>
+            <Route path="/input/servicepertama" element={<Servicepertama />}></Route>
           </Routes>
         </div>
       </div>

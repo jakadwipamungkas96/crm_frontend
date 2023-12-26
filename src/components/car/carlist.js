@@ -181,6 +181,12 @@ function Carlist() {
             width: '50%',
         },
         {
+            name: 'Tahun Kendaraan',
+            selector: row => row.tahun_kendaraan,
+            sortable: true,
+            width: '20%',
+        },
+        {
             name: 'Total Penjualan',
             selector: row => row.total_penjualan,
             sortable: true,
