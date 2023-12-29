@@ -998,6 +998,54 @@ function Datacustomers() {
         return formattedDate;
     }
 
+    // Editable No Polisi
+    const [inputNopol, setInputNopol] = useState([]);
+    const [isEditNopol, setIsEditNopol] = useState(false);
+    const [editableNoPol, seteditableNoPol] = useState('');
+    const handleOpenNopol = (event) => {
+        setIsEditNopol(true);
+        setInputNopol((values) => ({
+            ...values,
+            ["no_rangka"]: event,
+        }));
+    }
+
+    const closeEditNopol = (event) => {
+        setIsEditNopol(false);
+    }
+    
+    const handleChangeEditNopol = (event) => {
+        seteditableNoPol(event.target.value);
+        setInputNopol((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleSubmitNopol = () => {
+
+        axios
+            .post("http://127.0.0.1:8000/api/customers/datacustomers/update_nopol", inputNopol)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    setLoading(false);
+                    swal("Error", 'Data tidak boleh kosong!', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });   
+                } else {
+                    setLoading(false);
+                    swal("Success", 'Data Berhasil disimpan!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+    
+                    window.location.href = "/datacustomers";
+                }
+            });
+            
+    }
+
     return (
         <div className="page-content">
             <div className="container-fluid">
@@ -1258,7 +1306,23 @@ function Datacustomers() {
                                                             <tbody>
                                                                 <tr>
                                                                     <td className="text-muted">{infoDtCar.no_rangka}</td>
-                                                                    <td className="text-muted">{infoDtCar.no_pol}</td>
+                                                                    <td className="text-muted">
+                                                                        {/* {infoDtCar.no_pol} */}
+                                                                        {/* <input type="text" style={{float: "left"}} className="form-control form-control-sm" value={infoDtCar.no_pol} disabled />
+                                                                        <button className="btn btn-sm btn-success" style={{float: "left"}}>Edit</button> */}
+                                                                        <div className="row gy-2 gx-3 mb-1 align-items-center">
+                                                                            <div className="col-sm-auto">
+                                                                                <input type="text" onChange={handleChangeEditNopol} className="form-control form-control-sm" hidden={isEditNopol ? false : true} id="autoSizingInput" name="up_no_pol" value={editableNoPol} />
+                                                                                {/* <input type="text" className="form-control form-control-sm" hidden={isEditNopol ? false : true} onChange={handleChangeEmailCust} name="email_customer" value={updEmailCust !== null ? updEmailCust : ''} id="email_customer" placeholder="Email" /> */}
+                                                                                <input type="text" className="form-control form-control-sm" disabled hidden={!isEditNopol ? false : true} id="autoSizingInput" value={infoDtCar.no_pol} />
+                                                                            </div>
+                                                                            <div className="col-sm-auto">
+                                                                                <button type="submit" className="btn btn-sm btn-outline-success" hidden={!isEditNopol ? false : true} onClick={(event) => handleOpenNopol(infoDtCar.no_rangka)}><i className="ri-edit-fill"></i></button>
+                                                                                <button type="submit" className="btn btn-sm btn-outline-danger" hidden={isEditNopol ? false : true} onClick={closeEditNopol}><i className="ri-close-fill"></i></button>
+                                                                                <button type="submit" className="btn btn-sm btn-outline-success" style={{marginLeft: "2px"}} hidden={isEditNopol ? false : true} onClick={handleSubmitNopol}><i className="ri-check-fill"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td style={{background: "#E2E8F0", fontWeight: "600"}}>Type</td>
@@ -1646,27 +1710,27 @@ function Datacustomers() {
                                             <div className="card-body">
                                                 <div className="row">
                                                     <div className="col-md-12 mt-2 p-3">
-                                                        <div class="card" style={{maxHeight: "300px", overflowY: "auto"}}>
+                                                        <div className="card" style={{maxHeight: "300px", overflowY: "auto"}}>
                                                             {lsHistoryService.map((val, idx) => (
                                                                 <div key={idx}>
-                                                                    <div class="align-items-center d-flex"style={{marginBottom: "5px"}}>
-                                                                        <div class="live-preview  col-md-12">
-                                                                            <div class="list-group">
-                                                                                <a href="javascript:void(0);" class="list-group-item list-group-item-action">
-                                                                                    <div class="float-end">
-                                                                                        <span class="badge bg-success">{val.status_wo}</span>
+                                                                    <div className="align-items-center d-flex"style={{marginBottom: "5px"}}>
+                                                                        <div className="live-preview  col-md-12">
+                                                                            <div className="list-group">
+                                                                                <a href="javascript:void(0);" className="list-group-item list-group-item-action">
+                                                                                    <div className="float-end">
+                                                                                        <span className="badge bg-success">{val.status_wo}</span>
                                                                                     </div>
-                                                                                    <div class="d-flex mb-2 align-items-center">
-                                                                                        <div class="flex-shrink-0">
+                                                                                    <div className="d-flex mb-2 align-items-center">
+                                                                                        <div className="flex-shrink-0">
                                                                                             <i className="avatar-sm rounded-circle bx bx-car" style={{fontSize: "40px"}}></i>
                                                                                         </div>
-                                                                                        <div class="flex-grow-1 ms-3">
-                                                                                            <h5 class="list-title fs-15 mb-1">{val.nama_pemakai + ' - ' + val.telepon_pemakai}</h5>
-                                                                                            <p class="list-text mb-0 fs-12">{val.tgl_service}</p>
-                                                                                            <p class="list-text mb-0 fs-12">Lokasi Service: <b>{val.cabang_name}</b></p>
+                                                                                        <div className="flex-grow-1 ms-3">
+                                                                                            <h5 className="list-title fs-15 mb-1">{val.nama_pemakai + ' - ' + val.telepon_pemakai + ' '}</h5>
+                                                                                            <p className="list-text mb-0 fs-12">{val.tgl_service}</p>
+                                                                                            <p className="list-text mb-0 fs-12">Lokasi Service: <b>{val.cabang_name}</b></p>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <p class="list-text mb-0">{val.keterangan_service}</p>
+                                                                                    <p className="list-text mb-0">{val.keterangan_service}</p>
                                                                                 </a>
                                                                             </div>
                                                                         </div>

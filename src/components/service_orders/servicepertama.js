@@ -143,6 +143,12 @@ function Servicepertama() {
             width: '200px',
         },
         {
+            name: 'Tanggal Jatuh Tempo',
+            selector: row => row.tgl_jatuh_tempo,
+            sortable: true,
+            width: '200px',
+        },
+        {
             name: 'No Rangka',
             selector: row => row.no_rangka,
             sortable: true,
