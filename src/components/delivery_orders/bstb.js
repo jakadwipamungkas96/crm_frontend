@@ -574,7 +574,7 @@ function Bstb() {
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" required onChange={handleChangeInputDelivCar} value={bstbDelivCar} id="deliver" name="deliver" placeholder="Pertanyaan 1">
-                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="">-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>
                                                                             </select>
@@ -584,7 +584,7 @@ function Bstb() {
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" required onChange={handleChangeInputTcare} value={bstbTcare} id="tcare" name="tcare" placeholder="Pertanyaan 2">
-                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="">-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>
                                                                             </select>
@@ -594,7 +594,7 @@ function Bstb() {
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" required onChange={handleChangeInputTintouch} value={bstbTintouch} id="tintouch" name="tintouch" placeholder="Pertanyaan 3">
-                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="">-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>
                                                                             </select>
@@ -604,7 +604,7 @@ function Bstb() {
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" onChange={handleChangeInputHybrid} value={bstbHybrid} id="hybrid" name="hybrid" placeholder="Pertanyaan 5">
-                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="">-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>
                                                                             </select>
@@ -614,7 +614,7 @@ function Bstb() {
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" onChange={handleChangeInputServicePertama} value={bstbServicePertama} id="service_pertama" name="service_pertama" placeholder="Pertanyaan 6">
-                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="">-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>
                                                                             </select>
@@ -624,7 +624,7 @@ function Bstb() {
                                                                     <div className="col-lg-3 mb-2">
                                                                         <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" onChange={handleChangeInputTenor} value={bstbTenor} id="tenor" name="tenor" placeholder="Pertanyaan 7">
-                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="">-- Pilih --</option>
                                                                                 <option value="0">0</option>
                                                                                 <option value="1">1</option>
                                                                                 <option value="2">2</option>
@@ -638,7 +638,7 @@ function Bstb() {
                                                                     <div className="col-lg-3 mb-2">
                                                                         <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" onChange={handleChangeInputAsuransi} value={bstbAsuransi} id="asuransi" name="asuransi" placeholder="Pertanyaan 8">
-                                                                                <option value="" selected>-- Pilih --</option>
+                                                                                <option value="">-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>
                                                                             </select>

@@ -63,7 +63,7 @@ function Servicepertama() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/delivery_orders/list`;
+            const url = `http://127.0.0.1:8000/api/service_pertama/list`;
             try {
 
                 const response = await axios.get(url);
@@ -113,8 +113,51 @@ function Servicepertama() {
         }
     };
 
+    const [openServicePertama, setOpenServicePertama] = useState(false);
+    const [inputServices, setinputServices] = useState([]);
+    const [serviceNamaCustomer, setServiceNamaCustomer] = useState('');
+    const [serviceNoRangka, setServiceNorangka] = useState('');
+    const [serviceTglDec, setserviceTglDec] = useState('');
+    const [serviceTglJatuhTempo, setserviceTglJatuhTempo] = useState('');
+
+    const handleChangeInputDec = (event) => {
+        console.log(event.target.value);
+        // Assuming event.target.value is a valid date string, e.g., "2023-12-02"
+        const selectedDate = new Date(event.target.value);
+
+        // Set the date to the beginning of the next month
+        selectedDate.setMonth(selectedDate.getMonth() + 1, 1);
+
+        // Subtract one day to get the last day of the current month
+        selectedDate.setDate(selectedDate.getDate() - 1);
+
+        // Format the result as "YYYY-MM-DD"
+        const endDate = selectedDate.toISOString().split('T')[0];
+        
+        setserviceTglDec(event.target.value);
+        setserviceTglJatuhTempo(endDate);
+
+        setinputServices((values) => ({
+            ...values,
+            [event.target.name]: event.target.value
+        }));
+    }
+
     const handleOpenDetailKendaraan = (event) => {
-        console.log(event);
+        setOpenServicePertama(true);
+        setServiceNamaCustomer(event.nama_customer);
+        setServiceNorangka(event.no_rangka);
+        setserviceTglDec(formatDateInput(event.tgl_dec));
+        setserviceTglJatuhTempo(formatDateInput(event.tgl_jatuh_tempo));
+        setinputServices((values) => ({
+            ...values,
+            ["no_rangka"]: event.no_rangka
+        }));
+    }
+
+    const closeFollowUp = () => {
+        setOpenServicePertama(false);
+        setinputServices([]);
     }
 
     const columnsLsCustomer = [
@@ -129,6 +172,12 @@ function Servicepertama() {
                             <i className="ri-file-list-3-fill"></i> Followup
                         </button>,
                         width: "150px"
+        },
+        {
+            name: 'Status',
+            selector: row => <span className="badge bg-dark-subtle text-body badge-border">Belum Booking</span>,
+            sortable: true,
+            width: '150px',
         },
         {
             name: 'Nama Customer',
@@ -199,26 +248,6 @@ function Servicepertama() {
         window.location.href = "/services/input";
     }
 
-    // Import Excel
-    const [importExcel, setimportExcel] = React.useState(false);
-    const showFormImport = (event) => {
-        setimportExcel(true);
-    }
-
-    const closeImport = (event) => {
-        setimportExcel(false);
-    }
-
-    const [fileUpload, setFileUp] = React.useState([]);
-    const [inputsImport, setInputs] = React.useState([]);
-
-    const hChangeInputFile = (event) => {
-        console.log(event.target.files[0]);
-        console.log(event.target.name);
-        setFileUp(event.target.files[0]);
-        setInputs(values => ({...values, [event.target.name]: fileUpload}));
-    }
-
     const CustomBlockingOverlay = ({ isLoading, children }) => {
         return (
             <div>
@@ -248,29 +277,22 @@ function Servicepertama() {
         );
     };
 
-    const handleUploadSo = (event) => {
-        event.preventDefault();
-        const formData = new FormData();
-        
-        formData.append('fileSo',fileUpload);
-        setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/service_order/import', formData).then(function(response){
-            if (response.data.error == true) {
-                setLoading(false);
-                swal("Error", 'Data tidak boleh kosong!', "error", {
-                    buttons: false,
-                    timer: 2000,
-                });   
-            } else {
-                setLoading(false);
-                swal("Success", 'Data Berhasil disimpan!', "success", {
-                    buttons: false,
-                    timer: 2000,
-                });
+    const handleSubmitServicePertama = (event) => {
+        console.log(inputServices);
+    }
 
-                window.location.href = "/so";
-            }
-        });
+    function formatDateInput(inputDate) {
+        // Konversi tanggal input ke objek Date
+        const dateObj = new Date(inputDate);
+        // Dapatkan tahun, bulan, dan tanggal dari objek Date
+        const year = dateObj.getFullYear();
+        const month = ('0' + (dateObj.getMonth() + 1)).slice(-2); // Tambahkan 1 karena bulan dimulai dari 0
+        const day = ('0' + dateObj.getDate()).slice(-2);
+        
+        // Gabungkan tahun, bulan, dan tanggal sesuai dengan format yang diinginkan
+        const formattedDate = `${year}-${month}-${day}`;
+
+        return formattedDate;
     }
 
     return (
@@ -317,11 +339,7 @@ function Servicepertama() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            {rulesName == 'sa' || rulesName == 'superadmin' ? (
-                                                <>
-                                                    <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Attacklist</button>
-                                                </>
-                                             ) : ""}
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -347,13 +365,13 @@ function Servicepertama() {
                     </div>
                 </div>
 
-                {/* Start Import  */}
+                {/* Start Input Service Pertama  */}
                 <Dialog
-                        open={importExcel}
+                        open={openServicePertama}
                         TransitionComponent={Transition}
                         keepMounted
                         maxWidth="xl"
-                        onClose={closeImport}
+                        onClose={closeFollowUp}
                         aria-describedby="alert-dialog-slide-description"
                         style={{ width: "100%", margin: "0 auto" }}
                     >
@@ -368,7 +386,7 @@ function Servicepertama() {
                                                 <div className="card-header" style={{border: "none"}}>
                                                     <div className="d-flex align-items-center">
                                                         <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Import Data Service Order </h5>
+                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>Follow Up Service Pertama </h5>
                                                         </div>
                                                         <div className="flex-shrink-0">
                                                         </div>
@@ -380,27 +398,32 @@ function Servicepertama() {
                                                             <CustomBlockingOverlay isLoading={loading}>
                                                             </CustomBlockingOverlay>
                                                             <form>
-                                                                {/* <input type="file" name="fileDo" id="fileDo" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
-                                                                <TextField
-                                                                    id="outlined-select-currency-native"
-                                                                    defaultValue=""
-                                                                    label=""
-                                                                    helperText="Pilih File"
-                                                                    onChange={hChangeInputFile}
-                                                                    sx={{width: "50%"}}
-                                                                    size= "small"
-                                                                    name="fileDo"
-                                                                    type="file"
-                                                                    style={{width: "500px"}}
-                                                                    required
-                                                                >
-                                                                </TextField><br></br>
-                                                                <button
-                                                                    className="btn btn-primary btn-sm mt-2"
-                                                                    onClick={handleUploadSo}
-                                                                >
-                                                                    Proses Import
-                                                                </button>
+                                                                <div className="row">
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="text" className="form-control form-control-sm" readOnly value={serviceNamaCustomer} id="nama_customer" placeholder="Nama Customer" />
+                                                                            <label htmlFor="nama_customer">Nama Customer</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="text" className="form-control form-control-sm" readOnly value={serviceNoRangka} id="no_rangka" placeholder="No Rangka" />
+                                                                            <label htmlFor="no_rangka">No Rangka</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="date" className="form-control form-control-sm" onChange={handleChangeInputDec} value={serviceTglDec} id="tgl_dec" placeholder="Tanggal DEC" />
+                                                                            <label htmlFor="tgl_dec">Tanggal DEC</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-6 mb-2">
+                                                                        <div className="form-floating">
+                                                                            <input type="date" className="form-control form-control-sm" readOnly value={serviceTglJatuhTempo} id="tgl_jatuh_tempo" placeholder="Tanggal Jatuh Tempo" />
+                                                                            <label htmlFor="tgl_jatuh_tempo">Tanggal Jatuh Tempo</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -412,7 +435,7 @@ function Servicepertama() {
                             </div>
                         </DialogContent>
                 </Dialog>
-                {/* End Import */}
+                {/* End Input Service Pertama */}
             </div>
         </div>
     );
