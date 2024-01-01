@@ -118,25 +118,42 @@ function Servicepertama() {
     const [serviceNamaCustomer, setServiceNamaCustomer] = useState('');
     const [serviceNoRangka, setServiceNorangka] = useState('');
     const [serviceTglDec, setserviceTglDec] = useState('');
-    const [serviceTglJatuhTempo, setserviceTglJatuhTempo] = useState('');
+    const [serviceTglService, setserviceTglService] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handleChangeInputDec = (event) => {
-        console.log(event.target.value);
-        // Assuming event.target.value is a valid date string, e.g., "2023-12-02"
-        const selectedDate = new Date(event.target.value);
+        const initialDate = event.target.value;
 
-        // Set the date to the beginning of the next month
-        selectedDate.setMonth(selectedDate.getMonth() + 1, 1);
+        // Menghitung tanggal minimal (mulai bulan Februari)
+        const minDate = (() => {
+            const [year, month] = initialDate.split('-');
+            const nextMonthFirstDay = new Date(parseInt(year, 10), parseInt(month, 10), 1);
+            nextMonthFirstDay.setMonth(nextMonthFirstDay.getMonth() + 1);
+            return `${nextMonthFirstDay.getFullYear()}-${(nextMonthFirstDay.getMonth()).toString().padStart(2, '0')}-${nextMonthFirstDay.getDate().toString().padStart(2, '0')}`;
+        })();
 
-        // Subtract one day to get the last day of the current month
-        selectedDate.setDate(selectedDate.getDate() - 1);
+        // Menghitung tanggal maksimal (akhir bulan sebelumnya)
+        const maxDate = (() => {
+            const [year, month] = minDate.split('-');
+            const lastDayOfPreviousMonth = new Date(parseInt(year, 10), parseInt(month, 10), 0);
+            return `${lastDayOfPreviousMonth.getFullYear()}-${(lastDayOfPreviousMonth.getMonth() + 1).toString().padStart(2, '0')}-${lastDayOfPreviousMonth.getDate().toString().padStart(2, '0')}`;
+        })();
 
-        // Format the result as "YYYY-MM-DD"
-        const endDate = selectedDate.toISOString().split('T')[0];
-        
+        setStartDate(minDate);
+        setEndDate(maxDate);
         setserviceTglDec(event.target.value);
-        setserviceTglJatuhTempo(endDate);
+        setserviceTglService(minDate);
 
+        setinputServices((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+            ['tgl_jatuh_tempo']: maxDate
+        }));
+    }
+
+    const handleChangeInputTglService = (event) => {
+        setserviceTglService(event.target.value);
         setinputServices((values) => ({
             ...values,
             [event.target.name]: event.target.value
@@ -148,7 +165,8 @@ function Servicepertama() {
         setServiceNamaCustomer(event.nama_customer);
         setServiceNorangka(event.no_rangka);
         setserviceTglDec(formatDateInput(event.tgl_dec));
-        setserviceTglJatuhTempo(formatDateInput(event.tgl_jatuh_tempo));
+        // setserviceTglService(formatDateInput(event.tgl_jatuh_tempo));
+
         setinputServices((values) => ({
             ...values,
             ["no_rangka"]: event.no_rangka
@@ -169,13 +187,23 @@ function Servicepertama() {
                         style={{
                             fontSize: "10px"
                         }} type="button" className="btn btn-info waves-effect waves-light">
-                            <i className="ri-file-list-3-fill"></i> Followup
+                            <i className="ri-add-circle-line"></i> Booking
                         </button>,
                         width: "150px"
         },
         {
             name: 'Status',
-            selector: row => <span className="badge bg-dark-subtle text-body badge-border">Belum Booking</span>,
+            selector: row => {
+                if (row.status_service_pertama === 'scheduled') {
+                  return <span className="badge bg-success text-white badge-border">Sudah Booking</span>;
+                } else if (row.status_service_pertama === 'service') {
+                  return <span className="badge bg-info text-white badge-border">Sudah Service</span>;
+                } else if (row.status_service_pertama === 'batal_service') {
+                  return <span className="badge bg-danger text-white badge-border">Batal Service</span>;
+                } else if (row.status_service_pertama === null) {
+                  return <span className="badge bg-dark-subtle text-body badge-border">Belum Booking</span>;
+                }
+            },
             sortable: true,
             width: '150px',
         },
@@ -279,6 +307,27 @@ function Servicepertama() {
 
     const handleSubmitServicePertama = (event) => {
         console.log(inputServices);
+        event.preventDefault();
+        setLoading(true);
+        axios
+            .post("http://127.0.0.1:8000/api/services/save_service_pertama", inputServices)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    setLoading(false);
+                    swal("Error", 'Data tidak boleh kosong!', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });   
+                } else {
+                    setLoading(false);
+                    swal("Success", 'Data Berhasil disimpan!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+    
+                    window.location.href = "/input/servicepertama";
+                }
+            });
     }
 
     function formatDateInput(inputDate) {
@@ -413,18 +462,32 @@ function Servicepertama() {
                                                                     </div>
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
-                                                                            <input type="date" className="form-control form-control-sm" onChange={handleChangeInputDec} value={serviceTglDec} id="tgl_dec" placeholder="Tanggal DEC" />
+                                                                            <input type="date" className="form-control form-control-sm" onChange={handleChangeInputDec} value={serviceTglDec} name="tgl_dec" id="tgl_dec" placeholder="Tanggal DEC" />
                                                                             <label htmlFor="tgl_dec">Tanggal DEC</label>
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-lg-6 mb-2">
                                                                         <div className="form-floating">
-                                                                            <input type="date" className="form-control form-control-sm" readOnly value={serviceTglJatuhTempo} id="tgl_jatuh_tempo" placeholder="Tanggal Jatuh Tempo" />
-                                                                            <label htmlFor="tgl_jatuh_tempo">Tanggal Jatuh Tempo</label>
+                                                                            <input type="date" className="form-control form-control-sm" onChange={handleChangeInputTglService} min={startDate} max={endDate} value={serviceTglService} id="tgl_service_pertama" name="tgl_service_pertama" placeholder="Tanggal Service Pertama" />
+                                                                            <label htmlFor="tgl_service_pertama">Tanggal Service Pertama</label>
                                                                         </div>
+                                                                        <small style={{fontSize: "10px"}}><i>Tanggal Jatuh Tempo adalah <b style={{color: "red"}}>{endDate}</b></i></small>
                                                                     </div>
                                                                 </div>
                                                             </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="card-footer">
+                                                    <div className="row mt-3">
+                                                        <div className="col-lg-6">
+
+                                                        </div>
+                                                        <div className="col-lg-6">
+                                                            <div className="text-end">
+                                                                <button onClick={handleSubmitServicePertama} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                                <button onClick={closeFollowUp} className="btn btn-danger btn-label btn-sm"style={{marginLeft: "5px"}}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
