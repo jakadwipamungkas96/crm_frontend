@@ -52,6 +52,8 @@ const Login = () => {
                 window.location.href = "/dashboard";
             } else if (response.data.rules == "crc") {
                 window.location.href = "/list/bstb";
+            } else if (response.data.rules == "mra") {
+                window.location.href = "/service_orders/attacklist"; 
             }
             // window.location.href = "/dashboard";
 
@@ -161,7 +163,7 @@ const Login = () => {
                                             </div>
 
                                             <div className="mt-5 text-center">
-                                                <p className="mb-0">Belum punya akun ? <a href="https://wa.me/6289626481645?text=Selamat Pagi, saya .... divisi .... Nomor Pekerja .... belum mempunyai akun untuk mengakses CRM" target='__blank' className="fw-semibold text-primary text-decoration-underline"> Silahkan Hubungi IT Administrator</a> </p>
+                                                <p className="mb-0">Belum punya akun ? <a href="https://wa.me/6289626481645?text=Selamat Pagi, saya .... divisi .... Nomor Pekerja .... belum mempunyai akun untuk mengakses CRM" target='__blank' className="fw-semibold text-primary text-decoration-underline"> Silahkan Hubungi IT HO</a> </p>
                                             </div>
                                         </div>
                                     </div>

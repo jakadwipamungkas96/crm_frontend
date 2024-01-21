@@ -16,6 +16,7 @@ import Services from './components/services/services';
 import Attacklist from './components/service_orders/attacklist';
 import Bstb from './components/delivery_orders/bstb';
 import Servicepertama from './components/service_orders/servicepertama';
+import Bucket from './components/customers/bucket';
 
 function App() {
   useEffect(() => {
@@ -328,6 +329,13 @@ function App() {
                   <li className="nav-item">
                     <NavLink className="nav-link menu-link" exact to="/datacustomers" activeclassname="active"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
                   </li>
+                  {rulesName != "sales" ? (
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link" exact to="/customers/bucket" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
+                      </li>
+                  ) : (
+                      ""
+                  ) }
                   {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact to="/ulangtahun" activeclassname="active"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
                     <li className="menu-title"><span data-key="t-menu">List</span></li>
                   {rulesName != "mra" ? (
@@ -335,10 +343,9 @@ function App() {
                         <NavLink className="nav-link menu-link" exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
                       </li>
                   ) : (
-                      // <li className="nav-item">
-                      //   <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
-                      // </li>
-                      ""
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                      </li>
                   ) }
 
                   {rulesName == "sales" ? (
@@ -601,6 +608,7 @@ function App() {
             <Route path="/services/attacklist" element={<Attacklist />}></Route>
             <Route path="/list/bstb" element={<Bstb />}></Route>
             <Route path="/input/servicepertama" element={<Servicepertama />}></Route>
+            <Route path="/customers/bucket" element={<Bucket />}></Route>
           </Routes>
         </div>
       </div>

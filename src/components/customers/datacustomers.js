@@ -161,12 +161,6 @@ function Datacustomers() {
                         </>,
             width: "250px"
         },
-        // {
-        //     name: 'Total Kendaraan',
-        //     selector: row => row.total_kendaraan,
-        //     sortable: true,
-        //     width: "100px"
-        // },
         {
             name: 'Single ID',
             selector: row => row.single_id,
@@ -179,20 +173,20 @@ function Datacustomers() {
             width: "300px"
         },
         {
+            name: 'Total Kendaraan',
+            selector: row => row.total_kendaraan,
+            sortable: true,
+            width: "150px"
+        },
+        {
             name: 'No Telepon',
             selector: row => row.telp,
             sortable: true,
             width: "200px"
         },
         {
-            name: 'Email',
-            selector: row => row.email,
-            sortable: true,
-            width: "150px"
-        },
-        {
             name: 'Alamat',
-            selector: row => row.alamat_nik,
+            selector: row => row.alamat,
             sortable: true,
             width: "300px"
         }
@@ -1180,7 +1174,7 @@ function Datacustomers() {
                                                                 <p className="card-text mb-2 text-muted" style={{fontSize: "13px"}}><i className="ri-cake-2-line"></i> {nameCustomer.tgl_ultah == "" ? (<span className="badge bg-dark-subtle text-body badge-border">Tanggal Kosong</span>) : nameCustomer.tgl_ultah} 
                                                                  {currentDateFormatted == nameCustomer.tgl_ultah_cek ? (<span className="badge bg-primary">Hari ini berulang tahun</span>) : ""}</p>
                                                                 <p className="card-text mb-2" style={{fontSize: "13px"}}>
-                                                                    {nameCustomer.alamat_nik == null ? (<span className="badge bg-dark-subtle text-body badge-border">Alamat Kosong</span>) : nameCustomer.alamat_nik}
+                                                                    {nameCustomer.alamat == null ? (<span className="badge bg-dark-subtle text-body badge-border">Alamat Kosong</span>) : nameCustomer.alamat}
                                                                 </p>
                                                             </div>
                                                         </div>

@@ -623,26 +623,30 @@ function Bstb() {
                                                                     </div>
                                                                     <div className="col-lg-3 mb-2">
                                                                         <div className="form-floating">
-                                                                            <select type="text" className="form-control form-control-sm" onChange={handleChangeInputTenor} value={bstbTenor} id="tenor" name="tenor" placeholder="Pertanyaan 7">
-                                                                                <option value="">-- Pilih --</option>
-                                                                                <option value="0">0</option>
-                                                                                <option value="1">1</option>
-                                                                                <option value="2">2</option>
-                                                                                <option value="3">3</option>
-                                                                                <option value="4">4</option>
-                                                                                <option value="5">5</option>
-                                                                            </select>
-                                                                            <label htmlFor="tenor">Tenor ? </label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-lg-3 mb-2">
-                                                                        <div className="form-floating">
                                                                             <select type="text" className="form-control form-control-sm" onChange={handleChangeInputAsuransi} value={bstbAsuransi} id="asuransi" name="asuransi" placeholder="Pertanyaan 8">
                                                                                 <option value="">-- Pilih --</option>
                                                                                 <option value="Ya">Ya</option>
                                                                                 <option value="Tidak">Tidak</option>
                                                                             </select>
                                                                             <label htmlFor="asuransi">Apakah mobil menggunakan asuransi ?</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-lg-3 mb-2">
+                                                                        <div className="form-floating">
+                                                                            {isAsuransi ? (
+                                                                                <>
+                                                                                    <select type="text" className="form-control form-control-sm" onChange={handleChangeInputTenor} value={bstbTenor} id="tenor" name="tenor" placeholder="Pertanyaan 7">
+                                                                                        <option value="">-- Pilih --</option>
+                                                                                        <option value="0">0</option>
+                                                                                        <option value="1">1</option>
+                                                                                        <option value="2">2</option>
+                                                                                        <option value="3">3</option>
+                                                                                        <option value="4">4</option>
+                                                                                        <option value="5">5</option>
+                                                                                    </select>
+                                                                                    <label htmlFor="tenor">Tenor ? </label>
+                                                                                </>
+                                                                            ) : ""}
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-lg-6 mb-2">

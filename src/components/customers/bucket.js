@@ -1,24 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,  useLayoutEffect, useRef } from "react";
+import { NavLink } from "react-router-dom";
+import { makeStyles } from '@mui/styles';
+import CryptoJS from 'crypto-js';
+import DataTable from 'react-data-table-component';
 
 import axios from 'axios';
-import TableContainer from "@mui/material/TableContainer";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from '@mui/styles';
-import swal from 'sweetalert';
-
-// React DataTable
-import DataTable from 'react-data-table-component';
-import TextField from "@mui/material/TextField";
-
-// Modal Dialog
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import CryptoJS from 'crypto-js';
 
 const useStyles = makeStyles({
     noTableHover: {
@@ -28,13 +14,7 @@ const useStyles = makeStyles({
     },
 });
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const drawerWidth = 240;
-
-function Carlist() {
+function Bucket() {
     const classes = useStyles();
     
     const hariIni = new Date();
@@ -45,9 +25,6 @@ function Carlist() {
         'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
         'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
     ];
-
-    // Format tanggal dengan format "DD/MM/YYYY"
-    const tanggalFormat = tanggal + ' ' + namaBulan[hariIni.getMonth()] + ' ' + tahunHariIni;
 
     // Fungsi untuk mengupdate daftar tahun
     const tahunlist = [];
@@ -121,19 +98,21 @@ function Carlist() {
         },
     ];
 
+    // Format tanggal dengan format "DD/MM/YYYY"
+    const tanggalFormat = tanggal + ' ' + namaBulan[hariIni.getMonth()] + ' ' + tahunHariIni;
+
+    const [lsDtBucket, setLsDtBucket] = useState([]);
     const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-
-    const [lsDtCar, setLsDtCar] = useState([]);
     
     useEffect(() => {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/car/list_car_sale?bulan=${bulan}&tahun=${tahun}`;
+            const url = `http://127.0.0.1:8000/api/bucketlist`;
             try {
                 const response = await axios.get(url);
-                setLsDtCar(response.data.data);
+                setLsDtBucket(response.data.data);
                 setLoadingTable(false);
 
             } catch (error) {
@@ -141,17 +120,8 @@ function Carlist() {
             }
         };
         getData();
-    }, [bulan, tahun]);
-
-    const alertNotifSend = (event) => {
-        swal({
-            title: "Reminder berhasil terkirim",
-            icon: "success",
-            button: "OK",
-          });
-    }
-
-    // For List Data Customer
+    }, []);
+    
     const [searchText, setSearchText] = useState('');
     const customStyles = {
         tableWrapper: {
@@ -173,19 +143,48 @@ function Carlist() {
         }
     };
 
-    const columnsLsCar = [
+    const columnsLsBucket = [
         {
-            name: 'Model Type',
+            name: 'Single ID',
+            selector: row => row.single_id,
+            sortable: true,
+            width: '130px',
+        },
+        {
+            name: 'Nama Customer',
+            selector: row => row.nama_customer,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'No Rangka',
+            selector: row => row.no_rangka,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Tipe Kendaraan',
             selector: row => row.tipe,
             sortable: true,
-            width: '50%',
+            width: '200px',
         },
         {
             name: 'Usia Kendaraan',
             selector: row => row.usia_kendaraan,
             sortable: true,
-            width: '20%',
+            width: '200px',
+        },
+        {
+            name: 'Status Customer',
+            selector: row => (
+                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge border ${row.status_distribusi === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
+                    {row.status_distribusi === 0 ? 'Pending' : row.status_distribusi === 1 ? 'Done' : 'Unknown'}
+                </span>
+            ),
+            sortable: true,
+            width: '200px',
         }
+        ,
     ];
 
     const handleSearch = (text) => {
@@ -193,21 +192,15 @@ function Carlist() {
     };
     
     // Logika pencarian, memfilter data berdasarkan beberapa kolom
-    const filteredData = lsDtCar.filter(item =>
+    const filteredData = lsDtBucket.filter(item =>
         Object.values(item).some(value =>
             value && value.toString().toLowerCase().includes(searchText.toLowerCase())
         )
     );
     
     // Jika searchText kosong, tampilkan semua data
-    const displayData = searchText ? filteredData : lsDtCar;
+    const displayData = searchText ? filteredData : lsDtBucket;
 
-    function createBadgeHTML(data) {
-        const statusValues = data.status.split(',').map(s => s.trim());
-        const badgeHTML = statusValues.map(status => `<span className="badge">${status}</span>`).join(' ');
-        
-        return badgeHTML;
-    }
 
     return (
         <div className="page-content">
@@ -215,55 +208,23 @@ function Carlist() {
                 <div className="row">
                     <div className="col-12">
                         <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 className="mb-sm-0">Data Penjualan Kendaraan</h4>
+                            <h4 className="mb-sm-0">Data Bucket Customers</h4>
 
                             <div className="page-title-right">
-
+                                <ol className="breadcrumb m-0">
+                                    <li className="breadcrumb-item active">
+                                        <div id="" style={{background: "#CBD5E1", fontSize: "10px", color: "#0F172A"}} className='p-2'>
+                                            Tanggal: <b>{tanggalFormat}</b>
+                                        </div>
+                                    </li>
+                                </ol>
                             </div>
                         </div>
                     </div>
                 </div>
-                
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card">
-                            <div className="card-header">
-                                {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
-                                <div className="d-flex align-items-center">
-                                    <div className="flex-grow-1 overflow-hidden">
-                                        <form action="">
-                                            <div className="row">
-                                                <div className="col-lg-1 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Bulan</label>
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                    <select type="date" onChange={handleChange} value={bulan} className="form-select form-select-md" id="nameInput" name="bulan" placeholder="Enter your name" >
-                                                        {bulanlist.map((option) => (
-                                                            <option key={option.value} value={option.value}>
-                                                                {option.label}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <div className="col-lg-1 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tahun</label>
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                    <select type="date" onChange={handleChange2} value={tahun} className="form-select form-select-md" id="nameInput" name="tahun" placeholder="Enter your name" >
-                                                        {tahunlist.map((option) => (
-                                                            <option key={option.value} value={option.value}>
-                                                                {option.label}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                             <div className="card-body" style={{padding: "15px"}}>
                                 <div className="d-flex align-items-center mb-2">
                                     <div className="flex-grow-1 overflow-hidden">
@@ -290,7 +251,7 @@ function Carlist() {
 
                                     
                                     <DataTable
-                                        columns={columnsLsCar}
+                                        columns={columnsLsBucket}
                                         data={displayData}
                                         pagination
                                         paginationPerPage={10}
@@ -309,4 +270,4 @@ function Carlist() {
     );
 }
 
-export default Carlist;
+export default Bucket;

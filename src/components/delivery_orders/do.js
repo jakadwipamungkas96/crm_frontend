@@ -123,13 +123,13 @@ function Do() {
         },
         {
             name: 'Nama Customer',
-            selector: row => row.nama_customer,
+            selector: row => row.nama_customer_stnk,
             sortable: true,
             width: '300px',
         },
         {
-            name: 'Model Type',
-            selector: row => row.model_type,
+            name: 'Type',
+            selector: row => row.type,
             sortable: true,
             width: '300px',
         },
@@ -142,12 +142,6 @@ function Do() {
         {
             name: 'No Rangka',
             selector: row => row.no_rangka,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'No Mesin',
-            selector: row => row.no_mesin,
             sortable: true,
             width: '200px',
         }

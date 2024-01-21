@@ -94,7 +94,7 @@ function Dashboard() {
 
     const tahunSaatIni = new Date().getFullYear();
 
-    for (let tahun = tahunSaatIni; tahun >= 2018; tahun--) {
+    for (let tahun = tahunSaatIni; tahun >= 2017; tahun--) {
         tahunlist.push({
             value: tahun.toString(),
             label: tahun.toString(),
@@ -449,7 +449,7 @@ function Dashboard() {
         },
         {
             name: 'Aksi',
-            cell: row => <button type="button" className="btn btn-info btn-sm btn-label"><i className="ri-mail-send-fill label-icon align-middle fs-16 me-2"></i> Kirim Ucapan</button>,
+            cell: row => <a href={"https://wa.me/6289626481645?text=Selamat Ulang Tahun, Bapak/Ibu "+row.nama_customer} target="__blank" type="button" className="btn btn-info btn-sm btn-label"><i className="ri-mail-send-fill label-icon align-middle fs-16 me-2"></i> Kirim Ucapan</a>,
         },
     ];
 
@@ -514,7 +514,7 @@ function Dashboard() {
         },
         {
             name: 'Aksi',
-            cell: row => <button type="button" className="btn btn-info btn-sm btn-label"><i className="ri-mail-send-fill label-icon align-middle fs-16 me-2"></i> Kirim Reminder</button>,
+            cell: row => <a href={"https://wa.me/6289626481645?text=STNK akan habis, Bapak/Ibu "+row.nama_customer} type="button" className="btn btn-info btn-sm btn-label"><i className="ri-mail-send-fill label-icon align-middle fs-16 me-2"></i> Kirim Reminder</a>,
         },
     ];
     
@@ -535,6 +535,67 @@ function Dashboard() {
             tgl_stnk: '14 November 2023'
         },
         
+    ];
+
+    // service
+    const [openservice, setopenservice] = React.useState(false);
+    const [listservice, setListservice] = useState([]);
+    const [totalservice, setTotalservice] = useState("");
+
+    useEffect(() => {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        const getservice = async () => {
+            const url = `http://127.0.0.1:8000/api/list/notif_service`;
+            try {
+                const response = await axios.get(url);
+                setTotalservice(response.data.total);
+                setListservice(response.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getservice();
+    }, []);
+    
+    const showListservice = (event) => {
+        setopenservice(true);
+    }
+
+    const closeservice = (event) => {
+        setopenservice(false);
+    }
+
+    const customStylesservice = {
+        rows: {
+            style: {
+                minHeight: '50px', // override the row height
+            },
+        },
+        headCells: {
+            style: {
+                background: "#EF4444",
+                color: "white",
+                textAlign: "center",
+                width: "200px"
+            },
+        }
+    };
+
+    const columnsservice = [
+        {
+            name: 'Nama Customer',
+            selector: row => row.nama_customer,
+            sortable: true,
+        },
+        {
+            name: 'Next service',
+            selector: row => row.next_service,
+            sortable: true,
+        },
+        {
+            name: 'Aksi',
+            cell: row => <a href={"https://wa.me/6289626481645?text=Pemberitahuan Service, Bapak/Ibu "+row.nama_customer} type="button" className="btn btn-info btn-sm btn-label"><i className="ri-mail-send-fill label-icon align-middle fs-16 me-2"></i> Kirim Reminder</a>,
+        },
     ];
 
     return (
@@ -559,7 +620,7 @@ function Dashboard() {
                 </div>
 
                 <div className="row">
-                    <div className="col-xl-6 col-md-6">
+                    <div className="col-xl-4 col-md-4">
                         <div className="card card-animate overflow-hidden" style={{cursor: "pointer"}} onClick={showListUltah}>
                             <div className="position-absolute start-0" style={{zIndex: 0}}>
                                 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
@@ -579,7 +640,7 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-6 col-md-6">
+                    <div className="col-xl-4 col-md-4">
                         <div className="card card-animate overflow-hidden" style={{cursor: "pointer"}} onClick={showListStnk}>
                             <div className="position-absolute start-0" style={{zIndex: 0}}>
                                 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
@@ -591,6 +652,26 @@ function Dashboard() {
                                     <div className="flex-grow-1 overflow-hidden">
                                         <p className="text-uppercase fw-medium text-truncate mb-3 text-white">STNK<br/></p>
                                         <h4 className="fs-22 fw-semibold ff-secondary mb-0 text-white"><span>{totalStnk} <sup style={{fontSize: '12px'}}>Customers</sup></span></h4>
+                                    </div>
+                                    <div className="flex-shrink-0">
+                                        <div id=""><img src="assets/images/icon_wijaya.png" alt="" height="50" style={{opacity: 0.5}} /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-xl-4 col-md-4">
+                        <div className="card card-animate overflow-hidden" style={{cursor: "pointer"}} onClick={showListservice}>
+                            <div className="position-absolute start-0" style={{zIndex: 0}}>
+                                <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
+                                    <path id="Shape 8" className="s0" d="m189.5-25.8c0 0 20.1 46.2-26.7 71.4 0 0-60 15.4-62.3 65.3-2.2 49.8-50.6 59.3-57.8 61.5-7.2 2.3-60.8 0-60.8 0l-11.9-199.4z" />
+                                </svg>
+                            </div>
+                            <div className="card-body" style={{zIndex: 1}}>
+                                <div className="d-flex align-items-center">
+                                    <div className="flex-grow-1 overflow-hidden">
+                                        <p className="text-uppercase fw-medium text-truncate mb-3 text-white">Services<br/></p>
+                                        <h4 className="fs-22 fw-semibold ff-secondary mb-0 text-white"><span>{totalservice} <sup style={{fontSize: '12px'}}>Customers</sup></span></h4>
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id=""><img src="assets/images/icon_wijaya.png" alt="" height="50" style={{opacity: 0.5}} /></div>
@@ -991,6 +1072,56 @@ function Dashboard() {
                                                         <DataTable
                                                             columns={columnsstnk}
                                                             data={listStnk}
+                                                            pagination
+                                                            customStyles={customStylesUltah}
+                                                            defaultSortFieldId={1}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+            </Dialog>
+            {/* End Modal STNK */}
+
+            {/* Start Modal Service */}
+            <Dialog
+                    open={openservice}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{border: "none"}}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{fontSize: "17px"}}>List service </h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
+                                                        <button type="button" className="btn btn-danger btn-sm" onClick={closeservice}><i className="ri-close-circle-fill"></i> Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12 mt-2 p-3">
+                                                        <DataTable
+                                                            columns={columnsservice}
+                                                            data={listservice}
                                                             pagination
                                                             customStyles={customStylesUltah}
                                                             defaultSortFieldId={1}
