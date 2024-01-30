@@ -143,10 +143,16 @@ function Bstb() {
                         width: "150px"
         },
         {
-            name: 'Cabang',
-            selector: row => row.cabang_name,
+            name: 'Single ID',
+            selector: row => row.single_id,
             sortable: true,
-            width: '200px',
+            width: '150px',
+        },
+        {
+            name: 'Nama Customer',
+            selector: row => row.nama_customer_stnk,
+            sortable: true,
+            width: '300px',
         },
         {
             name: 'No Rangka',
@@ -167,14 +173,8 @@ function Bstb() {
             width: '200px',
         },
         {
-            name: 'Nama Customer',
-            selector: row => row.nama_customer,
-            sortable: true,
-            width: '300px',
-        },
-        {
             name: 'Model Type',
-            selector: row => row.model_type,
+            selector: row => row.type,
             sortable: true,
             width: '300px',
         },
@@ -296,7 +296,7 @@ function Bstb() {
 
     const handleOpenFrmBstb = (event) => {
         setinputBSTB(true);
-        setbstbNamaCustomer(event.nama_customer);
+        setbstbNamaCustomer(event.nama_customer_stnk);
         setbstbTglDec(formatDateInput(event.tgl_dec));
         setInputsDec((values) => ({
             ...values,

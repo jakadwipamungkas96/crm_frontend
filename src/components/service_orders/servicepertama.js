@@ -162,10 +162,12 @@ function Servicepertama() {
 
     const handleOpenDetailKendaraan = (event) => {
         setOpenServicePertama(true);
-        setServiceNamaCustomer(event.nama_customer);
+        setServiceNamaCustomer(event.nama_customer_stnk);
         setServiceNorangka(event.no_rangka);
         setserviceTglDec(formatDateInput(event.tgl_dec));
-        // setserviceTglService(formatDateInput(event.tgl_jatuh_tempo));
+        if (event.tgl_jatuh_tempo != '') {
+            setserviceTglService(formatDateInput(event.tgl_jatuh_tempo));
+        }
 
         setinputServices((values) => ({
             ...values,
@@ -181,14 +183,25 @@ function Servicepertama() {
     const columnsLsCustomer = [
         {
             name: 'Aksi',
-            cell: row => <button onClick={(event) => {
-                            handleOpenDetailKendaraan(row);
-                        }}
-                        style={{
-                            fontSize: "10px"
-                        }} type="button" className="btn btn-info waves-effect waves-light">
-                            <i className="ri-add-circle-line"></i> Booking
-                        </button>,
+            cell: row => {
+                if (row.status_service_pertama === 'service') {
+                    return <button 
+                    style={{
+                        fontSize: "10px"
+                    }} type="button" className="btn btn-info waves-effect waves-light" disabled>
+                        <i className="ri-add-circle-line"></i> Booking
+                    </button>
+                } else {
+                    return <button onClick={(event) => {
+                        handleOpenDetailKendaraan(row);
+                    }}
+                    style={{
+                        fontSize: "10px"
+                    }} type="button" className="btn btn-info waves-effect waves-light">
+                        <i className="ri-add-circle-line"></i> Booking
+                    </button>
+                }
+            },
                         width: "150px"
         },
         {
@@ -208,14 +221,32 @@ function Servicepertama() {
             width: '150px',
         },
         {
+            name: 'Single ID',
+            selector: row => row.single_id,
+            sortable: true,
+            width: '120px',
+        },
+        {
             name: 'Nama Customer',
-            selector: row => row.nama_customer,
+            selector: row => row.nama_customer_stnk,
             sortable: true,
             width: '250px',
         },
         {
+            name: 'Tanggal DO',
+            selector: row => row.tgl_do,
+            sortable: true,
+            width: '150px',
+        },
+        {
             name: 'Tanggal DEC',
             selector: row => row.tgl_dec,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Service Pertama',
+            selector: row => row.first_service,
             sortable: true,
             width: '200px',
         },
@@ -233,21 +264,15 @@ function Servicepertama() {
         },
         {
             name: 'No Polisi',
-            selector: row => row.no_polisi,
+            selector: row => row.no_pol,
             sortable: true,
-            width: '100px',
+            width: '150px',
         },
         {
             name: 'Model',
-            selector: row => row.model,
+            selector: row => row.type,
             sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Tahun Kendaraan',
-            selector: row => row.tahun_kendaraan,
-            sortable: true,
-            width: '200px',
+            width: '250px',
         }
     ];
 

@@ -329,7 +329,7 @@ function App() {
                   <li className="nav-item">
                     <NavLink className="nav-link menu-link" exact to="/datacustomers" activeclassname="active"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
                   </li>
-                  {rulesName != "sales" ? (
+                  {rulesName != "sales" && rulesName != "crc" ? (
                       <li className="nav-item">
                         <NavLink className="nav-link menu-link" exact to="/customers/bucket" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
                       </li>
@@ -348,14 +348,16 @@ function App() {
                       </li>
                   ) }
 
-                  {rulesName == "sales" ? (
+                  {rulesName != "spv" ? (
                     <>
                       <li className="menu-title"><span data-key="t-menu">Service</span></li>
                       <li className="nav-item">
                         <NavLink className="nav-link menu-link" exact to="/input/servicepertama" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
                       </li>
                     </>
-                  ) : ("") }
+                  ) : (
+                    ""
+                  ) }
 
                   {rulesName == "crc" ? (
                     <li className="nav-item">

@@ -178,11 +178,23 @@ function Carlist() {
             name: 'Model Type',
             selector: row => row.tipe,
             sortable: true,
-            width: '50%',
+            width: '40%',
+        },
+        {
+            name: 'Tanggal DO',
+            selector: row => row.tgl_do,
+            sortable: true,
+            width: '20%',
         },
         {
             name: 'Usia Kendaraan',
             selector: row => row.usia_kendaraan,
+            sortable: true,
+            width: '20%',
+        },
+        {
+            name: 'Total Terjual',
+            selector: row => row.total_penjualan,
             sortable: true,
             width: '20%',
         }
@@ -267,18 +279,18 @@ function Carlist() {
                             <div className="card-body" style={{padding: "15px"}}>
                                 <div className="d-flex align-items-center mb-2">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        <input
-                                            className="form-control form-control-sm"
-                                            type="text"
-                                            value={searchText}
-                                            onChange={(e) => handleSearch(e.target.value)}
-                                            placeholder="Search..."
-                                            style={{width: "20%"}}
-                                        />
+                                        Summary Penjualan Kendaraan <b> Bulan {namaBulan[bulan-1]} Tahun {tahun}</b>
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-
+                                            <input
+                                                className="form-control form-control-sm"
+                                                type="text"
+                                                value={searchText}
+                                                onChange={(e) => handleSearch(e.target.value)}
+                                                placeholder="Search..."
+                                                style={{width: "100%"}}
+                                            />
                                         </div>
                                     </div>
                                 </div>

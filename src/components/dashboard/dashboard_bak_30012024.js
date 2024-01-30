@@ -155,6 +155,21 @@ function Dashboard() {
     const [listUltah, setListUltah] = useState([]);
     const [totalUltah, setTotalUltah] = useState("");
 
+    useEffect(() => {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        const getUltah = async () => {
+            const url = `http://127.0.0.1:8000/api/list/notif_birthday`;
+            try {
+                const response = await axios.get(url);
+                setTotalUltah(response.data.total);
+                setListUltah(response.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getUltah();
+    }, []);
+
     const [dataProspek, setDataProspek] = useState([]);
     const [dataProspek2, setDataProspek2] = useState([]);
     const [refreshDt, setRefresh] = useState();
@@ -178,21 +193,6 @@ function Dashboard() {
                 : prevRowCountState
         );
     }, [dataProspek2?.totalAll, setRowCountState]);
-
-    useEffect(() => {
-        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const getUltah = async () => {
-            const url = `http://127.0.0.1:8000/api/list/notif_birthday`;
-            try {
-                const response = await axios.get(url);
-                setTotalUltah(response.data.total);
-                setListUltah(response.data.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getUltah();
-    }, [refreshDt]);
 
 
     const [openCustCard, setopenCustCard] = React.useState(false);
@@ -340,11 +340,8 @@ function Dashboard() {
     
     
     const [topCarNameArr, setTopCarName] = useState([]);
-    const monthday = new Date();
-    const firstDayOfMonth = `${monthday.getFullYear()}-${(monthday.getMonth() + 1).toString().padStart(2, '0')}`;
-    const defEndDate = new Date().toISOString().split('T')[0];
-    const [startdate, setStartDate] = useState(firstDayOfMonth+'-01');
-    const [enddate, setEndDate] = useState(defEndDate);
+    const [startdate, setStartDate] = useState("2024-01-01");
+    const [enddate, setEndDate] = useState("2024-01-10");
     
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -442,8 +439,8 @@ function Dashboard() {
         {
             name: 'Status',
             selector: row => (
-                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge ${row.reminder_status == "1" ? ' bg-success' : ' bg-dark'}`}>
-                    {row.reminder_status == "1" ? 'Done' : 'Waiting'}
+                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge ${row.reminder_status === "1" ? ' bg-success' : ' bg-dark'}`}>
+                    {row.reminder_status === "1" ? 'Done' : 'Waiting'}
                 </span>
             ),
             sortable: true,
@@ -453,7 +450,7 @@ function Dashboard() {
             cell: row => (
                 <>
                     <a href={"https://wa.me/"+row.no_telp+"?text=Selamat Ulang Tahun, Bapak/Ibu "+row.nama_customer} target="__blank" type="button" className="btn btn-info btn-sm"><i className="ri-mail-send-fill"></i></a>
-                    <a type="button" className={`btn btn-success btn-sm ${(rulesName === "superadmin" || rulesName === "administrator") ? "" : "d-none"}`} onClick={(event) => {
+                    <a type="button" className={`btn btn-success btn-sm ${rulesName === "superadmin" ? "" : "d-none"}`} onClick={(event) => {
                             handleUpdateStatus(row.single_id, row.nama_customer, row.nama_sales, row.no_telp, 'ultah', 1);
                         }} style={{marginLeft: "5px", cursor: "pointer"}}><i className="ri-checkbox-circle-fill"></i></a>
                 </>
@@ -663,7 +660,6 @@ function Dashboard() {
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
-                    setRefresh();
                     swal("Error", 'Data tidak boleh kosong!', "error", {
                         buttons: false,
                         timer: 2000,
@@ -747,14 +743,6 @@ function Dashboard() {
         //             // window.location.href = "/dashboard";
         //         }
         //     });
-    }
-
-    function handleStartDate(event) {
-        setStartDate(event.target.value);
-    }
-
-    function handleEndDate(event) {
-        setEndDate(event.target.value);
     }
 
     return (
@@ -849,19 +837,31 @@ function Dashboard() {
                                     <div className="flex-grow-1 overflow-hidden">
                                         <form action="">
                                             <div className="row">
-                                                <div className="col-lg-2 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Awal</label>
+                                                <div className="col-lg-1 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Bulan</label>
                                                 </div>
                                                 <div className="col-lg-3">
                                                     {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                    <input type="date" onChange={handleStartDate} value={startdate} className="form-control" id="nameInput" name="bulan" placeholder="Enter your name" />
+                                                    <select type="date" onChange={handleChange} value={bulan} className="form-select form-select-md" id="nameInput" name="bulan" placeholder="Enter your name" >
+                                                        {bulanlist.map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
                                                 </div>
-                                                <div className="col-lg-2 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Akhir</label>
+                                                <div className="col-lg-1 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tahun</label>
                                                 </div>
                                                 <div className="col-lg-3">
                                                     {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                    <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
+                                                    <select type="date" onChange={handleChange2} value={tahun} className="form-select form-select-md" id="nameInput" name="tahun" placeholder="Enter your name" >
+                                                        {tahunlist.map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
                                                 </div>
                                             </div>
                                         </form>

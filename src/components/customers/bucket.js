@@ -143,7 +143,17 @@ function Bucket() {
         }
     };
 
-    const columnsLsBucket = [
+    const columnsLsBucket = [,
+        {
+            name: 'Status Klaim',
+            selector: row => (
+                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge border ${row.status_klaim === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
+                    {row.status_klaim === 0 ? 'Pending' : 'Done'}
+                </span>
+            ),
+            sortable: true,
+            width: '150px',
+        },
         {
             name: 'Single ID',
             selector: row => row.single_id,
@@ -154,7 +164,13 @@ function Bucket() {
             name: 'Nama Customer',
             selector: row => row.nama_customer,
             sortable: true,
-            width: '200px',
+            width: '300px',
+        },
+        {
+            name: 'Tanggal DO',
+            selector: row => row.tgl_do,
+            sortable: true,
+            width: '150px',
         },
         {
             name: 'No Rangka',
@@ -174,17 +190,6 @@ function Bucket() {
             sortable: true,
             width: '200px',
         },
-        {
-            name: 'Status Customer',
-            selector: row => (
-                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge border ${row.status_distribusi === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
-                    {row.status_distribusi === 0 ? 'Pending' : row.status_distribusi === 1 ? 'Done' : 'Unknown'}
-                </span>
-            ),
-            sortable: true,
-            width: '200px',
-        }
-        ,
     ];
 
     const handleSearch = (text) => {

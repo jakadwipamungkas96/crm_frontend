@@ -77,7 +77,7 @@ function Datacustomers() {
     const cleanedCabangName = cabangName.replace(/"/g, '');
     const idCab = localStorage.getItem("id_cabang");
 
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
     const [totalRows, setTotalRows] = useState(0);
 
@@ -91,9 +91,9 @@ function Datacustomers() {
             try {
 
                 const response = await axios.get(url);
-                setTotalRows(response.data.totalAll);
                 setLoading(false);
                 setLsDtCustomer(response.data.data);
+                setTotalRows(response.data.pagination.total);
 
             } catch (error) {
                 console.log(error);
@@ -102,12 +102,13 @@ function Datacustomers() {
         getData();
     }, [currentPage, perPage, refreshDt]);
 
-    const handlePageChange = (page, totalRows) => {
-        setCurrentPage(page);
+    const handleRowsPerPageChange = (newPerPage, currentPage) => {
+        setPerPage(newPerPage);
+        setCurrentPage(currentPage);
     };
 
-    const handlePerRowsChange = async (newPerPage, page) => {
-        setPageSize(newPerPage);
+    const handlePageChange = (page) => {
+        console.log(page);
         setCurrentPage(page);
     };
 
@@ -243,7 +244,7 @@ function Datacustomers() {
                     setInfoDtServices(response.data.dtService);
                 });
 
-        } else if (rulesName == "sales"){
+        } else if (rulesName == "sales" || rulesName == "spv"){
             console.log("buka card sales");
             setCardSales(true);
             setDtCar(event);
@@ -1120,7 +1121,13 @@ function Datacustomers() {
                                     <DataTable
                                         columns={columnsLsCustomer}
                                         data={displayData}
+                                        key={currentPage}
                                         pagination
+                                        paginationPerPage={perPage} // Jumlah item per halaman
+                                        paginationRowsPerPageOptions={[10, 20, 30]} // Opsi jumlah item per halaman
+                                        paginationTotalRows={totalRows} // Total jumlah data
+                                        onChangeRowsPerPage={handleRowsPerPageChange} 
+                                        onChangePage={handlePageChange}
                                         customStyles={customStyles}
                                         defaultSortFieldId={1}
                                         onSearch={handleSearch} // Menambahkan fungsi pencarian
