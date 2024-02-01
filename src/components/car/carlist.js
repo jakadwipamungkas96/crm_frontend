@@ -54,6 +54,20 @@ function Carlist() {
     const [bulan, setBulan] = React.useState(bulanHariIni);
     const [tahun, setTahun] = React.useState(tahunHariIni);
 
+    const monthday = new Date();
+    const firstDayOfMonth = `${monthday.getFullYear()}-${(monthday.getMonth() + 1).toString().padStart(2, '0')}`;
+    const defEndDate = new Date().toISOString().split('T')[0];
+    const [startdate, setStartDate] = useState(firstDayOfMonth+'-01');
+    const [enddate, setEndDate] = useState(defEndDate);
+
+    function handleStartDate(event) {
+        setStartDate(event.target.value);
+    }
+
+    function handleEndDate(event) {
+        setEndDate(event.target.value);
+    }
+
     const handleChange = (event) => {
         setBulan(event.target.value);
     };
@@ -125,15 +139,17 @@ function Carlist() {
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
 
     const [lsDtCar, setLsDtCar] = useState([]);
+    const [infoRange, setInfoRange] = useState();
     
     useEffect(() => {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/car/list_car_sale?bulan=${bulan}&tahun=${tahun}`;
+            const url = `http://127.0.0.1:8000/api/car/list_car_sale?startdate=${startdate}&enddate=${enddate}`;
             try {
                 const response = await axios.get(url);
                 setLsDtCar(response.data.data);
+                setInfoRange(response.data.range);
                 setLoadingTable(false);
 
             } catch (error) {
@@ -141,7 +157,7 @@ function Carlist() {
             }
         };
         getData();
-    }, [bulan, tahun]);
+    }, [startdate, enddate]);
 
     const alertNotifSend = (event) => {
         swal({
@@ -245,31 +261,17 @@ function Carlist() {
                                     <div className="flex-grow-1 overflow-hidden">
                                         <form action="">
                                             <div className="row">
-                                                <div className="col-lg-1 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Bulan</label>
+                                                <div className="col-lg-2 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Awal</label>
                                                 </div>
                                                 <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                    <select type="date" onChange={handleChange} value={bulan} className="form-select form-select-md" id="nameInput" name="bulan" placeholder="Enter your name" >
-                                                        {bulanlist.map((option) => (
-                                                            <option key={option.value} value={option.value}>
-                                                                {option.label}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                                                    <input type="date" onChange={handleStartDate} value={startdate} className="form-control" id="nameInput" name="bulan" placeholder="Enter your name" />
                                                 </div>
-                                                <div className="col-lg-1 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tahun</label>
+                                                <div className="col-lg-2 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Akhir</label>
                                                 </div>
                                                 <div className="col-lg-3">
-                                                    {/* <input type="date" className="form-control" id="nameInput" placeholder="Enter your name" /> */}
-                                                    <select type="date" onChange={handleChange2} value={tahun} className="form-select form-select-md" id="nameInput" name="tahun" placeholder="Enter your name" >
-                                                        {tahunlist.map((option) => (
-                                                            <option key={option.value} value={option.value}>
-                                                                {option.label}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                                                    <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
                                                 </div>
                                             </div>
                                         </form>
@@ -279,7 +281,7 @@ function Carlist() {
                             <div className="card-body" style={{padding: "15px"}}>
                                 <div className="d-flex align-items-center mb-2">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        Summary Penjualan Kendaraan <b> Bulan {namaBulan[bulan-1]} Tahun {tahun}</b>
+                                        Summary Penjualan Kendaraan <b> {infoRange}</b>
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>

@@ -82,12 +82,17 @@ function Datacustomers() {
     const [totalRows, setTotalRows] = useState(0);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
+    const monthday = new Date();
+    const firstDayOfMonth = `${monthday.getFullYear()}-${(monthday.getMonth() + 1).toString().padStart(2, '0')}`;
+    const defEndDate = new Date().toISOString().split('T')[0];
+    const [startdate, setStartDate] = useState(firstDayOfMonth+'-01');
+    const [enddate, setEndDate] = useState(defEndDate);
     
     useEffect(() => {
         setLoading(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${currentPage}&size=${perPage}`;
+            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${currentPage}&size=${perPage}&startdate=${startdate}&enddate=${enddate}`;
             try {
 
                 const response = await axios.get(url);
@@ -100,7 +105,7 @@ function Datacustomers() {
             }
         };
         getData();
-    }, [currentPage, perPage, refreshDt]);
+    }, [currentPage, perPage, startdate, enddate, refreshDt]);
 
     const handleRowsPerPageChange = (newPerPage, currentPage) => {
         setPerPage(newPerPage);
@@ -656,18 +661,19 @@ function Datacustomers() {
     }
 
     const handleOpenEditCust = (event) => {
+        console.log(event);
         getKendaraanCust(event.single_id);
         setupdSingleID(event.single_id);
         setupdCustomerName(event.nama_customer);
         setupdTelpCust(event.telp);
         setupdEmailCust(event.email);
-        setupdAlamatNikCust(event.alamat_nik);
+        setupdAlamatNikCust(event.alamat);
         setInputUpdCust((values) => ({
             ...values,
             ["single_id"]: event.single_id,
-            ["alamat_nik"]: event.alamat_nik,
+            ["alamat"]: event.alamat,
             ["telp_customer"]: event.telp,
-            ["email_customer"]: event.email,
+            ["email"]: event.email,
         }));
         // Konversi tanggal input ke objek Date
         const dateObj = new Date(event.tgl_ultah);
@@ -742,7 +748,7 @@ function Datacustomers() {
                         timer: 2000,
                     });
     
-                    window.location.href = "/datacustomers";
+                    // window.location.href = "/datacustomers";
                 }
             });
     }
@@ -913,6 +919,7 @@ function Datacustomers() {
                     setupdWarna('');
                     setupdLeasing('');
                     setupdAsuransi('');
+                    setupdEmailCust('');
                 } else {
                     setupdNoDoTam(response.data.data.no_do_tam);
                     setupdNoDo(response.data.data.no_do);
@@ -921,11 +928,12 @@ function Datacustomers() {
                     setupdTglSpk(formatDateInput(response.data.data.tgl_spk));
                     setupdNoSpk(response.data.data.no_spk);
                     setupdKode(response.data.data.kode);
+                    setupdEmailCust(response.data.data.email);
                     setupdNamaSpk(response.data.data.nama_spk);
                     setupdNamaStnk(response.data.data.nama_stnk);
                     setupdTglAjuAfi(formatDateInput(response.data.data.tgl_aju_afi));
-                    setupdNikbdoSpk(response.data.data.nikbdo_spk);
-                    setupdNikbdoStnk(response.data.data.nikbdo_stnk);
+                    setupdNikbdoSpk(response.data.data.nik_nib_spk);
+                    setupdNikbdoStnk(response.data.data.nik_nib_stnk);
                     setupdKetType(response.data.data.ket_type);
                     setupdType(response.data.data.type);
                     setupdWarna(response.data.data.warna);
@@ -943,13 +951,14 @@ function Datacustomers() {
                         ["nama_spk"]: response.data.data.nama_spk,
                         ["nama_stnk"]: response.data.data.nama_stnk,
                         ["tgl_aju_afi"]: response.data.data.tgl_aju_afi,
-                        ["nikbdo_spk"]: response.data.data.nikbdo_spk,
-                        ["nikbdo_stnk"]: response.data.data.nikbdo_stnk,
+                        ["nikbdo_spk"]: response.data.data.nik_nib_spk,
+                        ["nikbdo_stnk"]: response.data.data.nik_nib_stnk,
                         ["ket_type"]: response.data.data.ket_type,
                         ["type"]: response.data.data.type,
                         ["warna"]: response.data.data.warna,
                         ["leasing"]: response.data.data.leasing,
                         ["asuransi"]: response.data.data.asuransi,
+                        ["email"]: response.data.data.email,
                     }));
                 }
             });
@@ -1041,6 +1050,14 @@ function Datacustomers() {
             
     }
 
+    function handleStartDate(event) {
+        setStartDate(event.target.value);
+    }
+
+    function handleEndDate(event) {
+        setEndDate(event.target.value);
+    }
+
     return (
         <div className="page-content">
             <div className="container-fluid">
@@ -1081,33 +1098,55 @@ function Datacustomers() {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card">
-                            <div className="card-header">
+                        <div className="card-header">
                                 {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        {/* <h5 className="card-title mb-0">List Data Customer</h5>  */}
-                                        <div id="" className='p-2 col-md-3'>
-                                            <input
-                                                className="form-control form-control-md"
-                                                type="text"
-                                                value={searchText}
-                                                onChange={(e) => handleSearch(e.target.value)}
-                                                placeholder="Search..."
-                                            />
-                                        </div>
+                                        <form action="">
+                                            <div className="row">
+                                                <div className="col-lg-2 mt-2">
+                                                    <input
+                                                        className="form-control form-control-sm"
+                                                        type="text"
+                                                        value={searchText}
+                                                        onChange={(e) => handleSearch(e.target.value)}
+                                                        placeholder="Search..."
+                                                        style={{width: "100%"}}
+                                                    />
+                                                </div>
+                                                <div className="col-lg-2 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Awal</label>
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    <input type="date" onChange={handleStartDate} value={startdate} className="form-control" id="nameInput" name="bulan" placeholder="Enter your name" />
+                                                </div>
+                                                <div className="col-lg-2 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Akhir</label>
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div className="flex-shrink-0">
-                                        {/* Content disini  */}
-                                    </div>
-                                    <div className="flex-shrink-0">
-                                        <div id="" className='p-2'>
-                                            {rulesName == 'sa' ? ("") : (
-                                                <>
-                                                    <a href={`http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
-                                                    <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{marginLeft: "5px", cursor: "pointer"}}><i className="ri-edit-2-line"></i> Multi Update</a>
-                                                </>
-                                            )}
-                                        </div>
+                                </div>
+                            </div>
+                            <div className="card-header" style={{border: 'none'}}>
+                                {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
+                                <div className="d-flex align-items-center">
+                                    <div className="flex-grow-1 overflow-hidden">
+                                        <form action="">
+                                            <div className="row">
+                                                <div className="col-lg-3 text-right">
+                                                    {rulesName == 'sa' ? ("") : (
+                                                        <>
+                                                            <a href={`http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}&startdate=${startdate}&enddate=${enddate}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
+                                                            <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{marginLeft: "5px", cursor: "pointer"}}><i className="ri-edit-2-line"></i> Multi Update</a>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -1919,7 +1958,7 @@ function Datacustomers() {
                                             </div>
                                             <div className="col-lg-4 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="number" className="form-control form-control-sm" onChange={handleChangeTelpCust} value={updTelpCust !== null ? updTelpCust : ''} name="telp_customer" id="telp_customer" placeholder="No Telepon" />
+                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeTelpCust} value={updTelpCust !== null ? updTelpCust : ''} name="telp_customer" id="telp_customer" placeholder="No Telepon" />
                                                     <label htmlFor="telp_customer">No Telepon</label>
                                                 </div>
                                             </div>

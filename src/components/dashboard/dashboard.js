@@ -85,6 +85,23 @@ function Dashboard() {
     const [bulan, setBulan] = React.useState(bulanHariIni);
     const [tahun, setTahun] = React.useState(tahunHariIni);
 
+    const [listUltah, setListUltah] = useState([]);
+    const [totalUltah, setTotalUltah] = useState("");
+
+    const [dataProspek, setDataProspek] = useState([]);
+    const [dataProspek2, setDataProspek2] = useState([]);
+    const [refreshDt, setRefresh] = useState();
+    const [pageSize, setPageSize] = useState(25);
+    const [page, setPage] = useState(0);
+    const [isLoading, setLoading] = useState(true);
+
+    const [topCarNameArr, setTopCarName] = useState([]);
+    const monthday = new Date();
+    const firstDayOfMonth = `${monthday.getFullYear()}-${(monthday.getMonth() + 1).toString().padStart(2, '0')}`;
+    const defEndDate = new Date().toISOString().split('T')[0];
+    const [startdate, setStartDate] = useState(firstDayOfMonth+'-01');
+    const [enddate, setEndDate] = useState(defEndDate);
+
     const handleChange = (event) => {
         setBulan(event.target.value);
     };
@@ -152,17 +169,8 @@ function Dashboard() {
         },
     ];
     
-    const [listUltah, setListUltah] = useState([]);
-    const [totalUltah, setTotalUltah] = useState("");
-
-    const [dataProspek, setDataProspek] = useState([]);
-    const [dataProspek2, setDataProspek2] = useState([]);
-    const [refreshDt, setRefresh] = useState();
-    const [pageSize, setPageSize] = useState(25);
-    const [page, setPage] = useState(0);
-    const [isLoading, setLoading] = useState(true);
     const token =  CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    // console.log(token);
+    // // console.log(token);
     const rulesName = JSON.parse(localStorage.getItem("rules"));
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
@@ -188,7 +196,7 @@ function Dashboard() {
                 setTotalUltah(response.data.total);
                 setListUltah(response.data.data);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         };
         getUltah();
@@ -199,7 +207,7 @@ function Dashboard() {
     const [nameCustomer, setNameCustomer] = React.useState();
     const [singleIdNo, setSingleIdNo] = React.useState();
     const handleOpenCardCustomer = (event) => {
-        console.log(event);
+        // console.log(event);
         setopenCustCard(true);
         setNameCustomer(event.nama_customer);
         setSingleIdNo(event.single_id);
@@ -286,10 +294,10 @@ function Dashboard() {
           },
         },
         onClick: (event, elements) => {
-            // Menggunakan console.log untuk menampilkan indeks elemen yang diklik ke konsol
+            // Menggunakan // console.log untuk menampilkan indeks elemen yang diklik ke konsol
             if (elements.length > 0) {
               const clickedIndex = elements[0].index;
-              console.log(`Bar yang diklik: ${tipeKendaraan[clickedIndex]}`);
+              // console.log(`Bar yang diklik: ${tipeKendaraan[clickedIndex]}`);
             }
         },
     };
@@ -300,16 +308,16 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getTopSales = async () => {
-            const url = `http://127.0.0.1:8000/api/chart/topfive/sales?bulan=${bulan}&tahun=${tahun}`;
+            const url = `http://127.0.0.1:8000/api/chart/topfive/sales?startdate=${startdate}&enddate=${enddate}`;
             try {
                 const response = await axios.get(url);
                 setTopSalesName(response.data.top_sales);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         };
         getTopSales();
-    }, [bulan, tahun]);
+    }, [startdate, enddate]);
 
     // END CHART TOP 5
     const topSalesName = topSalesNameArr.nama_sales;
@@ -338,14 +346,6 @@ function Dashboard() {
         ],
     };
     
-    
-    const [topCarNameArr, setTopCarName] = useState([]);
-    const monthday = new Date();
-    const firstDayOfMonth = `${monthday.getFullYear()}-${(monthday.getMonth() + 1).toString().padStart(2, '0')}`;
-    const defEndDate = new Date().toISOString().split('T')[0];
-    const [startdate, setStartDate] = useState(firstDayOfMonth+'-01');
-    const [enddate, setEndDate] = useState(defEndDate);
-    
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getTopCar = async () => {
@@ -354,7 +354,7 @@ function Dashboard() {
                 const response = await axios.get(url);
                 setTopCarName(response.data.top_car);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         };
         getTopCar();
@@ -475,7 +475,7 @@ function Dashboard() {
                 setTotalStnk(response.data.total);
                 setListStnk(response.data.data);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         };
         getStnk();
@@ -580,7 +580,7 @@ function Dashboard() {
                 setTotalservice(response.data.total);
                 setListservice(response.data.data);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         };
         getservice();
@@ -725,7 +725,7 @@ function Dashboard() {
             ["reminder_status"]: 1,
         }));
 
-        console.log(inputRemindersService);
+        // console.log(inputRemindersService);
 
         setLoading(true);
         // axios
