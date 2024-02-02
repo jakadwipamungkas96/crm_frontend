@@ -34,7 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const drawerWidth = 240;
 
-function Servicepertama() {
+function Nextservices() {
     const classes = useStyles();
 
     const hariIni = new Date();
@@ -431,7 +431,7 @@ function Servicepertama() {
                 <div className="row">
                     <div className="col-12">
                         <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 className="mb-sm-0">List Booking Service Pertama</h4>
+                            <h4 className="mb-sm-0">List Booking Service</h4>
 
                             <div className="page-title-right">
                                 <ol className="breadcrumb m-0">
@@ -611,4 +611,4 @@ function Servicepertama() {
     );
 }
 
-export default Servicepertama;
+export default Nextservices;

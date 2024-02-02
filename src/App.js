@@ -18,6 +18,7 @@ import Bstb from './components/delivery_orders/bstb';
 import Servicepertama from './components/service_orders/servicepertama';
 import Bucket from './components/customers/bucket';
 import Profile from './components/profile/profile';
+import Nextservices from './components/service_orders/nextservices';
 
 function App() {
   useEffect(() => {
@@ -355,6 +356,9 @@ function App() {
                       <li className="nav-item">
                         <NavLink className="nav-link menu-link" exact="true" to="/input/servicepertama"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
                       </li>
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link" exact="true" to="/services/booking"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service</span></NavLink>
+                      </li>
                     </>
                   ) : (
                     ""
@@ -613,6 +617,7 @@ function App() {
             <Route path="/input/servicepertama" element={<Servicepertama />}></Route>
             <Route path="/customers/bucket" element={<Bucket />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/services/booking" element={<Nextservices />}></Route>
           </Routes>
         </div>
       </div>
