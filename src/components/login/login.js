@@ -44,6 +44,7 @@ const Login = () => {
             // localStorage.setItem('apiUrl', "http://127.0.0.1:8000/");
             // localStorage.setItem('access_token', response.data.access_token);
             localStorage.setItem('id_cabang', response.data.id_cabang);
+            localStorage.setItem('uid', response.data.uid);
             localStorage.setItem('person', JSON.stringify(response.data.person));
             localStorage.setItem('rules', JSON.stringify(response.data.rules));
             localStorage.setItem('cabang_name', JSON.stringify(response.data.cabang_name));

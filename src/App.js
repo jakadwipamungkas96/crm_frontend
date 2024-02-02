@@ -17,6 +17,7 @@ import Attacklist from './components/service_orders/attacklist';
 import Bstb from './components/delivery_orders/bstb';
 import Servicepertama from './components/service_orders/servicepertama';
 import Bucket from './components/customers/bucket';
+import Profile from './components/profile/profile';
 
 function App() {
   useEffect(() => {
@@ -282,7 +283,7 @@ function App() {
                     </button>
                     <div className="dropdown-menu dropdown-menu-end">
                         <h6 className="dropdown-header">Welcome {personName}!</h6>
-                        <a className="dropdown-item" href="pages-profile.html"><i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span className="align-middle">Profile</span></a> <div className="dropdown-divider"></div>
+                        <a className="dropdown-item" href="/profile"><i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span className="align-middle">Profile</span></a> <div className="dropdown-divider"></div>
                         <a className="dropdown-item" onClick={handleLogout} style={{cursor: "pointer"}}><i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span className="align-middle" data-key="t-logout">Logout</span></a>
                     </div>
                 </div>
@@ -323,28 +324,28 @@ function App() {
                 <ul className="navbar-nav" id="navbar-nav">
                   <li className="menu-title mb-2" style={{background: "rgb(229, 231, 235)", color: "#000"}}><span><img src={domain + "/assets/images/icon_wijaya.png"} alt="" height="20" /> {usrCabangName}</span></li>
                   <li className="nav-item">
-                    <NavLink className="nav-link menu-link" exact to="/dashboard" activeclassname="active"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
+                    <NavLink className="nav-link menu-link" exact="true" to="/dashboard"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
                   </li>
                   <li className="menu-title"><span data-key="t-menu">Customers</span></li>
                   <li className="nav-item">
-                    <NavLink className="nav-link menu-link" exact to="/datacustomers" activeclassname="active"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
+                    <NavLink className="nav-link menu-link" exact="true" to="/datacustomers"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
                   </li>
                   {rulesName != "sales" && rulesName != "crc" ? (
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact to="/customers/bucket" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact="true" to="/customers/bucket"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
                       </li>
                   ) : (
                       ""
                   ) }
-                  {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact to="/ulangtahun" activeclassname="active"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
+                  {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact="true" to="/ulangtahun"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
                     <li className="menu-title"><span data-key="t-menu">List</span></li>
                   {rulesName != "mra" ? (
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact to="/do" activeclassname="active"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact="true" to="/do"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
                       </li>
                   ) : (
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
                       </li>
                   ) }
 
@@ -352,7 +353,7 @@ function App() {
                     <>
                       <li className="menu-title"><span data-key="t-menu">Service</span></li>
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact to="/input/servicepertama" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact="true" to="/input/servicepertama"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
                       </li>
                     </>
                   ) : (
@@ -361,20 +362,20 @@ function App() {
 
                   {rulesName == "crc" ? (
                     <li className="nav-item">
-                      <NavLink className="nav-link menu-link" exact to="/list/bstb" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">DEC Tracking by BSTB</span></NavLink>
+                      <NavLink className="nav-link menu-link" exact="true" to="/list/bstb"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">DEC Tracking by BSTB</span></NavLink>
                     </li>
                   ) : ("") }
 
                   {rulesName == "superadmin" ? (
                     <li className="nav-item">
-                      <NavLink className="nav-link menu-link d-none" exact to="/services/attacklist" activeclassname="active"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                      <NavLink className="nav-link menu-link d-none" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
                     </li>
                   ) : ("") }
                   
                   {rulesName != "sales" ? (
                     <>
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact to="/so" activeclassname="active"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact="true" to="/so"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
                       </li>
                     </>
                   ) : (
@@ -611,6 +612,7 @@ function App() {
             <Route path="/list/bstb" element={<Bstb />}></Route>
             <Route path="/input/servicepertama" element={<Servicepertama />}></Route>
             <Route path="/customers/bucket" element={<Bucket />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
           </Routes>
         </div>
       </div>
