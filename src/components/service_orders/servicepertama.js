@@ -126,7 +126,9 @@ function Servicepertama() {
     };
 
     const [openServicePertama, setOpenServicePertama] = useState(false);
+    const [openRechedule, setopenRechedule] = useState(false);
     const [inputServices, setinputServices] = useState([]);
+    const [inpuReschedule, setinpuReschedule] = useState([]);
     const [listSa, setListSa] = useState([]);
     const [serviceNamaCustomer, setServiceNamaCustomer] = useState('');
     const [serviceNoRangka, setServiceNorangka] = useState('');
@@ -189,7 +191,7 @@ function Servicepertama() {
         setServiceNorangka(event.no_rangka);
         setserviceTglDec(formatDateInput(event.tgl_dec));
         if (event.tgl_jatuh_tempo != '') {
-            setserviceTglService(formatDateInput(event.tgl_jatuh_tempo));
+            setserviceTglService(formatDateInput(event.first_service));
         }
 
         setinputServices((values) => ({
@@ -203,10 +205,6 @@ function Servicepertama() {
         setinputServices([]);
     }
 
-    const handleOpenReshedule = (event) => {
-        console.log(event);
-    }
-
     const columnsLsCustomer = [
         {
             name: 'Aksi',
@@ -216,16 +214,16 @@ function Servicepertama() {
                         style={{
                             fontSize: "10px"
                         }} type="button" className="btn btn-info waves-effect waves-light" disabled>
-                        <i className="ri-add-circle-line"></i> Booking
+                        <i className="ri-add-circle-line"></i> Service Pertama
                     </button>
                 } else {
                     if (row.status_service_pertama === 'scheduled') {
 
                         return <>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                <button onClick={(event) => { handleOpenReshedule(row); }} type="button" class="btn btn-info"><i className="ri ri-calendar-todo-fill"></i> Reschedule</button>
-                                <button onClick={(event) => { handleOpenReshedule(row); }} type="button" class="btn btn-success"><i className="ri ri-checkbox-circle-fill"> </i>Datang</button>
-                                <button onClick={(event) => { handleOpenReshedule(row); }} type="button" class="btn btn-danger"><i className="ri ri-close-circle-fill"></i> Cancel</button>
+                            <div className="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                <button onClick={(event) => { handleOpenReshedule(row); }} type="button" className="btn btn-info"><i className="ri ri-calendar-todo-fill"></i> Reschedule</button>
+                                <button onClick={(event) => { handleSubmitConfirm(row, 'datang'); }} type="button" className="btn btn-success"><i className="ri ri-checkbox-circle-fill"> </i>Datang</button>
+                                <button onClick={(event) => { handleSubmitConfirm(row, 'cancel'); }} type="button" className="btn btn-danger"><i className="ri ri-close-circle-fill"></i> Cancel</button>
                             </div>
                         </>
 
@@ -237,7 +235,7 @@ function Servicepertama() {
                             style={{
                                 fontSize: "10px"
                             }} type="button" className="btn btn-info waves-effect waves-light">
-                            <i className="ri-add-circle-line"></i> Booking
+                            <i className="ri-add-circle-line"></i> Service Pertama
                         </button>
                     }
                 }
@@ -245,7 +243,7 @@ function Servicepertama() {
             width: "300px"
         },
         {
-            name: 'Status',
+            name: 'Status Service Pertama',
             selector: row => {
                 if (row.status_service_pertama === 'scheduled') {
                     return <span className="badge bg-success text-white badge-border">Sudah Booking</span>;
@@ -258,7 +256,7 @@ function Servicepertama() {
                 }
             },
             sortable: true,
-            width: '150px',
+            width: '200px',
         },
         {
             name: 'Single ID',
@@ -271,6 +269,12 @@ function Servicepertama() {
             selector: row => row.nama_customer_stnk,
             sortable: true,
             width: '250px',
+        },
+        {
+            name: 'Nama SA',
+            selector: row => row.nama_sa,
+            sortable: true,
+            width: '200px',
         },
         {
             name: 'Tanggal DO',
@@ -409,6 +413,32 @@ function Servicepertama() {
         return formattedDate;
     }
 
+    function settingMinDateRange(daterangw) {
+        const initialDate = daterangw;
+
+        // Menghitung tanggal minimal (mulai bulan Februari)
+        const minDate = (() => {
+            const [year, month] = initialDate.split('-');
+            const nextMonthFirstDay = new Date(parseInt(year, 10), parseInt(month, 10), 1);
+            nextMonthFirstDay.setMonth(nextMonthFirstDay.getMonth() + 1);
+            return `${nextMonthFirstDay.getFullYear()}-${(nextMonthFirstDay.getMonth()).toString().padStart(2, '0')}-${nextMonthFirstDay.getDate().toString().padStart(2, '0')}`;
+        })();
+
+        // Menghitung tanggal maksimal (akhir bulan sebelumnya)
+        const maxDate = (() => {
+            const [year, month] = minDate.split('-');
+            const lastDayOfPreviousMonth = new Date(parseInt(year, 10), parseInt(month, 10), 0);
+            return `${lastDayOfPreviousMonth.getFullYear()}-${(lastDayOfPreviousMonth.getMonth() + 1).toString().padStart(2, '0')}-${lastDayOfPreviousMonth.getDate().toString().padStart(2, '0')}`;
+        })();
+
+        const arrRange = {
+            "startdate": minDate,
+            "enddate": maxDate
+        };
+
+        return arrRange;
+    }
+
     const getSa = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const url = `http://127.0.0.1:8000/api/sa`;
@@ -424,6 +454,121 @@ function Servicepertama() {
     useEffect(() => {
         getSa();
     }, []);
+
+
+    const closeRechedule = () => {
+        setopenRechedule(false);
+        setServiceNamaCustomer("");
+        setServiceNorangka("");
+        setserviceTglDec();
+        setserviceTglService("");
+        setsaName("");
+        setEndDate("");
+    }
+
+    const [dtConfirmation, setConfirmation] = useState([]);
+
+    console.log(token);
+
+    const handleSubmitConfirm = (event, type) => {
+        setLoading(true);
+        setConfirmation((values) => ({
+            ...values,
+            ["single_id"]: event.single_id,
+            ["no_rangka"]: event.no_rangka,
+            ["first_service"]: formatDateInput(event.first_service),
+            ['type']: type
+        }));
+        axios
+            .post("http://127.0.0.1:8000/api/servicepertama/confirmation", dtConfirmation)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    setLoading(false);
+                    swal("Error", 'Data tidak boleh kosong!', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                } else {
+                    setLoading(false);
+                    swal("Success", 'Status Berhasil disimpan!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+
+                    window.location.href = "/input/servicepertama";
+                }
+            });
+        
+    }
+
+    const [reTglDec, setReTglDec] = useState('');
+    const [reTglService, setReTglService] = useState('');
+
+    const handleOpenReshedule = (event) => {
+        const resultRange = settingMinDateRange(formatDateInput(event.tgl_dec));
+
+        setStartDate(formatDateInput(event.tgl_dec));
+        setEndDate(resultRange.enddate);
+
+        setopenRechedule(true);
+        setServiceNamaCustomer(event.nama_customer_stnk);
+        setServiceNorangka(event.no_rangka);
+        setReTglDec(formatDateInput(event.tgl_dec));
+        if (event.tgl_jatuh_tempo != '') {
+            setReTglService(formatDateInput(event.first_service));
+        }
+        setsaName(event.said);
+        setEndDate(formatDateInput(event.tgl_jatuh_tempo));
+
+        setinpuReschedule((values) => ({
+            ...values,
+            ["no_rangka"]: event.no_rangka,
+            ["nama_sa"]: event.said,
+            ["re_tgl_service_pertama"]: formatDateInput(event.first_service),
+            ["re_tgl_dec"]: formatDateInput(event.tgl_dec),
+            ["tgl_service_pertama"]: formatDateInput(event.first_service)
+        }));
+    }
+
+    const handleReTglDec = (event) => {
+        setReTglDec(event.target.value);
+        setinpuReschedule((values) => ({
+            ...values,
+            [event.target.name]: event.target.value
+        }));
+    }
+
+    const handleReTglService = (event) => {
+        setReTglService(event.target.value);
+        setinpuReschedule((values) => ({
+            ...values,
+            [event.target.name]: event.target.value
+        }));
+    }
+
+    const handleSubmitReschedule = (event) => {
+        console.log(inpuReschedule);
+        setLoading(true);
+        axios
+            .post("http://127.0.0.1:8000/api/servicepertama/reschedule", inpuReschedule)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    setLoading(false);
+                    swal("Error", 'Data tidak boleh kosong!', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                } else {
+                    setLoading(false);
+                    swal("Success", 'Reschedule Berhasil disimpan!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+
+                    window.location.href = "/input/servicepertama";
+                }
+            });
+    }
 
     return (
         <div className="page-content">
@@ -606,6 +751,104 @@ function Servicepertama() {
                     </DialogContent>
                 </Dialog>
                 {/* End Input Service Pertama */}
+
+                {/* Start Reschedule Service Pertama  */}
+                <Dialog
+                    open={openRechedule}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={closeRechedule}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{ border: "none" }}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>Reschedule Service</h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <CustomBlockingOverlay isLoading={loading}>
+                                                        </CustomBlockingOverlay>
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNamaCustomer} id="re_nama_customer" placeholder="Nama Customer" />
+                                                                        <label htmlFor="nama_customer">Nama Customer</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNoRangka} id="re_no_rangka" placeholder="No Rangka" />
+                                                                        <label htmlFor="no_rangka">No Rangka</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleReTglDec} value={reTglDec} name="re_tgl_dec" id="re_tgl_dec" placeholder="Tanggal DEC" />
+                                                                        <label htmlFor="tgl_dec">Tanggal DEC</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleReTglService} min={startDate} max={endDate} value={reTglService} id="re_tgl_service_pertama" name="re_tgl_service_pertama" placeholder="Tanggal Service Pertama" />
+                                                                        <label htmlFor="tgl_service_pertama">Tanggal Service Pertama</label>
+                                                                    </div>
+                                                                    <small style={{ fontSize: "10px" }}><i>Tanggal Jatuh Tempo adalah <b style={{ color: "red" }}>{endDate}</b></i></small>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm" value={saName} onChange={handleChangeInputSaName} id="nama_sa" name="re_nama_sa">
+                                                                            <option value={""}>-- Pilih --</option>
+                                                                            {listSa.map((val, index) => (
+                                                                                <option key={index} value={val.id}>{val.nama_sa}</option>
+                                                                            ))}
+                                                                                <option value={"lainnya"}>Lainnya</option>
+                                                                        </select>
+                                                                        <label htmlFor="nama_customer">Pilih SA</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-footer">
+                                                <div className="row mt-3">
+                                                    <div className="col-lg-6">
+
+                                                    </div>
+                                                    <div className="col-lg-6">
+                                                        <div className="text-end">
+                                                            <button onClick={handleSubmitReschedule} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                            <button onClick={closeRechedule} className="btn btn-danger btn-label btn-sm" style={{ marginLeft: "5px" }}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+                {/* End Reschedule Service Pertama */}
             </div>
         </div>
     );
