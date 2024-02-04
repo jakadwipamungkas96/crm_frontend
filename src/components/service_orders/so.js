@@ -139,8 +139,14 @@ function So() {
             width: '200px',
         },
         {
-            name: 'Nama Customer',
+            name: 'Nama Pelanggan',
             selector: row => row.nama_customer,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Nama Customer (Buyer)',
+            selector: row => row.nama_customer_buyer,
             sortable: true,
             width: '250px',
         },

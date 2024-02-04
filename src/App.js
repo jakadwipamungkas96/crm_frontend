@@ -19,6 +19,7 @@ import Servicepertama from './components/service_orders/servicepertama';
 import Bucket from './components/customers/bucket';
 import Profile from './components/profile/profile';
 import Nextservices from './components/service_orders/nextservices';
+import Wablast from './components/service_orders/wablast';
 
 function App() {
   useEffect(() => {
@@ -171,6 +172,7 @@ function App() {
   const rulesName = JSON.parse(localStorage.getItem("rules"));
   const token =  localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
   const id_cabang = JSON.parse(localStorage.getItem("id_cabang"));
+  const uid = JSON.parse(localStorage.getItem("uid"));
   const usrCabangName = JSON.parse(localStorage.getItem("cabang_name"));
 
   const avaProfile = 'assets/images/users/user-dummy-img.jpg';
@@ -201,15 +203,18 @@ function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("strul");
-    localStorage.removeItem("strtkn");
-    localStorage.removeItem("person");
-    localStorage.removeItem("rules");
-    localStorage.removeItem("cabang_name");
-    localStorage.removeItem("id_cabang");
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    axios.post('http://127.0.0.1:8000/api/logout', token)
+    axios.post('http://127.0.0.1:8000/api/logout', {
+      "uid": uid
+    })
         .then(response => {
+
+            localStorage.removeItem("strul");
+            localStorage.removeItem("strtkn");
+            localStorage.removeItem("person");
+            localStorage.removeItem("rules");
+            localStorage.removeItem("cabang_name");
+            localStorage.removeItem("id_cabang");
 
             swal("Success", "Berhasil Logout", "success", {
               buttons: false,
@@ -345,9 +350,14 @@ function App() {
                         <NavLink className="nav-link menu-link" exact="true" to="/do"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
                       </li>
                   ) : (
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
-                      </li>
+                      <>
+                        <li className="nav-item">
+                          <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                        </li>
+                        <li className="nav-item">
+                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                        </li>
+                      </>
                   ) }
 
                   {rulesName != "spv" ? (
@@ -357,7 +367,7 @@ function App() {
                         <NavLink className="nav-link menu-link" exact="true" to="/input/servicepertama"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
                       </li>
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/services/booking"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact="true" to="/services/booking"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Lainnya</span></NavLink>
                       </li>
                     </>
                   ) : (
@@ -371,9 +381,14 @@ function App() {
                   ) : ("") }
 
                   {rulesName == "superadmin" ? (
-                    <li className="nav-item">
-                      <NavLink className="nav-link menu-link d-none" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
-                    </li>
+                    <>
+                      <li className="nav-item">
+                        <NavLink className="nav-link menu-link d-none" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                      </li>
+                      <li className="nav-item">
+                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                      </li>
+                    </>
                   ) : ("") }
                   
                   {rulesName != "sales" ? (
@@ -618,6 +633,7 @@ function App() {
             <Route path="/customers/bucket" element={<Bucket />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/services/booking" element={<Nextservices />}></Route>
+            <Route path="/wablast" element={<Wablast />}></Route>
           </Routes>
         </div>
       </div>
