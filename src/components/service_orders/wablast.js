@@ -270,6 +270,7 @@ function Wablast() {
     const [fuCustomer, setfuCustomer] = useState('');
     const [fuConfirm, setfuConfirm] = useState('');
     const [fuReason, setfuReason] = useState('');
+    const [listReason, setListReason] = useState([]);
     const [fuVerbatim, setfuVerbatim] = useState('');
     const [statusPhone, setstatusPhone] = useState('');
     const [fuBooking, setfuBooking] = useState('');
@@ -343,6 +344,18 @@ function Wablast() {
         console.log(inputFu);
     }
 
+    function getReason() {
+        axios.get('http://127.0.0.1:8000/api/list/reason').then(function(response){
+            var result = response.data;
+            console.log(result);
+            setListReason(result.data);
+        });
+    }
+
+    useEffect(() => {
+        getReason();
+    }, []);
+
     return (
         <div className="page-content">
             <div className="container-fluid">
@@ -387,7 +400,7 @@ function Wablast() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            {rulesName == 'sa' || rulesName == 'superadmin' ? (
+                                            {rulesName == 'mra' || rulesName == 'superadmin' ? (
                                                 <>
                                                     <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={showFormImport}><i className="ri-add-circle-line"></i> Import WA Blast</button>
                                                 </>
@@ -543,12 +556,6 @@ function Wablast() {
                                                                         <label htmlFor="fuBooking">Booking Service</label>
                                                                     </div>
                                                                 </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuBooking === '0' ? '' : 'd-none'}`}>
-                                                                    <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuDate} value={fuDate} name="followup_date" id="followup_date" />
-                                                                        <label htmlFor="fuDate">Plan Follow Up Date</label>
-                                                                    </div>
-                                                                </div>
                                                                 <div className={`col-lg-6 mb-2 ${fuBooking === '1' ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
                                                                         <select type="text" className="form-control form-control-sm" onChange={handleChangeConfirm} value={fuConfirm} name="confirmService" id="confirmService">
@@ -561,7 +568,12 @@ function Wablast() {
                                                                 </div>
                                                                 <div className={`col-lg-6 mb-2 ${fuBooking === '0' ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
-                                                                        <input type="text" className="form-control form-control-sm" onChange={handleChangeInputReason} value={fuReason} name="followup_reason" id="followup_reason" />
+                                                                        <select type="text" className="form-control form-control-sm form-select" onChange={handleChangeInputReason} value={fuReason} name="followup_reason" id="followup_reason">
+                                                                                <option value={""}>-- Pilih --</option>
+                                                                            {listReason.map((value, index) => 
+                                                                                <option key={index} value={value.desc}>{value.desc}</option>
+                                                                            )}
+                                                                        </select>
                                                                         <label htmlFor="fuReason">Reason</label>
                                                                     </div>
                                                                 </div>
@@ -569,6 +581,12 @@ function Wablast() {
                                                                     <div className="form-floating">
                                                                         <input type="text" className="form-control form-control-sm" onChange={handleChangeInputVerbatim} value={fuVerbatim} name="followup_verbatim" id="followup_verbatim" />
                                                                         <label htmlFor="fuVerbatim">Verbatim</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${fuBooking === '0' ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuDate} value={fuDate} name="followup_date" id="followup_date" />
+                                                                        <label htmlFor="fuDate">Plan Follow Up Date</label>
                                                                     </div>
                                                                 </div>
                                                             </div>

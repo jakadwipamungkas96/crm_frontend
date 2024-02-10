@@ -272,7 +272,15 @@ function Servicepertama() {
         },
         {
             name: 'Nama SA',
-            selector: row => row.nama_sa,
+            selector: row => {
+                if (row.nama_sa == null) {
+                    return <>
+                        <button onClick={(event) => { handleOpenUpSa(row); }} type="button" className="btn btn-info"><i className="ri ri-calendar-todo-fill"></i> Set SA</button>
+                    </>
+                } else {
+                    return row.nama_sa
+                }
+            },
             sortable: true,
             width: '200px',
         },
@@ -319,6 +327,32 @@ function Servicepertama() {
             width: '250px',
         }
     ];
+
+    const [upSaName, setUpSaName] = useState('');
+    const [openFormSa, setOpenFormSa] = useState(false);
+    const [inputUpdateSa, setInputUpdateSa] = useState([]);
+    const handleUpdateSaService = () => {
+        
+    }
+
+    const handleOpenUpSa = (event) => {
+        
+        setInputUpdateSa((values) => ({
+            ...values,
+            ['tgl_service']: formatDateInput(event.first_service),
+            ['no_rangka']: event.no_rangka
+        }));
+
+        setOpenFormSa(true);
+    }
+
+    const closeFormSa = (event) => {
+        setOpenFormSa(false);
+    }
+
+    const handleSubmitFormSa = (event) => {
+        console.log(inputUpdateSa);
+    }
 
     const handleSearch = (text) => {
         setSearchText(text);
@@ -394,7 +428,8 @@ function Servicepertama() {
                         timer: 2000,
                     });
 
-                    // window.location.href = "/input/servicepertama";
+                    setRefresh();
+                    window.location.href = "/input/servicepertama";
                 }
             });
     }
@@ -444,7 +479,6 @@ function Servicepertama() {
         const url = `http://127.0.0.1:8000/api/sa`;
         try {
             const response = await axios.get(url);
-            console.log(response.data.data);
             setListSa(response.data.data);
         } catch (error) {
             // console.log(error);
@@ -467,8 +501,6 @@ function Servicepertama() {
     }
 
     const [dtConfirmation, setConfirmation] = useState([]);
-
-    console.log(token);
 
     const handleSubmitConfirm = (event, type) => {
         setLoading(true);
@@ -498,7 +530,7 @@ function Servicepertama() {
                     window.location.href = "/input/servicepertama";
                 }
             });
-        
+
     }
 
     const [reTglDec, setReTglDec] = useState('');
@@ -708,7 +740,7 @@ function Servicepertama() {
                                                                 </div>
                                                                 <div className="col-lg-6 mb-2">
                                                                     <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputTglService} min={startDate} max={endDate} value={serviceTglService} id="tgl_service_pertama" name="tgl_service_pertama" placeholder="Tanggal Service Pertama" />
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputTglService} min={serviceTglDec} max={endDate} value={serviceTglService} id="tgl_service_pertama" name="tgl_service_pertama" placeholder="Tanggal Service Pertama" />
                                                                         <label htmlFor="tgl_service_pertama">Tanggal Service Pertama</label>
                                                                     </div>
                                                                     <small style={{ fontSize: "10px" }}><i>Tanggal Jatuh Tempo adalah <b style={{ color: "red" }}>{endDate}</b></i></small>
@@ -720,7 +752,7 @@ function Servicepertama() {
                                                                             {listSa.map((val, index) => (
                                                                                 <option key={index} value={val.id}>{val.nama_sa}</option>
                                                                             ))}
-                                                                                <option value={"lainnya"}>Lainnya</option>
+                                                                            <option value={"lainnya"}>Lainnya</option>
                                                                         </select>
                                                                         <label htmlFor="nama_customer">Pilih SA</label>
                                                                     </div>
@@ -818,7 +850,7 @@ function Servicepertama() {
                                                                             {listSa.map((val, index) => (
                                                                                 <option key={index} value={val.id}>{val.nama_sa}</option>
                                                                             ))}
-                                                                                <option value={"lainnya"}>Lainnya</option>
+                                                                            <option value={"lainnya"}>Lainnya</option>
                                                                         </select>
                                                                         <label htmlFor="nama_customer">Pilih SA</label>
                                                                     </div>
@@ -849,6 +881,79 @@ function Servicepertama() {
                     </DialogContent>
                 </Dialog>
                 {/* End Reschedule Service Pertama */}
+
+                {/* Start Update SA  */}
+                <Dialog
+                    open={openFormSa}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={closeFormSa}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{ border: "none" }}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>Setting SA</h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <CustomBlockingOverlay isLoading={loading}>
+                                                        </CustomBlockingOverlay>
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-lg-12 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm" value={saName} onChange={handleChangeInputSaName} id="nama_sa" name="nama_sa">
+                                                                            <option value={""}>-- Pilih --</option>
+                                                                            {listSa.map((val, index) => (
+                                                                                <option key={index} value={val.id}>{val.nama_sa}</option>
+                                                                            ))}
+                                                                            <option value={"lainnya"}>Lainnya</option>
+                                                                        </select>
+                                                                        <label htmlFor="nama_customer">Pilih SA</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-footer">
+                                                <div className="row mt-3">
+                                                    <div className="col-lg-6">
+
+                                                    </div>
+                                                    <div className="col-lg-12">
+                                                        <div className="text-end">
+                                                            <button onClick={handleSubmitFormSa} className="btn btn-primary btn-block btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                            <button onClick={closeFormSa} className="btn btn-danger btn-label btn-sm btn-block" style={{ marginLeft: "5px" }}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+                {/* End Update SA */}
             </div>
         </div>
     );

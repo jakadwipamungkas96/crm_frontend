@@ -131,64 +131,72 @@ function Attacklist() {
         }
     };
 
-    const handleOpenDetailKendaraan = (event) => {
-        console.log(event);
-    }
-
     const columnsLsCustomer = [
         {
             name: 'No Rangka',
-            selector: row => <span style={{cursor: "pointer", color: "#2563EB"}}>{row.no_rangka}</span>,
+            selector: row => <span style={{cursor: "pointer", color: "#2563EB"}} onClick={(event) => { handleOpenFormFu(row); }}>{row.no_rangka}</span>,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Cabang',
-            selector: row => row.cabang_name,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Nama Pelanggan',
-            selector: row => row.nama_customer,
+            name: 'Nama',
+            selector: row => row.name,
             sortable: true,
             width: '250px',
         },
         {
-            name: 'Nama Customer (Buyer)',
-            selector: row => row.nama_customer_buyer,
+            name: 'No Telepon',
+            selector: row => row.number,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Status Follow Up',
+            selector: row => {
+                if (row.status_follow_up == 1) {
+                    return <span className="badge bg-success-subtle text-success">Done</span>
+                } else {
+                    return <span className="badge bg-danger-subtle text-danger">Not</span>
+                }
+            },
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Tanggal Follow Up',
+            selector: row => row.created_at,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Status Phone',
+            selector: row => {
+                if (row.status_phone == 1) {
+                    return <span className="badge bg-success-subtle text-success">Connected</span>
+                } else {
+                    return <span className="badge bg-danger-subtle text-danger">Not Connected</span>
+                }
+            },
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Status WA Blast',
+            selector: row => row.status,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Sender',
+            selector: row => row.sender,
             sortable: true,
             width: '250px',
         },
         {
-            name: 'Tanggal WO',
-            selector: row => row.tgl_wo,
+            name: 'Date',
+            selector: row => row.date,
             sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Kategori WO',
-            selector: row => row.category_wo,
-            sortable: true,
-            width: '300px',
-        },
-        {
-            name: 'No Polisi',
-            selector: row => row.no_polisi,
-            sortable: true,
-            width: '100px',
-        },
-        {
-            name: 'Model',
-            selector: row => row.model,
-            sortable: true,
-            width: '200px',
-        },
-        {
-            name: 'Tahun Kendaraan',
-            selector: row => row.tahun_kendaraan,
-            sortable: true,
-            width: '200px',
+            width: '250px',
         }
     ];
 
@@ -211,10 +219,6 @@ function Attacklist() {
         const badgeHTML = statusValues.map(status => `<span className="badge">${status}</span>`).join(' ');
         
         return badgeHTML;
-    }
-
-    const linkToInputServices = () => {
-        window.location.href = "/services/input";
     }
 
     // Import Excel
@@ -266,13 +270,13 @@ function Attacklist() {
         );
     };
 
-    const handleUploadSo = (event) => {
+    const handleUploadWaBlast = (event) => {
         event.preventDefault();
         const formData = new FormData();
         
-        formData.append('fileSo',fileUpload);
+        formData.append('fileWa',fileUpload);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/service_order/import', formData).then(function(response){
+        axios.post('http://127.0.0.1:8000/api/service_order/import_wa', formData).then(function(response){
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -286,10 +290,154 @@ function Attacklist() {
                     timer: 2000,
                 });
 
-                window.location.href = "/so";
+                window.location.href = "/wablast";
             }
         });
     }
+
+    const [serviceNoRangka, setServiceNorangka] = useState('');
+    const [fuDate, setfuDate] = useState('');
+    const [fuTglService, setfuTglService] = useState('');
+    const [fuSa, setfuSa] = useState('');
+    const [fuCustomer, setfuCustomer] = useState('');
+    const [fuConfirm, setfuConfirm] = useState('');
+    const [fuReason, setfuReason] = useState('');
+    const [listReason, setListReason] = useState([]);
+    const [listSa, setListSa] = useState([]);
+    const [fuVerbatim, setfuVerbatim] = useState('');
+    const [statusPhone, setstatusPhone] = useState('');
+    const [fuBooking, setfuBooking] = useState('');
+    const [openFormFU, setOpenFU] = useState(false);
+    const [inputFu, setInputFu] = useState(false);
+
+    const handleChangeInputVerbatim = (event) => {
+        setfuVerbatim(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputReason = (event) => {
+        setfuReason(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeConfirm = (event) => {
+        setfuConfirm(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputFuDate = (event) => {
+        setfuDate(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+    
+    const handleChangeInputFuTglService = (event) => {
+        setfuTglService(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeInputFuSa = (event) => {
+        setfuSa(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleChangeStatusPhone = (event) => {
+        setstatusPhone(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+    
+    const handleChangeBooking = (event) => {
+        setfuBooking(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleOpenFormFu = (event) => {
+        console.log(event);
+        setOpenFU(true);
+        setServiceNorangka(event.no_rangka);
+        setfuCustomer(event.name);
+        setstatusPhone(event.status_phone);
+        setfuBooking(event.status_booking_service);
+        setfuReason(event.reason_id);
+        setfuVerbatim(event.verbatim);
+        setfuDate(event.re_follow_up_date);
+        setInputFu((values) => ({
+            ...values,
+            ["no_rangka"]: event.no_rangka,
+        }));
+    }
+
+    const closeFollowUp = (event) => {
+        setOpenFU(false);
+        setServiceNorangka('');
+    }
+
+    const handleSubmitFu = (event) => {
+        console.log(inputFu);
+        event.preventDefault();
+        setLoading(true);
+        axios
+            .post("http://127.0.0.1:8000/api/attacklist/save", inputFu)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    setLoading(false);
+                    swal("Error", 'Data tidak boleh kosong!', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                } else {
+                    setLoading(false);
+                    swal("Success", 'Data Berhasil disimpan!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+
+                    window.location.href = "/services/attacklist";
+                }
+            });
+    }
+
+    function getReason() {
+        axios.get('http://127.0.0.1:8000/api/list/reason').then(function(response){
+            var result = response.data;
+            setListReason(result.data);
+        });
+    }
+
+    function getSa() {
+        axios.get('http://127.0.0.1:8000/api/sa').then(function(response){
+            var result = response.data;
+            setListSa(result.data);
+        });
+    }
+
+    useEffect(() => {
+        getSa();
+        getReason();
+    }, []);
 
     return (
         <div className="page-content">
@@ -303,7 +451,7 @@ function Attacklist() {
                                 <ol className="breadcrumb m-0">
                                     <li className="breadcrumb-item"><a href="#">List</a></li>
                                     <li className="breadcrumb-item"><a href="#">Services</a></li>
-                                    <li className="breadcrumb-item active">Attacklist</li>
+                                    <li className="breadcrumb-item active">Wa Blast</li>
                                 </ol>
                             </div>
                         </div>
@@ -317,7 +465,7 @@ function Attacklist() {
                                 {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        <h5 className="card-title mb-0">Attacklist</h5> 
+                                        {/* <h5 className="card-title mb-0"></h5>  */}
                                     </div>
                                 </div>
                             </div>
@@ -325,7 +473,7 @@ function Attacklist() {
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
                                         <input
-                                            className="form-control form-control-sm"
+                                            className="form-control form-control-sm mb-2"
                                             type="text"
                                             value={searchText}
                                             onChange={(e) => handleSearch(e.target.value)}
@@ -337,7 +485,7 @@ function Attacklist() {
                                         <div id="" className='p-2'>
                                             {rulesName == 'sa' || rulesName == 'superadmin' ? (
                                                 <>
-                                                    <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Attacklist</button>
+                                                    <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={showFormImport}><i className="ri-add-circle-line"></i> Import WA Blast</button>
                                                 </>
                                              ) : ""}
                                         </div>
@@ -386,7 +534,7 @@ function Attacklist() {
                                                 <div className="card-header" style={{border: "none"}}>
                                                     <div className="d-flex align-items-center">
                                                         <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Import Data Service Order </h5>
+                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Upload Data WA Blast </h5>
                                                         </div>
                                                         <div className="flex-shrink-0">
                                                         </div>
@@ -407,7 +555,7 @@ function Attacklist() {
                                                                     onChange={hChangeInputFile}
                                                                     sx={{width: "50%"}}
                                                                     size= "small"
-                                                                    name="fileDo"
+                                                                    name="fileWa"
                                                                     type="file"
                                                                     style={{width: "500px"}}
                                                                     required
@@ -415,7 +563,7 @@ function Attacklist() {
                                                                 </TextField><br></br>
                                                                 <button
                                                                     className="btn btn-primary btn-sm mt-2"
-                                                                    onClick={handleUploadSo}
+                                                                    onClick={handleUploadWaBlast}
                                                                 >
                                                                     Proses Import
                                                                 </button>
@@ -431,6 +579,142 @@ function Attacklist() {
                         </DialogContent>
                 </Dialog>
                 {/* End Import */}
+
+                {/* Start Input Service Pertama  */}
+                <Dialog
+                    open={openFormFU}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={closeFollowUp}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{ border: "none" }}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>Follow Up</h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="ribbon ribbon-primary round-shape mb-3">Customer: <span className="badge badge-label bg-secondary"><i className="mdi mdi-circle-medium"></i>{fuCustomer}</span></div>
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNoRangka} id="no_rangka" placeholder="No Rangka" />
+                                                                        <label htmlFor="no_rangka">No Rangka</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm" onChange={handleChangeStatusPhone} value={statusPhone} name="callbyphone" id="callbyphone">
+                                                                            <option value={""}>-- Pilih --</option>
+                                                                            <option value={1}>Connected</option>
+                                                                            <option value={0}>Not Connected</option>
+                                                                        </select>
+                                                                        <label htmlFor="statusPhone">Call By Phone</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm" onChange={handleChangeBooking} value={fuBooking} name="followup_booking" id="followup_booking">
+                                                                            <option value={""}>-- Pilih --</option>
+                                                                            <option value={1}>Booking</option>
+                                                                            <option value={0}>Tidak Booking</option>
+                                                                        </select>
+                                                                        <label htmlFor="fuBooking">Booking Service</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 1 ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm" onChange={handleChangeConfirm} value={fuConfirm} name="confirmService" id="confirmService">
+                                                                            <option value={""}>-- Pilih --</option>
+                                                                            <option value={'come'}>Come</option>
+                                                                            <option value={'not'}>Not</option>
+                                                                        </select>
+                                                                        <label htmlFor="fuBooking">Come or Not ?</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 0 ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm form-select" onChange={handleChangeInputReason} value={fuReason} name="followup_reason" id="followup_reason">
+                                                                                <option value={""}>-- Pilih --</option>
+                                                                            {listReason.map((value, index) => 
+                                                                                <option key={index} value={value.id}>{value.desc}</option>
+                                                                            )}
+                                                                        </select>
+                                                                        <label htmlFor="fuReason">Reason</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 0 ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" onChange={handleChangeInputVerbatim} value={fuVerbatim} name="followup_verbatim" id="followup_verbatim" />
+                                                                        <label htmlFor="fuVerbatim">Verbatim</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 0 ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuDate} value={fuDate} name="followup_date" id="followup_date" />
+                                                                        <label htmlFor="fuDate">Plan Follow Up Date</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && fuBooking !== 0 ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuTglService} value={fuTglService} name="re_tgl_service" id="re_tgl_service" />
+                                                                        <label htmlFor="fuDate">Reschedule Service ?</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && fuBooking !== 0 ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <select className="form-control form-control-sm" onChange={handleChangeInputFuSa} value={fuSa} name="sa" id="sa">
+                                                                            <option value={""}>-- Pilih --</option>
+                                                                            {listSa.map((value, index) => 
+                                                                                <option key={index} value={value.id}>{value.nama_sa}</option>
+                                                                            )}
+                                                                        </select>
+                                                                        <label htmlFor="fuSa">Pilih SA</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-footer">
+                                                <div className="row mt-3">
+                                                    <div className="col-lg-6">
+
+                                                    </div>
+                                                    <div className="col-lg-6">
+                                                        <div className="text-end">
+                                                            <button onClick={handleSubmitFu} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                            <button onClick={closeFollowUp} className="btn btn-danger btn-label btn-sm" style={{ marginLeft: "5px" }}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+                {/* End Input Service Pertama */}
             </div>
         </div>
     );
