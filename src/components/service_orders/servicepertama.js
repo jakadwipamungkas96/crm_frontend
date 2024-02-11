@@ -336,7 +336,7 @@ function Servicepertama() {
     }
 
     const handleOpenUpSa = (event) => {
-        
+        console.log(event);
         setInputUpdateSa((values) => ({
             ...values,
             ['tgl_service']: formatDateInput(event.first_service),
@@ -503,6 +503,8 @@ function Servicepertama() {
     const [dtConfirmation, setConfirmation] = useState([]);
 
     const handleSubmitConfirm = (event, type) => {
+        console.log(event);
+        console.log(type);
         setLoading(true);
         setConfirmation((values) => ({
             ...values,
