@@ -147,7 +147,7 @@ function Bucket() {
         {
             name: 'Status Klaim',
             selector: row => (
-                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge border ${row.status_klaim === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
+                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge border ${parseInt(row.status_klaim) === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
                     {row.status_klaim === 0 ? 'Pending' : 'Done'}
                 </span>
             ),
@@ -167,22 +167,52 @@ function Bucket() {
             width: '300px',
         },
         {
-            name: 'Tanggal DO',
-            selector: row => row.tgl_do,
-            sortable: true,
-            width: '150px',
-        },
-        {
             name: 'No Rangka',
             selector: row => row.no_rangka,
             sortable: true,
             width: '250px',
         },
         {
+            name: 'Nama Sales',
+            selector: row => row.nama_sales,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Nama SPV',
+            selector: row => row.nama_spv,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Tanggal Share',
+            selector: row => row.sharing_at,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Tanggal Expired',
+            selector: row => row.expired_at,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Status FU',
+            selector: row => row.flagging_check,
+            sortable: true,
+            width: '100px',
+        },
+        {
             name: 'Tipe Kendaraan',
             selector: row => row.tipe,
             sortable: true,
             width: '200px',
+        },
+        {
+            name: 'Tanggal DO',
+            selector: row => row.tgl_do,
+            sortable: true,
+            width: '150px',
         },
         {
             name: 'Usia Kendaraan',

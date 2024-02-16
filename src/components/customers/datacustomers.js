@@ -1879,11 +1879,11 @@ function Datacustomers() {
                                                                     Follow Up
                                                                 </a>
                                                             </li>
-                                                            <li className="nav-item">
+                                                            {/* <li className="nav-item">
                                                                 <a className="nav-link" data-bs-toggle="tab" href="#profile1" role="tab">
                                                                     Bookings
                                                                 </a>
-                                                            </li>
+                                                            </li> */}
                                                         </ul>
                                                         <div className="tab-content text-muted">
                                                             <div className="tab-pane active" id="home1" role="tabpanel">
@@ -1895,7 +1895,7 @@ function Datacustomers() {
                                                                     defaultSortFieldId={1}
                                                                 />
                                                             </div>
-                                                            <div className="tab-pane" id="profile1" role="tabpanel">
+                                                            {/* <div className="tab-pane" id="profile1" role="tabpanel">
                                                                 <div className="d-flex">
                                                                     <div className="flex-shrink-0">
                                                                         <i className="ri-checkbox-multiple-blank-fill text-success"></i>
@@ -1907,7 +1907,7 @@ function Datacustomers() {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div> */}
                                                         </div>
                                                     </div>
 

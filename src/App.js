@@ -20,6 +20,7 @@ import Bucket from './components/customers/bucket';
 import Profile from './components/profile/profile';
 import Nextservices from './components/service_orders/nextservices';
 import Wablast from './components/service_orders/wablast';
+import Reason from './components/reason/reason';
 
 function App() {
   useEffect(() => {
@@ -352,10 +353,13 @@ function App() {
                   ) : (
                       <>
                         <li className="nav-item">
+                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                        </li>
+                        <li className="nav-item">
                           <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
                         </li>
                         <li className="nav-item">
-                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                          <NavLink className="nav-link menu-link" exact="true" to="/reason"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Master Reason</span></NavLink>
                         </li>
                       </>
                   ) }
@@ -634,6 +638,7 @@ function App() {
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/services/booking" element={<Nextservices />}></Route>
             <Route path="/wablast" element={<Wablast />}></Route>
+            <Route path="/reason" element={<Reason />}></Route>
           </Routes>
         </div>
       </div>

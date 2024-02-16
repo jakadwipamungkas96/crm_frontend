@@ -356,6 +356,8 @@ function Wablast() {
         getReason();
     }, []);
 
+    const urlDownloadForm = `http://127.0.0.1:8000/api/template_import_wa`; 
+
     return (
         <div className="page-content">
             <div className="container-fluid">
@@ -454,6 +456,7 @@ function Wablast() {
                                                             <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Upload Data WA Blast </h5>
                                                         </div>
                                                         <div className="flex-shrink-0">
+                                                            <a href={urlDownloadForm} className="btn btn-sm btn-icon btn-success p-2" style={{ width: "100%", cursor: "pointer" }}><i className="ri-file-excel-fill"></i> Download Template Form</a>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -22,9 +22,9 @@ import CryptoJS from 'crypto-js';
 
 const useStyles = makeStyles({
     noTableHover: {
-      '& tbody tr:hover': {
-        background: 'none', // Menghapus latar belakang pada hover
-      },
+        '& tbody tr:hover': {
+            background: 'none', // Menghapus latar belakang pada hover
+        },
     },
 });
 
@@ -36,7 +36,7 @@ const drawerWidth = 240;
 
 function Attacklist() {
     const classes = useStyles();
-    
+
     const hariIni = new Date();
     const tanggal = hariIni.getDate();
     const bulanHariIni = hariIni.getMonth() + 1; // Perlu ditambah 1 karena indeks bulan dimulai dari 0
@@ -62,7 +62,7 @@ function Attacklist() {
     console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
-    
+
     useEffect(() => {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -100,7 +100,7 @@ function Attacklist() {
             title: "Reminder berhasil terkirim",
             icon: "success",
             button: "OK",
-          });
+        });
     }
 
     // For List Data Customer
@@ -134,7 +134,7 @@ function Attacklist() {
     const columnsLsCustomer = [
         {
             name: 'No Rangka',
-            selector: row => <span style={{cursor: "pointer", color: "#2563EB"}} onClick={(event) => { handleOpenFormFu(row); }}>{row.no_rangka}</span>,
+            selector: row => <span style={{ cursor: "pointer", color: "#2563EB" }} onClick={(event) => { handleOpenFormFu(row); }}>{row.no_rangka}</span>,
             sortable: true,
             width: '200px',
         },
@@ -203,21 +203,21 @@ function Attacklist() {
     const handleSearch = (text) => {
         setSearchText(text);
     };
-    
+
     // Logika pencarian, memfilter data berdasarkan beberapa kolom
     const filteredData = lsDtCustomer.filter(item =>
         Object.values(item).some(value =>
             value && value.toString().toLowerCase().includes(searchText.toLowerCase())
         )
     );
-    
+
     // Jika searchText kosong, tampilkan semua data
     const displayData = searchText ? filteredData : lsDtCustomer;
 
     function createBadgeHTML(data) {
         const statusValues = data.status.split(',').map(s => s.trim());
         const badgeHTML = statusValues.map(status => `<span className="badge">${status}</span>`).join(' ');
-        
+
         return badgeHTML;
     }
 
@@ -238,51 +238,51 @@ function Attacklist() {
         console.log(event.target.files[0]);
         console.log(event.target.name);
         setFileUp(event.target.files[0]);
-        setInputs(values => ({...values, [event.target.name]: fileUpload}));
+        setInputs(values => ({ ...values, [event.target.name]: fileUpload }));
     }
 
     const CustomBlockingOverlay = ({ isLoading, children }) => {
         return (
             <div>
-            {isLoading && (
-              <div
-                style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'rgba(30, 41, 59, 0.5)',
-                  color: "white",
-                  fontSize: "20px",
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 1000,
-                }}
-              >
-                <img src="/assets/images/icon_wijaya.png" style={{opacity: 0.8}} alt="" height="50" /><br /><br />
-                <p>Please wait...</p>
-              </div>
-            )}
-            {children}
-          </div>
+                {isLoading && (
+                    <div
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            background: 'rgba(30, 41, 59, 0.5)',
+                            color: "white",
+                            fontSize: "20px",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 1000,
+                        }}
+                    >
+                        <img src="/assets/images/icon_wijaya.png" style={{ opacity: 0.8 }} alt="" height="50" /><br /><br />
+                        <p>Please wait...</p>
+                    </div>
+                )}
+                {children}
+            </div>
         );
     };
 
     const handleUploadWaBlast = (event) => {
         event.preventDefault();
         const formData = new FormData();
-        
-        formData.append('fileWa',fileUpload);
+
+        formData.append('fileWa', fileUpload);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/service_order/import_wa', formData).then(function(response){
+        axios.post('http://127.0.0.1:8000/api/service_order/import_wa', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
                     buttons: false,
                     timer: 2000,
-                });   
+                });
             } else {
                 setLoading(false);
                 swal("Success", 'Data Berhasil disimpan!', "success", {
@@ -341,7 +341,7 @@ function Attacklist() {
             [event.target.name]: event.target.value,
         }));
     }
-    
+
     const handleChangeInputFuTglService = (event) => {
         setfuTglService(event.target.value);
         setInputFu((values) => ({
@@ -365,7 +365,7 @@ function Attacklist() {
             [event.target.name]: event.target.value,
         }));
     }
-    
+
     const handleChangeBooking = (event) => {
         setfuBooking(event.target.value);
         setInputFu((values) => ({
@@ -379,11 +379,11 @@ function Attacklist() {
         setOpenFU(true);
         setServiceNorangka(event.no_rangka);
         setfuCustomer(event.name);
-        setstatusPhone(event.status_phone);
-        setfuBooking(event.status_booking_service);
-        setfuReason(event.reason_id);
-        setfuVerbatim(event.verbatim);
-        setfuDate(event.re_follow_up_date);
+        // setstatusPhone(event.status_phone);
+        // setfuBooking(event.status_booking_service);
+        // setfuReason(event.reason_id);
+        // setfuVerbatim(event.verbatim);
+        // setfuDate(event.re_follow_up_date);
         setInputFu((values) => ({
             ...values,
             ["no_rangka"]: event.no_rangka,
@@ -396,7 +396,6 @@ function Attacklist() {
     }
 
     const handleSubmitFu = (event) => {
-        console.log(inputFu);
         event.preventDefault();
         setLoading(true);
         axios
@@ -421,14 +420,14 @@ function Attacklist() {
     }
 
     function getReason() {
-        axios.get('http://127.0.0.1:8000/api/list/reason').then(function(response){
+        axios.get('http://127.0.0.1:8000/api/list/reason').then(function (response) {
             var result = response.data;
             setListReason(result.data);
         });
     }
 
     function getSa() {
-        axios.get('http://127.0.0.1:8000/api/sa').then(function(response){
+        axios.get('http://127.0.0.1:8000/api/sa').then(function (response) {
             var result = response.data;
             setListSa(result.data);
         });
@@ -465,11 +464,16 @@ function Attacklist() {
                                 {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        {/* <h5 className="card-title mb-0"></h5>  */}
+                                        <h5 className="card-title mb-0"></h5>
+                                        <div className="alert alert-info alert-dismissible alert-label-icon rounded-label fade show mb-xl-0" role="alert">
+                                            <i className="ri-error-warning-line label-icon"></i><strong>Info</strong>
+                                            - Data Attacklist berdasarkan upload Wa Blast terbaru pada menu Wa Blast (TBC)
+                                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="card-body" style={{padding: "15px"}}>
+                            <div className="card-body" style={{ padding: "15px" }}>
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
                                         <input
@@ -478,22 +482,22 @@ function Attacklist() {
                                             value={searchText}
                                             onChange={(e) => handleSearch(e.target.value)}
                                             placeholder="Search..."
-                                            style={{width: "20%"}}
+                                            style={{ width: "20%" }}
                                         />
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
                                             {rulesName == 'sa' || rulesName == 'superadmin' ? (
                                                 <>
-                                                    <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={showFormImport}><i className="ri-add-circle-line"></i> Import WA Blast</button>
+                                                    <button className="btn btn-sm btn-primary" style={{ marginRight: "5px" }} onClick={showFormImport}><i className="ri-add-circle-line"></i> Import WA Blast</button>
                                                 </>
-                                             ) : ""}
+                                            ) : ""}
                                         </div>
                                     </div>
                                 </div>
                                 {loadingTable ? (
                                     <div className="text-center ">
-                                        <i className="mdi mdi-spin mdi-loading" style={{fontSize: "30px", color: "#991B1B"}}></i> <h6 className="m-0 loading-text">Please wait...</h6>
+                                        <i className="mdi mdi-spin mdi-loading" style={{ fontSize: "30px", color: "#991B1B" }}></i> <h6 className="m-0 loading-text">Please wait...</h6>
                                     </div>
                                 ) : (
 
@@ -507,7 +511,7 @@ function Attacklist() {
                                         onSearch={handleSearch} // Menambahkan fungsi pencarian
                                     />
 
-                                ) }
+                                )}
                             </div>
                         </div>
                     </div>
@@ -515,60 +519,59 @@ function Attacklist() {
 
                 {/* Start Import  */}
                 <Dialog
-                        open={importExcel}
-                        TransitionComponent={Transition}
-                        keepMounted
-                        maxWidth="xl"
-                        onClose={closeImport}
-                        aria-describedby="alert-dialog-slide-description"
-                        style={{ width: "100%", margin: "0 auto" }}
-                    >
-                        <DialogContent style={{
-                            background: "#ecf0f1"
-                        }}>
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="card">
-                                        <div className="row g-0">
-                                            <div className="col-md-12">
-                                                <div className="card-header" style={{border: "none"}}>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="card-title mb-0" style={{fontSize: "17px"}}>From Upload Data WA Blast </h5>
-                                                        </div>
-                                                        <div className="flex-shrink-0">
-                                                        </div>
+                    open={importExcel}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={closeImport}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{ border: "none" }}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>From Upload Data WA Blast </h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
                                                     </div>
                                                 </div>
-                                                <div className="card-body">
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <CustomBlockingOverlay isLoading={loading}>
-                                                            </CustomBlockingOverlay>
-                                                            <form>
-                                                                {/* <input type="file" name="fileDo" id="fileDo" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
-                                                                <TextField
-                                                                    id="outlined-select-currency-native"
-                                                                    defaultValue=""
-                                                                    label=""
-                                                                    helperText="Pilih File"
-                                                                    onChange={hChangeInputFile}
-                                                                    sx={{width: "50%"}}
-                                                                    size= "small"
-                                                                    name="fileWa"
-                                                                    type="file"
-                                                                    style={{width: "500px"}}
-                                                                    required
-                                                                >
-                                                                </TextField><br></br>
-                                                                <button
-                                                                    className="btn btn-primary btn-sm mt-2"
-                                                                    onClick={handleUploadWaBlast}
-                                                                >
-                                                                    Proses Import
-                                                                </button>
-                                                            </form>
-                                                        </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <CustomBlockingOverlay isLoading={loading}>
+                                                        </CustomBlockingOverlay>
+                                                        <form>
+                                                            {/* <input type="file" name="fileDo" id="fileDo" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
+                                                            <TextField
+                                                                id="outlined-select-currency-native"
+                                                                defaultValue=""
+                                                                label=""
+                                                                helperText="Pilih File"
+                                                                onChange={hChangeInputFile}
+                                                                sx={{ width: "50%" }}
+                                                                size="small"
+                                                                name="fileWa"
+                                                                type="file"
+                                                                style={{ width: "500px" }}
+                                                                required
+                                                            >
+                                                            </TextField><br></br>
+                                                            <button
+                                                                className="btn btn-primary btn-sm mt-2"
+                                                                onClick={handleUploadWaBlast}
+                                                            >
+                                                                Proses Import
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -576,7 +579,8 @@ function Attacklist() {
                                     </div>
                                 </div>
                             </div>
-                        </DialogContent>
+                        </div>
+                    </DialogContent>
                 </Dialog>
                 {/* End Import */}
 
@@ -639,7 +643,7 @@ function Attacklist() {
                                                                         <label htmlFor="fuBooking">Booking Service</label>
                                                                     </div>
                                                                 </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 1 ? '' : 'd-none'}`}>
+                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 1 ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
                                                                         <select type="text" className="form-control form-control-sm" onChange={handleChangeConfirm} value={fuConfirm} name="confirmService" id="confirmService">
                                                                             <option value={""}>-- Pilih --</option>
@@ -649,40 +653,40 @@ function Attacklist() {
                                                                         <label htmlFor="fuBooking">Come or Not ?</label>
                                                                     </div>
                                                                 </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 0 ? '' : 'd-none'}`}>
+                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
                                                                         <select type="text" className="form-control form-control-sm form-select" onChange={handleChangeInputReason} value={fuReason} name="followup_reason" id="followup_reason">
-                                                                                <option value={""}>-- Pilih --</option>
-                                                                            {listReason.map((value, index) => 
+                                                                            <option value={""}>-- Pilih --</option>
+                                                                            {listReason.map((value, index) =>
                                                                                 <option key={index} value={value.id}>{value.desc}</option>
                                                                             )}
                                                                         </select>
                                                                         <label htmlFor="fuReason">Reason</label>
                                                                     </div>
                                                                 </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 0 ? '' : 'd-none'}`}>
+                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
                                                                         <input type="text" className="form-control form-control-sm" onChange={handleChangeInputVerbatim} value={fuVerbatim} name="followup_verbatim" id="followup_verbatim" />
                                                                         <label htmlFor="fuVerbatim">Verbatim</label>
                                                                     </div>
                                                                 </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuBooking === 0 ? '' : 'd-none'}`}>
+                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
                                                                         <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuDate} value={fuDate} name="followup_date" id="followup_date" />
                                                                         <label htmlFor="fuDate">Plan Follow Up Date</label>
                                                                     </div>
                                                                 </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && fuBooking !== 0 ? '' : 'd-none'}`}>
+                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
                                                                         <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuTglService} value={fuTglService} name="re_tgl_service" id="re_tgl_service" />
                                                                         <label htmlFor="fuDate">Reschedule Service ?</label>
                                                                     </div>
                                                                 </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && fuBooking !== 0 ? '' : 'd-none'}`}>
+                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
                                                                     <div className="form-floating">
                                                                         <select className="form-control form-control-sm" onChange={handleChangeInputFuSa} value={fuSa} name="sa" id="sa">
                                                                             <option value={""}>-- Pilih --</option>
-                                                                            {listSa.map((value, index) => 
+                                                                            {listSa.map((value, index) =>
                                                                                 <option key={index} value={value.id}>{value.nama_sa}</option>
                                                                             )}
                                                                         </select>
