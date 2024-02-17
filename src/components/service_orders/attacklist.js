@@ -59,6 +59,7 @@ function Attacklist() {
     const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
     const rulesName = JSON.parse(localStorage.getItem("rules"));
+    const idCab = JSON.parse(localStorage.getItem("id_cabang"));
     console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
@@ -139,14 +140,26 @@ function Attacklist() {
             width: '200px',
         },
         {
-            name: 'Nama',
-            selector: row => row.name,
+            name: 'Nama Customer',
+            selector: row => row.nama_customer,
             sortable: true,
             width: '250px',
         },
         {
             name: 'No Telepon',
-            selector: row => row.number,
+            selector: row => row.no_telp,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Status WA Blast',
+            selector: row => {
+                if (row.status_fu == 1) {
+                    return <span className="badge bg-success-subtle text-success">Done</span>
+                } else {
+                    return <span className="badge bg-danger-subtle text-danger">Not</span>
+                }
+            },
             sortable: true,
             width: '200px',
         },
@@ -163,17 +176,11 @@ function Attacklist() {
             width: '200px',
         },
         {
-            name: 'Tanggal Follow Up',
-            selector: row => row.created_at,
-            sortable: true,
-            width: '200px',
-        },
-        {
             name: 'Status Phone',
             selector: row => {
                 if (row.status_phone == 1) {
                     return <span className="badge bg-success-subtle text-success">Connected</span>
-                } else {
+                } else if (row.status_phone == 0) {
                     return <span className="badge bg-danger-subtle text-danger">Not Connected</span>
                 }
             },
@@ -181,8 +188,14 @@ function Attacklist() {
             width: '200px',
         },
         {
-            name: 'Status WA Blast',
-            selector: row => row.status,
+            name: 'Status Contacted',
+            selector: row => {
+                if (row.is_contacted == 1) {
+                    return <span className="badge bg-success-subtle text-success">Contacted</span>
+                } else if (row.is_contacted == 0) {
+                    return <span className="badge bg-danger-subtle text-danger">Not Contacted</span>
+                }
+            },
             sortable: true,
             width: '200px',
         },
@@ -270,13 +283,20 @@ function Attacklist() {
         );
     };
 
-    const handleUploadWaBlast = (event) => {
+    const [inputCabang, setInputCabang] = useState();
+
+    const handleChangeInputCabang = (event) => {
+        setInputCabang(event.target.value);
+    }
+
+    const handleUploadAttacklist = (event) => {
         event.preventDefault();
         const formData = new FormData();
 
-        formData.append('fileWa', fileUpload);
+        formData.append('fileAttacklist', fileUpload);
+        formData.append('id_cabang', inputCabang);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/service_order/import_wa', formData).then(function (response) {
+        axios.post('http://127.0.0.1:8000/api/mra/import_attacklist', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -289,8 +309,8 @@ function Attacklist() {
                     buttons: false,
                     timer: 2000,
                 });
-
-                window.location.href = "/wablast";
+                setimportExcel(false);
+                setRefresh(new Date());
             }
         });
     }
@@ -305,10 +325,12 @@ function Attacklist() {
     const [listReason, setListReason] = useState([]);
     const [listSa, setListSa] = useState([]);
     const [fuVerbatim, setfuVerbatim] = useState('');
-    const [statusPhone, setstatusPhone] = useState('');
+    const [statusPhone, setstatusPhone] = useState();
+    const [statusContacted, setstatusContacted] = useState();
     const [fuBooking, setfuBooking] = useState('');
     const [openFormFU, setOpenFU] = useState(false);
     const [inputFu, setInputFu] = useState(false);
+    const [detailKendaraan, setDetailKendaraan] = useState([]);
 
     const handleChangeInputVerbatim = (event) => {
         setfuVerbatim(event.target.value);
@@ -366,6 +388,14 @@ function Attacklist() {
         }));
     }
 
+    const handleChangeStatusContacted = (event) => {
+        setstatusContacted(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
     const handleChangeBooking = (event) => {
         setfuBooking(event.target.value);
         setInputFu((values) => ({
@@ -375,24 +405,57 @@ function Attacklist() {
     }
 
     const handleOpenFormFu = (event) => {
-        console.log(event);
         setOpenFU(true);
         setServiceNorangka(event.no_rangka);
-        setfuCustomer(event.name);
-        // setstatusPhone(event.status_phone);
-        // setfuBooking(event.status_booking_service);
-        // setfuReason(event.reason_id);
-        // setfuVerbatim(event.verbatim);
-        // setfuDate(event.re_follow_up_date);
+        setfuCustomer(event.nama_customer);
+        setstatusPhone(event.status_phone);
+        setstatusContacted(event.is_contacted);
+        setfuBooking(event.status_booking_service);
+        setfuReason(event.reason_id);
+        setfuVerbatim(event.verbatim);
+        setfuDate(event.re_follow_up_date);
+        getDetailKendaraan(event.no_rangka);
         setInputFu((values) => ({
             ...values,
             ["no_rangka"]: event.no_rangka,
         }));
     }
 
+    const [vehicleNoPolisi, setvehicleNoPolisi] = useState();
+    const [vehicleNamaCustomer, setvehicleNamaCustomer] = useState();
+    const [vehicleNoTelp, setvehicleNoTelp] = useState();
+    const [vehicleTipe, setvehicleTipe] = useState();
+    const [vehicleDecisionMaker, setvehicleDecisionMaker] = useState();
+    const [result_service, setresultservice] = useState([]);
+    const [openHistoryService, setOpenHistoryService] = React.useState(false);
+    function getDetailKendaraan(no_rangka) {
+        axios.get(`http://127.0.0.1:8000/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
+            var result = response.data;
+            console.log(result.dtlso);
+            setresultservice(result.dtlso);
+            setDetailKendaraan(result.dtlcar);
+            setvehicleNoPolisi(result.dtlcar.no_pol);
+            setvehicleNamaCustomer(result.dtlcar.nama_customer);
+            setvehicleNoTelp(result.dtlcar.no_telp);
+            setvehicleTipe(result.dtlcar.tipe);
+            setvehicleDecisionMaker(result.dtlso[0].decision_maker);
+        });
+    }
+
     const closeFollowUp = (event) => {
         setOpenFU(false);
         setServiceNorangka('');
+        setfuCustomer('');
+        setstatusPhone('');
+        setstatusContacted('');
+        setfuBooking('');
+        setfuReason('');
+        setfuVerbatim('');
+        setfuDate('');
+    }
+
+    const handleShowHistory = (event) => {
+        setOpenHistoryService(true);
     }
 
     const handleSubmitFu = (event) => {
@@ -449,8 +512,7 @@ function Attacklist() {
                             <div className="page-title-right">
                                 <ol className="breadcrumb m-0">
                                     <li className="breadcrumb-item"><a href="#">List</a></li>
-                                    <li className="breadcrumb-item"><a href="#">Services</a></li>
-                                    <li className="breadcrumb-item active">Wa Blast</li>
+                                    <li className="breadcrumb-item active"><a href="#">Attacklist</a></li>
                                 </ol>
                             </div>
                         </div>
@@ -465,11 +527,11 @@ function Attacklist() {
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
                                         <h5 className="card-title mb-0"></h5>
-                                        <div className="alert alert-info alert-dismissible alert-label-icon rounded-label fade show mb-xl-0" role="alert">
-                                            <i className="ri-error-warning-line label-icon"></i><strong>Info</strong>
-                                            - Data Attacklist berdasarkan upload Wa Blast terbaru pada menu Wa Blast (TBC)
-                                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>
+                                    </div>
+                                    <div className="flex-shrink-0">
+                                        <>
+                                            <button className="btn btn-sm btn-primary" style={{ marginRight: "5px" }} onClick={showFormImport}><i className="ri-add-circle-line"></i> Upload Attacklist</button>
+                                        </>
                                     </div>
                                 </div>
                             </div>
@@ -538,7 +600,7 @@ function Attacklist() {
                                             <div className="card-header" style={{ border: "none" }}>
                                                 <div className="d-flex align-items-center">
                                                     <div className="flex-grow-1 overflow-hidden">
-                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>From Upload Data WA Blast </h5>
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>From Upload Attacklist </h5>
                                                     </div>
                                                     <div className="flex-shrink-0">
                                                     </div>
@@ -550,7 +612,13 @@ function Attacklist() {
                                                         <CustomBlockingOverlay isLoading={loading}>
                                                         </CustomBlockingOverlay>
                                                         <form>
-                                                            {/* <input type="file" name="fileDo" id="fileDo" onChange={hChangeInputFile} required style={{width: "500px"}} className="form-control"></input> */}
+                                                            <select type="file" name="cabang_id" id="cabang_id" onChange={handleChangeInputCabang} value={inputCabang} required style={{ width: "500px" }} className="form-control mb-2">
+                                                                <option value={''}>-- Pilih Cabang --</option>
+                                                                <option value={1}>WML</option>
+                                                                <option value={2}>WLD</option>
+                                                                <option value={3}>WLP</option>
+                                                                <option value={4}>WLS</option>
+                                                            </select>
                                                             <TextField
                                                                 id="outlined-select-currency-native"
                                                                 defaultValue=""
@@ -559,7 +627,7 @@ function Attacklist() {
                                                                 onChange={hChangeInputFile}
                                                                 sx={{ width: "50%" }}
                                                                 size="small"
-                                                                name="fileWa"
+                                                                name="fileAttacklist"
                                                                 type="file"
                                                                 style={{ width: "500px" }}
                                                                 required
@@ -567,7 +635,7 @@ function Attacklist() {
                                                             </TextField><br></br>
                                                             <button
                                                                 className="btn btn-primary btn-sm mt-2"
-                                                                onClick={handleUploadWaBlast}
+                                                                onClick={handleUploadAttacklist}
                                                             >
                                                                 Proses Import
                                                             </button>
@@ -613,102 +681,193 @@ function Attacklist() {
                                             </div>
                                             <div className="card-body">
                                                 <div className="row">
-                                                    <div className="col-md-12">
-                                                        <div className="ribbon ribbon-primary round-shape mb-3">Customer: <span className="badge badge-label bg-secondary"><i className="mdi mdi-circle-medium"></i>{fuCustomer}</span></div>
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="col-lg-6 mb-2">
-                                                                    <div className="form-floating">
-                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNoRangka} id="no_rangka" placeholder="No Rangka" />
-                                                                        <label htmlFor="no_rangka">No Rangka</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-lg-6 mb-2">
-                                                                    <div className="form-floating">
-                                                                        <select type="text" className="form-control form-control-sm" onChange={handleChangeStatusPhone} value={statusPhone} name="callbyphone" id="callbyphone">
-                                                                            <option value={""}>-- Pilih --</option>
-                                                                            <option value={1}>Connected</option>
-                                                                            <option value={0}>Not Connected</option>
-                                                                        </select>
-                                                                        <label htmlFor="statusPhone">Call By Phone</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-lg-6 mb-2">
-                                                                    <div className="form-floating">
-                                                                        <select type="text" className="form-control form-control-sm" onChange={handleChangeBooking} value={fuBooking} name="followup_booking" id="followup_booking">
-                                                                            <option value={""}>-- Pilih --</option>
-                                                                            <option value={1}>Booking</option>
-                                                                            <option value={0}>Tidak Booking</option>
-                                                                        </select>
-                                                                        <label htmlFor="fuBooking">Booking Service</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 1 ? '' : 'd-none'}`}>
-                                                                    <div className="form-floating">
-                                                                        <select type="text" className="form-control form-control-sm" onChange={handleChangeConfirm} value={fuConfirm} name="confirmService" id="confirmService">
-                                                                            <option value={""}>-- Pilih --</option>
-                                                                            <option value={'come'}>Come</option>
-                                                                            <option value={'not'}>Not</option>
-                                                                        </select>
-                                                                        <label htmlFor="fuBooking">Come or Not ?</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
-                                                                    <div className="form-floating">
-                                                                        <select type="text" className="form-control form-control-sm form-select" onChange={handleChangeInputReason} value={fuReason} name="followup_reason" id="followup_reason">
-                                                                            <option value={""}>-- Pilih --</option>
-                                                                            {listReason.map((value, index) =>
-                                                                                <option key={index} value={value.id}>{value.desc}</option>
-                                                                            )}
-                                                                        </select>
-                                                                        <label htmlFor="fuReason">Reason</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
-                                                                    <div className="form-floating">
-                                                                        <input type="text" className="form-control form-control-sm" onChange={handleChangeInputVerbatim} value={fuVerbatim} name="followup_verbatim" id="followup_verbatim" />
-                                                                        <label htmlFor="fuVerbatim">Verbatim</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
-                                                                    <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuDate} value={fuDate} name="followup_date" id="followup_date" />
-                                                                        <label htmlFor="fuDate">Plan Follow Up Date</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
-                                                                    <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuTglService} value={fuTglService} name="re_tgl_service" id="re_tgl_service" />
-                                                                        <label htmlFor="fuDate">Reschedule Service ?</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
-                                                                    <div className="form-floating">
-                                                                        <select className="form-control form-control-sm" onChange={handleChangeInputFuSa} value={fuSa} name="sa" id="sa">
-                                                                            <option value={""}>-- Pilih --</option>
-                                                                            {listSa.map((value, index) =>
-                                                                                <option key={index} value={value.id}>{value.nama_sa}</option>
-                                                                            )}
-                                                                        </select>
-                                                                        <label htmlFor="fuSa">Pilih SA</label>
-                                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="ribbon ribbon-primary round-shape mb-3" style={{ fontWeight: "bold" }}>Vehicle Detail</div>
+                                                        <div className="row">
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" readOnly value={serviceNoRangka} placeholder="No Rangka" />
+                                                                    <label htmlFor="no_rangka">No Rangka</label>
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" readOnly value={vehicleNoPolisi} placeholder="No Polisi" />
+                                                                    <label htmlFor="no_polisi">No Polisi</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" readOnly value={vehicleNamaCustomer} placeholder="Nama Customer" />
+                                                                    <label htmlFor="nama_customer">Nama Customer</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" readOnly value={vehicleNoTelp} placeholder="No Telp" />
+                                                                    <label htmlFor="no_telp">Customer Phone</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" readOnly value={vehicleTipe} placeholder="Tipe" />
+                                                                    <label htmlFor="tipe">Model</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" readOnly value={vehicleDecisionMaker} placeholder="Decision Maker" />
+                                                                    <label htmlFor="decision maker">Decision Maker</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <button onClick={handleShowHistory} className="btn btn-info btn-label btn-sm" style={{ marginLeft: "5px" }}><i className="ri-information-line label-icon align-middle fs-16 me-2"></i> View History Service</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-6" style={{ background: "#E2E8F0", padding: "15px" }}>
+                                                        <div className="ribbon ribbon-primary round-shape mb-3" style={{ fontWeight: "bold" }}>MRA Action</div>
+                                                        {/* <form> */}
+                                                        <div className="row">
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <select type="text" className="form-control form-control-sm" onChange={handleChangeStatusPhone} value={statusPhone} name="callbyphone" id="callbyphone">
+                                                                        <option value={""}>-- Pilih --</option>
+                                                                        <option value={1}>Connected</option>
+                                                                        <option value={0}>Not Connected</option>
+                                                                    </select>
+                                                                    <label htmlFor="statusPhone">Call By Phone</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <select type="text" className="form-control form-control-sm" onChange={handleChangeStatusContacted} value={statusContacted} name="iscontacted" id="iscontacted">
+                                                                        <option value={""}>-- Pilih --</option>
+                                                                        <option value={1}>Contacted</option>
+                                                                        <option value={0}>Not Contacted</option>
+                                                                    </select>
+                                                                    <label htmlFor="statusPhone">Is Contacted ?</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6 mb-2">
+                                                                <div className="form-floating">
+                                                                    <select type="text" className="form-control form-control-sm" onChange={handleChangeBooking} value={fuBooking} name="followup_booking" id="followup_booking">
+                                                                        <option value={""}>-- Pilih --</option>
+                                                                        <option value={1}>Booking</option>
+                                                                        <option value={0}>Tidak Booking</option>
+                                                                    </select>
+                                                                    <label htmlFor="fuBooking">Booking Service</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 1 ? '' : 'd-none'}`}>
+                                                                <div className="form-floating">
+                                                                    <select type="text" className="form-control form-control-sm" onChange={handleChangeConfirm} value={fuConfirm} name="confirmService" id="confirmService">
+                                                                        <option value={""}>-- Pilih --</option>
+                                                                        <option value={'come'}>Come</option>
+                                                                        <option value={'not'}>Not</option>
+                                                                    </select>
+                                                                    <label htmlFor="fuBooking">Come or Not ?</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
+                                                                <div className="form-floating">
+                                                                    <select type="text" className="form-control form-control-sm form-select" onChange={handleChangeInputReason} value={fuReason} name="followup_reason" id="followup_reason">
+                                                                        <option value={""}>-- Pilih --</option>
+                                                                        {listReason.map((value, index) =>
+                                                                            <option key={index} value={value.id}>{value.desc}</option>
+                                                                        )}
+                                                                    </select>
+                                                                    <label htmlFor="fuReason">Reason</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeInputVerbatim} value={fuVerbatim} name="followup_verbatim" id="followup_verbatim" />
+                                                                    <label htmlFor="fuVerbatim">Verbatim</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
+                                                                <div className="form-floating">
+                                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuDate} value={fuDate} name="followup_date" id="followup_date" />
+                                                                    <label htmlFor="fuDate">Plan Follow Up Date</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
+                                                                <div className="form-floating">
+                                                                    <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuTglService} value={fuTglService} name="re_tgl_service" id="re_tgl_service" />
+                                                                    <label htmlFor="fuDate">Reschedule Service ?</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
+                                                                <div className="form-floating">
+                                                                    <select className="form-control form-control-sm" onChange={handleChangeInputFuSa} value={fuSa} name="sa" id="sa">
+                                                                        <option value={""}>-- Pilih --</option>
+                                                                        {listSa.map((value, index) =>
+                                                                            <option key={index} value={value.id}>{value.nama_sa}</option>
+                                                                        )}
+                                                                    </select>
+                                                                    <label htmlFor="fuSa">Pilih SA</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-12">
+                                                                <div className="text-end">
+                                                                    <button onClick={handleSubmitFu} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                                    <button onClick={closeFollowUp} className="btn btn-danger btn-label btn-sm" style={{ marginLeft: "5px" }}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* </form> */}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="card-footer">
                                                 <div className="row mt-3">
-                                                    <div className="col-lg-6">
+                                                    <div className="col-lg-12">
+                                                        {openHistoryService ? (
+                                                            <>
 
+                                                                <div className="table-responsive" style={{ fontSize: "12px" }}>
+                                                                    <table className="table align-middle table-nowrap mb-0">
+                                                                        <thead className="table-light">
+                                                                            <tr>
+                                                                                <th>Tanggal WO</th>
+                                                                                <th>SA</th>
+                                                                                <th>Foreman</th>
+                                                                                <th>Category WO</th>
+                                                                                <th>Nomor Polisi</th>
+                                                                                <th>Nomor Rangka</th>
+                                                                                <th>Model</th>
+                                                                                <th>Tahun Kendaraan</th>
+                                                                                <th>Nama Customer (User)</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {result_service.map((value, index) =>
+                                                                                <tr>
+                                                                                    <td>{value.tgl_wo}</td>
+                                                                                    <td>{value.sa}</td>
+                                                                                    <td>{value.foreman}</td>
+                                                                                    <td>{value.category_wo}</td>
+                                                                                    <td>{value.no_polisi}</td>
+                                                                                    <td>{value.no_rangka}</td>
+                                                                                    <td>{value.model}</td>
+                                                                                    <td>{value.tahun_kendaraan}</td>
+                                                                                    <td>{value.nama_customer}</td>
+                                                                                </tr>
+                                                                            )}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+
+                                                            </>
+                                                        ) : ("")}
                                                     </div>
-                                                    <div className="col-lg-6">
-                                                        <div className="text-end">
+                                                    {/* <div className="col-lg-6"> */}
+                                                    {/* <div className="text-end">
                                                             <button onClick={handleSubmitFu} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
                                                             <button onClick={closeFollowUp} className="btn btn-danger btn-label btn-sm" style={{ marginLeft: "5px" }}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
-                                                        </div>
-                                                    </div>
+                                                        </div> */}
+                                                    {/* </div> */}
                                                 </div>
                                             </div>
                                         </div>
