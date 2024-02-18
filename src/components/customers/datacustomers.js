@@ -673,20 +673,12 @@ function Datacustomers() {
     }
 
     const handleOpenEditCust = (event) => {
-        console.log(event);
         getKendaraanCust(event.single_id);
         setupdSingleID(event.single_id);
         setupdCustomerName(event.nama_customer);
         setupdTelpCust(event.telp);
         setupdEmailCust(event.email);
         setupdAlamatNikCust(event.alamat);
-        setInputUpdCust((values) => ({
-            ...values,
-            ["single_id"]: event.single_id,
-            ["alamat"]: event.alamat,
-            ["telp_customer"]: event.telp,
-            ["email"]: event.email,
-        }));
         // Konversi tanggal input ke objek Date
         const dateObj = new Date(event.tgl_ultah);
         // Dapatkan tahun, bulan, dan tanggal dari objek Date
@@ -697,6 +689,15 @@ function Datacustomers() {
         // Gabungkan tahun, bulan, dan tanggal sesuai dengan format yang diinginkan
         const formattedDate = `${year}-${month}-${day}`;
         setupdTglLahir(formattedDate);
+        
+        setInputUpdCust((values) => ({
+            ...values,
+            ["single_id"]: event.single_id,
+            ["alamat"]: event.alamat,
+            ["telp_customer"]: event.telp,
+            ["email"]: event.email,
+            ["tgl_ultah"]: formattedDate
+        }));
 
         setFormUpdateCust(true);
     }
@@ -741,7 +742,6 @@ function Datacustomers() {
         }
     }
     const handleSubmitUpdateCust = (event) => {
-        console.log(inputsUpdCust);
         event.preventDefault();
         setLoading(true);
         axios
@@ -760,6 +760,8 @@ function Datacustomers() {
                         timer: 2000,
                     });
 
+                    setFormUpdateCust(false);
+                    setRefresh(new Date());
                     // window.location.href = "/datacustomers";
                 }
             });
@@ -2206,19 +2208,19 @@ function Datacustomers() {
                                                     <label htmlFor="nama_customer">Nama Customer</label>
                                                 </div>
                                             </div>
-                                            <div className="col-lg-4 mb-2">
+                                            {/* <div className="col-lg-4 mb-2">
                                                 <div className="form-floating">
                                                     <input type="email" className="form-control form-control-sm" onChange={handleChangeEmailCust} name="email_customer" value={updEmailCust !== null ? updEmailCust : ''} id="email_customer" placeholder="Email" />
                                                     <label htmlFor="email_customer">Email</label>
                                                 </div>
-                                            </div>
-                                            <div className="col-lg-4 mb-2">
+                                            </div> */}
+                                            <div className="col-lg-6 mb-2">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control form-control-sm" onChange={handleChangeTelpCust} value={updTelpCust !== null ? updTelpCust : ''} name="telp_customer" id="telp_customer" placeholder="No Telepon" />
+                                                    <input type="number" className="form-control form-control-sm" onChange={handleChangeTelpCust} value={updTelpCust !== null ? updTelpCust : ''} name="telp_customer" id="telp_customer" placeholder="No Telepon" />
                                                     <label htmlFor="telp_customer">No Telepon</label>
                                                 </div>
                                             </div>
-                                            <div className="col-lg-4 mb-2">
+                                            <div className="col-lg-6 mb-2">
                                                 <div className="form-floating">
                                                     <input type="date" className="form-control form-control-sm" onChange={handleChangeTglLahir} value={updTglLahir !== null ? updTglLahir : ''} name="tgl_lahir_customer" id="tgl_lahir_customer" placeholder="Tanggal Lahir" />
                                                     <label htmlFor="tgl_lahir_customer">Tanggal Lahir</label>
@@ -2475,7 +2477,7 @@ function Datacustomers() {
                                         <div className="card-header" style={{ border: "none" }}>
                                             <div className="d-flex align-items-center">
                                                 <div className="flex-grow-1 overflow-hidden">
-                                                    <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>History Kendaraan {historyNoRangka}</h5>
+                                                    <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>History Kendaraan <br />{historyNoRangka}</h5>
                                                 </div>
                                                 <div className="flex-shrink-0">
                                                     <button type="button" className="btn btn-danger btn-sm" onClick={closeHistoryCar}><i className="ri-close-circle-fill"></i> Close</button>
@@ -2497,7 +2499,7 @@ function Datacustomers() {
                                                                                 </div>
                                                                                 <div className="d-flex mb-2 align-items-center">
                                                                                     <div className="flex-shrink-0">
-                                                                                        <i className={`avatar-sm rounded-circle bx ${val.status_customer === 'active' ? 'bx-user-check' : 'bx-user-x'}`} style={{ fontSize: "40px" }}></i>
+                                                                                        <i className={`avatar-sm rounded-circle bx ${val.status_customer === 'active' ? 'bx-user-check' : 'ri-shield-user-line'}`} style={{ fontSize: "40px" }}></i>
                                                                                     </div>
                                                                                     <div className="flex-grow-1 ms-3">
                                                                                         <h5 className="list-title fs-15 mb-1">{val.nama_customer + ' - ' + val.no_telp + ' '}</h5>

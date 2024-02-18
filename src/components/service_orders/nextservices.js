@@ -293,7 +293,7 @@ function Nextservice() {
         {
             name: 'Nama SA',
             selector: row => {
-                if (row.nama_sa == null) {
+                if (row.nama_sa == null && row.status_service !== null && row.status_service !== 'DATANG' && row.status_service !== 'CANCEL' && rulesName !== 'sales') {
                     return <>
                         <button onClick={(event) => { handleOpenUpSa(row); }} type="button" className="btn btn-info"><i className="ri ri-calendar-todo-fill"></i> Set SA</button>
                     </>
@@ -686,7 +686,7 @@ function Nextservice() {
                 <div className="row">
                     <div className="col-12">
                         <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 className="mb-sm-0">List Booking Next Service</h4>
+                            <h4 className="mb-sm-0">List Booking Service</h4>
 
                             <div className="page-title-right">
                                 <ol className="breadcrumb m-0">

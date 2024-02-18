@@ -273,7 +273,7 @@ function Servicepertama() {
         {
             name: 'Nama SA',
             selector: row => {
-                if (row.nama_sa == null) {
+                if (row.nama_sa == null && row.status_service_pertama !== null) {
                     return <>
                         <button onClick={(event) => { handleOpenUpSa(row); }} type="button" className="btn btn-info"><i className="ri ri-calendar-todo-fill"></i> Set SA</button>
                     </>
