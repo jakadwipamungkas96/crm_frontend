@@ -93,7 +93,7 @@ function Datacustomers() {
         setLoading(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${currentPage}&size=${perPage}&startdate=${startdate}&enddate=${enddate}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/customers/datacustomer?page=${currentPage}&size=${perPage}&startdate=${startdate}&enddate=${enddate}`;
             try {
 
                 const response = await axios.get(url);
@@ -106,7 +106,7 @@ function Datacustomers() {
             }
         };
         getData();
-    }, [currentPage, perPage, startdate, enddate, refreshDt]);
+    }, [currentPage, perPage, refreshDt]);
 
     const handleRowsPerPageChange = (newPerPage, currentPage) => {
         setPerPage(newPerPage);
@@ -245,7 +245,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -258,7 +258,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -269,7 +269,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -280,7 +280,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -291,7 +291,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/mra/info?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/mra/info?vin=" + event.no_rangka)
                 .then((response) => {
                     setlsDtMraCard(response.data.data);
                 });
@@ -316,7 +316,7 @@ function Datacustomers() {
     function getKendaraanCust(singleID) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("http://127.0.0.1:8000/api/customers/datacustomer/detail?single_id=" + singleID)
+            .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail?single_id=" + singleID)
             .then((response) => {
                 setlsDtKendaraan(response.data.data);
                 setlsTenggatStnk(response.data.listStnk);
@@ -549,11 +549,11 @@ function Datacustomers() {
     ];
     // const urlExport = '';
     // if (rulesName == 'sales') {
-    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&nama_sales=${personName}&rules=${rulesName}`;
+    //     urlExport = `https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&nama_sales=${personName}&rules=${rulesName}`;
     // } else {
-    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
+    //     urlExport = `https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
     // }
-    const urlDownloadForm = `http://127.0.0.1:8000/api/template_form_update_data_customer`;
+    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_form_update_data_customer`;
 
     const [importExcel, setimportExcel] = React.useState(false);
     const [fileUpload, setFileUp] = React.useState([]);
@@ -610,7 +610,7 @@ function Datacustomers() {
         formData.append('fileCust', fileUpload);
 
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/customers/datacustomers/import_update', formData).then(function (response) {
+        axios.post('https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/import_update', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -689,7 +689,7 @@ function Datacustomers() {
         // Gabungkan tahun, bulan, dan tanggal sesuai dengan format yang diinginkan
         const formattedDate = `${year}-${month}-${day}`;
         setupdTglLahir(formattedDate);
-        
+
         setInputUpdCust((values) => ({
             ...values,
             ["single_id"]: event.single_id,
@@ -745,7 +745,7 @@ function Datacustomers() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/customers/datacustomers/single_update", inputsUpdCust)
+            .post("https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/single_update", inputsUpdCust)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -915,7 +915,7 @@ function Datacustomers() {
     function getDetailbyVin(vin) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("http://127.0.0.1:8000/api/delivery_orders/detail/vin?vin=" + vin)
+            .get("https://api.crm.wijayatoyota.co.id/api/delivery_orders/detail/vin?vin=" + vin)
             .then((response) => {
                 if (response.data.data.length == 0) {
                     setupdNoDoTam('');
@@ -991,7 +991,7 @@ function Datacustomers() {
     function getHistory(no_rangka) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("http://127.0.0.1:8000/api/services/history?no_rangka=" + no_rangka)
+            .get("https://api.crm.wijayatoyota.co.id/api/services/history?no_rangka=" + no_rangka)
             .then((response) => {
                 console.log(response);
                 setLsHistoryService(response.data.dtService);
@@ -1043,7 +1043,7 @@ function Datacustomers() {
     const handleSubmitNopol = () => {
 
         axios
-            .post("http://127.0.0.1:8000/api/customers/datacustomers/update_nopol", inputNopol)
+            .post("https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/update_nopol", inputNopol)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -1070,6 +1070,10 @@ function Datacustomers() {
 
     function handleEndDate(event) {
         setEndDate(event.target.value);
+    }
+
+    function handleTerapkan() {
+        setRefresh(new Date());
     }
 
     // For MRA
@@ -1123,7 +1127,7 @@ function Datacustomers() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/customer/update_kendaraan", inputUpdFollow)
+            .post("https://api.crm.wijayatoyota.co.id/api/customer/update_kendaraan", inputUpdFollow)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -1191,7 +1195,7 @@ function Datacustomers() {
         },
         {
             name: 'Status Wa Blast',
-            selector: row => row.status,
+            selector: row => row.status_wa_blast,
             sortable: true,
             cell: row => (
                 <span className="badge bg-success">{row.status}</span>
@@ -1231,7 +1235,7 @@ function Datacustomers() {
     );
 
     const displayDataMraCard = searchMraCard ? filteredData : lsDtMraCard; // Jika searchText kosong, tampilkan semua data
-    
+
     const [listHistoryCar, setListHistory] = useState([]);
     const [openHistoryCar, setopenHistoryCar] = useState(false);
     const [historyNoRangka, sethistoryNoRangka] = useState(false);
@@ -1241,7 +1245,7 @@ function Datacustomers() {
         setopenHistoryCar(true);
         sethistoryNoRangka(no_rangka);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `http://127.0.0.1:8000/api/customers/history_kendaraan?vin=${no_rangka}`;
+        const url = `https://api.crm.wijayatoyota.co.id/api/customers/history_kendaraan?vin=${no_rangka}`;
         try {
             const response = await axios.get(url);
             setListHistory(response.data.data);
@@ -1300,27 +1304,20 @@ function Datacustomers() {
                                     <div className="flex-grow-1 overflow-hidden">
                                         <form action="">
                                             <div className="row">
-                                                <div className="col-lg-2 mt-2">
-                                                    <input
-                                                        className="form-control form-control-sm"
-                                                        type="text"
-                                                        value={searchText}
-                                                        onChange={(e) => handleSearch(e.target.value)}
-                                                        placeholder="Search..."
-                                                        style={{ width: "100%" }}
-                                                    />
+                                                <div className="col-lg-1 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{ fontSize: 12 }}>Start Date</label>
                                                 </div>
-                                                <div className="col-lg-2 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{ fontSize: 12 }}>Pilih Tanggal Awal</label>
-                                                </div>
-                                                <div className="col-lg-3">
+                                                <div className="col-lg-2">
                                                     <input type="date" onChange={handleStartDate} value={startdate} className="form-control" id="nameInput" name="bulan" placeholder="Enter your name" />
                                                 </div>
-                                                <div className="col-lg-2 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{ fontSize: 12 }}>Pilih Tanggal Akhir</label>
+                                                <div className="col-lg-1 mt-2">
+                                                    <label htmlFor="nameInput" className="form-label" style={{ fontSize: 12 }}>End Date</label>
+                                                </div>
+                                                <div className="col-lg-2">
+                                                    <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
                                                 </div>
                                                 <div className="col-lg-3">
-                                                    <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
+                                                    <button onClick={handleTerapkan} type="button" className="btn btn-sm btn-primary"><i className=" ri-user-search-line"></i> Go</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -1333,10 +1330,20 @@ function Datacustomers() {
                                     <div className="flex-grow-1 overflow-hidden">
                                         <form action="">
                                             <div className="row">
-                                                <div className="col-lg-3 text-right">
+                                                <div className="col-lg-2">
+                                                    <input
+                                                        className="form-control form-control-sm"
+                                                        type="text"
+                                                        value={searchText}
+                                                        onChange={(e) => handleSearch(e.target.value)}
+                                                        placeholder="Search..."
+                                                        style={{ width: "100%" }}
+                                                    />
+                                                </div>
+                                                <div className="col-lg-10 text-end">
                                                     {rulesName == 'sa' ? ("") : (
                                                         <>
-                                                            <a href={`http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}&startdate=${startdate}&enddate=${enddate}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
+                                                            <a href={`https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}&startdate=${startdate}&enddate=${enddate}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
                                                             <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{ marginLeft: "5px", cursor: "pointer" }}><i className="ri-edit-2-line"></i> Multi Update</a>
                                                         </>
                                                     )}
@@ -2427,7 +2434,7 @@ function Datacustomers() {
                                                                         <option value="user">User (Pemakai)</option>
                                                                     </select>
                                                                     <label htmlFor="deliver">Status Kepemilikan Pelanggan Service ?</label>
-                                                                    <small style={{fontSize: "10px"}}><i>Pelanggan ketika datang service</i></small>
+                                                                    <small style={{ fontSize: "10px" }}><i>Pelanggan ketika datang service</i></small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2505,7 +2512,7 @@ function Datacustomers() {
                                                                                         <h5 className="list-title fs-15 mb-1">{val.nama_customer + ' - ' + val.no_telp + ' '}</h5>
                                                                                         <p className="list-text mb-0 fs-12">{val.tipe}</p>
                                                                                         <p className="list-text mb-0 fs-12"><b>{val.no_rangka}</b></p>
-                                                                                        <p className="list-text mb-0 fs-12"><b>{"Pemilik ke - " + (idx+1)}</b></p>
+                                                                                        <p className="list-text mb-0 fs-12"><b>{"Pemilik ke - " + (idx + 1)}</b></p>
                                                                                     </div>
                                                                                 </div>
                                                                             </a>

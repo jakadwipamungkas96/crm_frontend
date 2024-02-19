@@ -68,7 +68,7 @@ function Attacklist() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/mra/attacklist?page=${page}&size=${pageSize}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/mra/attacklist?page=${page}&size=${pageSize}`;
             try {
 
                 const response = await axios.get(url);
@@ -142,6 +142,12 @@ function Attacklist() {
         {
             name: 'Nama Customer',
             selector: row => row.nama_customer,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Plan Re Follow Up Date',
+            selector: row => row.re_follow_up_date,
             sortable: true,
             width: '250px',
         },
@@ -283,7 +289,7 @@ function Attacklist() {
         );
     };
 
-    const [inputCabang, setInputCabang] = useState();
+    const [inputCabang, setInputCabang] = useState(idCab == 5 ? '' : idCab);
 
     const handleChangeInputCabang = (event) => {
         setInputCabang(event.target.value);
@@ -296,7 +302,7 @@ function Attacklist() {
         formData.append('fileAttacklist', fileUpload);
         formData.append('id_cabang', inputCabang);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/mra/import_attacklist', formData).then(function (response) {
+        axios.post('https://api.crm.wijayatoyota.co.id/api/mra/import_attacklist', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -429,7 +435,7 @@ function Attacklist() {
     const [result_service, setresultservice] = useState([]);
     const [openHistoryService, setOpenHistoryService] = React.useState(false);
     function getDetailKendaraan(no_rangka) {
-        axios.get(`http://127.0.0.1:8000/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
+        axios.get(`https://api.crm.wijayatoyota.co.id/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
             var result = response.data;
             console.log(result.dtlso);
             setresultservice(result.dtlso);
@@ -462,7 +468,7 @@ function Attacklist() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/attacklist/save", inputFu)
+            .post("https://api.crm.wijayatoyota.co.id/api/attacklist/save", inputFu)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -483,14 +489,14 @@ function Attacklist() {
     }
 
     function getReason() {
-        axios.get('http://127.0.0.1:8000/api/list/reason').then(function (response) {
+        axios.get('https://api.crm.wijayatoyota.co.id/api/list/reason').then(function (response) {
             var result = response.data;
             setListReason(result.data);
         });
     }
 
     function getSa() {
-        axios.get('http://127.0.0.1:8000/api/sa').then(function (response) {
+        axios.get('https://api.crm.wijayatoyota.co.id/api/sa').then(function (response) {
             var result = response.data;
             setListSa(result.data);
         });
@@ -500,6 +506,8 @@ function Attacklist() {
         getSa();
         getReason();
     }, []);
+
+    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_import_attacklist`;
 
     return (
         <div className="page-content">
@@ -551,7 +559,7 @@ function Attacklist() {
                                         <div id="" className='p-2'>
                                             {rulesName == 'sa' || rulesName == 'superadmin' ? (
                                                 <>
-                                                    <button className="btn btn-sm btn-primary" style={{ marginRight: "5px" }} onClick={showFormImport}><i className="ri-add-circle-line"></i> Import WA Blast</button>
+                                                    {/* <button className="btn btn-sm btn-primary" style={{ marginRight: "5px" }} onClick={showFormImport}><i className="ri-add-circle-line"></i> Import WA Blast</button> */}
                                                 </>
                                             ) : ""}
                                         </div>
@@ -600,9 +608,12 @@ function Attacklist() {
                                             <div className="card-header" style={{ border: "none" }}>
                                                 <div className="d-flex align-items-center">
                                                     <div className="flex-grow-1 overflow-hidden">
-                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>From Upload Attacklist </h5>
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>Form Upload Attacklist </h5>
                                                     </div>
                                                     <div className="flex-shrink-0">
+                                                        <div className="flex-shrink-0">
+                                                            <a href={urlDownloadForm} className="btn btn-sm btn-icon btn-success p-2" style={{ width: "100%", cursor: "pointer" }}><i className="ri-file-excel-fill"></i> Download Template Form</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -612,7 +623,7 @@ function Attacklist() {
                                                         <CustomBlockingOverlay isLoading={loading}>
                                                         </CustomBlockingOverlay>
                                                         <form>
-                                                            <select type="file" name="cabang_id" id="cabang_id" onChange={handleChangeInputCabang} value={inputCabang} required style={{ width: "500px" }} className="form-control mb-2">
+                                                            <select type="file" name="cabang_id" id="cabang_id" onChange={handleChangeInputCabang} value={inputCabang} readOnly={idCab === 5 ? false : true} style={{ width: "500px" }} className={`form-control mb-2 `}>
                                                                 <option value={''}>-- Pilih Cabang --</option>
                                                                 <option value={1}>WML</option>
                                                                 <option value={2}>WLD</option>
@@ -759,7 +770,7 @@ function Attacklist() {
                                                                     <label htmlFor="fuBooking">Booking Service</label>
                                                                 </div>
                                                             </div>
-                                                            <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 1 ? '' : 'd-none'}`}>
+                                                            {/* <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 1 ? '' : 'd-none'}`}>
                                                                 <div className="form-floating">
                                                                     <select type="text" className="form-control form-control-sm" onChange={handleChangeConfirm} value={fuConfirm} name="confirmService" id="confirmService">
                                                                         <option value={""}>-- Pilih --</option>
@@ -768,7 +779,7 @@ function Attacklist() {
                                                                     </select>
                                                                     <label htmlFor="fuBooking">Come or Not ?</label>
                                                                 </div>
-                                                            </div>
+                                                            </div> */}
                                                             <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 0 ? '' : 'd-none'}`}>
                                                                 <div className="form-floating">
                                                                     <select type="text" className="form-control form-control-sm form-select" onChange={handleChangeInputReason} value={fuReason} name="followup_reason" id="followup_reason">
@@ -792,13 +803,14 @@ function Attacklist() {
                                                                     <label htmlFor="fuDate">Plan Follow Up Date</label>
                                                                 </div>
                                                             </div>
-                                                            <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
+                                                            <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 1 ? '' : 'd-none'}`}>
                                                                 <div className="form-floating">
                                                                     <input type="date" className="form-control form-control-sm" onChange={handleChangeInputFuTglService} value={fuTglService} name="re_tgl_service" id="re_tgl_service" />
-                                                                    <label htmlFor="fuDate">Reschedule Service ?</label>
+                                                                    <label htmlFor="fuDate">Pilih Tanggal Service ?</label>
                                                                 </div>
                                                             </div>
-                                                            <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}>
+                                                            {/* <div className={`col-lg-6 mb-2 ${fuConfirm === 'not' && parseInt(fuBooking) !== 0 ? '' : 'd-none'}`}> */}
+                                                            <div className={`col-lg-6 mb-2 ${parseInt(fuBooking) === 1 ? '' : 'd-none'}`}>
                                                                 <div className="form-floating">
                                                                     <select className="form-control form-control-sm" onChange={handleChangeInputFuSa} value={fuSa} name="sa" id="sa">
                                                                         <option value={""}>-- Pilih --</option>

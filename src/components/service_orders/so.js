@@ -67,7 +67,7 @@ function So() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/service_order/list?page=${page}&size=${pageSize}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/service_order/list?page=${page}&size=${pageSize}`;
             try {
 
                 const response = await axios.get(url);
@@ -268,7 +268,7 @@ function So() {
         
         formData.append('fileSo',fileUpload);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/service_order/import', formData).then(function(response){
+        axios.post('https://api.crm.wijayatoyota.co.id/api/service_order/import', formData).then(function(response){
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {

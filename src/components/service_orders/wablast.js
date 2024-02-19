@@ -67,7 +67,7 @@ function Wablast() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/mra/wablast?page=${page}&size=${pageSize}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/mra/wablast?page=${page}&size=${pageSize}`;
             try {
 
                 const response = await axios.get(url);
@@ -134,7 +134,8 @@ function Wablast() {
     const columnsLsCustomer = [
         {
             name: 'No Rangka',
-            selector: row => <span style={{cursor: "pointer", color: "#2563EB"}} onClick={(event) => { handleOpenFormFu(row); }}>{row.no_rangka}</span>,
+            // selector: row => <span style={{cursor: "pointer", color: "#2563EB"}} onClick={(event) => { handleOpenFormFu(row); }}>{row.no_rangka}</span>,
+            selector: row => row.no_rangka,
             sortable: true,
             width: '200px',
         },
@@ -246,7 +247,7 @@ function Wablast() {
         
         formData.append('fileWa',fileUpload);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/service_order/import_wa', formData).then(function(response){
+        axios.post('https://api.crm.wijayatoyota.co.id/api/service_order/import_wa', formData).then(function(response){
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -345,7 +346,7 @@ function Wablast() {
     }
 
     function getReason() {
-        axios.get('http://127.0.0.1:8000/api/list/reason').then(function(response){
+        axios.get('https://api.crm.wijayatoyota.co.id/api/list/reason').then(function(response){
             var result = response.data;
             console.log(result);
             setListReason(result.data);
@@ -356,7 +357,7 @@ function Wablast() {
         getReason();
     }, []);
 
-    const urlDownloadForm = `http://127.0.0.1:8000/api/template_import_wa`; 
+    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_import_wa`; 
 
     return (
         <div className="page-content">

@@ -16,7 +16,7 @@ const Login = () => {
             password: password
         };
     
-        axios.post('http://127.0.0.1:8000/api/login', data)
+        axios.post('https://api.crm.wijayatoyota.co.id/api/login', data)
         .then(response => {
             setLoading(false);
             swal("Success", "Berhasil Login", "success", {
@@ -27,7 +27,7 @@ const Login = () => {
             // window.location.reload();
 
             
-            const enkripUrl    = CryptoJS.AES.encrypt("http://127.0.0.1:8000/", "w1j4y4#t0y0T4");
+            const enkripUrl    = CryptoJS.AES.encrypt("https://api.crm.wijayatoyota.co.id/", "w1j4y4#t0y0T4");
             const enkripToken  = CryptoJS.AES.encrypt(response.data.access_token, "w1j4y4#t0y0T4");
             // const enkripCabangId= CryptoJS.AES.encrypt(response.data.id_cabang, "w1j4y4#t0y0T4");
             // const enkripPerson = CryptoJS.AES.encrypt(JSON.stringify(response.data.person), "w1j4y4#t0y0T4");
@@ -41,7 +41,7 @@ const Login = () => {
             // localStorage.setItem('strprsn', enkripPerson.toString());
             // localStorage.setItem('strrls', enkripRules.toString());
             // localStorage.setItem('strcbn', enkripCabangName.toString());
-            // localStorage.setItem('apiUrl', "http://127.0.0.1:8000/");
+            // localStorage.setItem('apiUrl', "https://api.crm.wijayatoyota.co.id/");
             // localStorage.setItem('access_token', response.data.access_token);
             localStorage.setItem('id_cabang', response.data.id_cabang);
             localStorage.setItem('uid', response.data.uid);

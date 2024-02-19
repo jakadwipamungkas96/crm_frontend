@@ -1,4 +1,4 @@
-import React, { useEffect, useState,  useLayoutEffect, useRef } from "react";
+import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import CryptoJS from 'crypto-js';
@@ -8,15 +8,15 @@ import axios from 'axios';
 
 const useStyles = makeStyles({
     noTableHover: {
-      '& tbody tr:hover': {
-        background: 'none', // Menghapus latar belakang pada hover
-      },
+        '& tbody tr:hover': {
+            background: 'none', // Menghapus latar belakang pada hover
+        },
     },
 });
 
 function Bucket() {
     const classes = useStyles();
-    
+
     const hariIni = new Date();
     const tanggal = hariIni.getDate();
     const bulanHariIni = hariIni.getMonth() + 1; // Perlu ditambah 1 karena indeks bulan dimulai dari 0
@@ -104,12 +104,28 @@ function Bucket() {
     const [lsDtBucket, setLsDtBucket] = useState([]);
     const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    
+    const idCab = JSON.parse(localStorage.getItem("id_cabang"));
+    const monthday = new Date();
+    const firstDayOfMonth = `${monthday.getFullYear()}-${(monthday.getMonth() + 1).toString().padStart(2, '0')}`;
+    const defEndDate = new Date().toISOString().split('T')[0];
+    const [startdate, setStartDate] = useState(firstDayOfMonth + '-01');
+    const [enddate, setEndDate] = useState(defEndDate);
+    const [refreshDt, setRefresh] = useState();
+    const [inputCabang, setInputCabang] = useState(idCab);
+
+    const handleChangeInputCabang = (event) => {
+        setInputCabang(event.target.value);
+    }
+
+    function handleTerapkan() {
+        setRefresh(new Date());
+    }
+
     useEffect(() => {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/bucketlist`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/bucketlist?id_cabang=${inputCabang}`;
             try {
                 const response = await axios.get(url);
                 setLsDtBucket(response.data.data);
@@ -120,8 +136,8 @@ function Bucket() {
             }
         };
         getData();
-    }, []);
-    
+    }, [refreshDt]);
+
     const [searchText, setSearchText] = useState('');
     const customStyles = {
         tableWrapper: {
@@ -147,7 +163,7 @@ function Bucket() {
         {
             name: 'Status Klaim',
             selector: row => (
-                <span key={row.someUniqueKey} style={{ fontSize: "10px"}} className={`badge border ${parseInt(row.status_klaim) === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
+                <span key={row.someUniqueKey} style={{ fontSize: "10px" }} className={`badge border ${parseInt(row.status_klaim) === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
                     {row.status_klaim === 0 ? 'Pending' : 'Done'}
                 </span>
             ),
@@ -167,8 +183,14 @@ function Bucket() {
             width: '300px',
         },
         {
-            name: 'No Rangka',
-            selector: row => row.no_rangka,
+            name: 'Alamat',
+            selector: row => row.alamat,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'No Telepon',
+            selector: row => row.no_telp,
             sortable: true,
             width: '250px',
         },
@@ -225,14 +247,14 @@ function Bucket() {
     const handleSearch = (text) => {
         setSearchText(text);
     };
-    
+
     // Logika pencarian, memfilter data berdasarkan beberapa kolom
     const filteredData = lsDtBucket.filter(item =>
         Object.values(item).some(value =>
             value && value.toString().toLowerCase().includes(searchText.toLowerCase())
         )
     );
-    
+
     // Jika searchText kosong, tampilkan semua data
     const displayData = searchText ? filteredData : lsDtBucket;
 
@@ -248,7 +270,7 @@ function Bucket() {
                             <div className="page-title-right">
                                 <ol className="breadcrumb m-0">
                                     <li className="breadcrumb-item active">
-                                        <div id="" style={{background: "#CBD5E1", fontSize: "10px", color: "#0F172A"}} className='p-2'>
+                                        <div id="" style={{ background: "#CBD5E1", fontSize: "10px", color: "#0F172A" }} className='p-2'>
                                             Tanggal: <b>{tanggalFormat}</b>
                                         </div>
                                     </li>
@@ -260,7 +282,30 @@ function Bucket() {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card">
-                            <div className="card-body" style={{padding: "15px"}}>
+                            <div className="card-header">
+                                {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
+                                <div className="d-flex align-items-center">
+                                    <div className="flex-grow-1 overflow-hidden">
+                                        <form action="">
+                                            <div className="row">
+                                                <div className="col-lg-2">
+                                                    <select type="file" name="cabang_id" id="cabang_id" onChange={handleChangeInputCabang} value={inputCabang} disabled={idCab === 5 ? false : true} className={`form-control form-control-sm `}>
+                                                        <option value={''}>-- Pilih Cabang --</option>
+                                                        <option value={1}>WML</option>
+                                                        <option value={2}>WLD</option>
+                                                        <option value={3}>WLP</option>
+                                                        <option value={4}>WLS</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    <button onClick={handleTerapkan} type="button" className="btn btn-sm btn-primary"><i className=" ri-user-search-line"></i> Go</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-body" style={{ padding: "15px" }}>
                                 <div className="d-flex align-items-center mb-2">
                                     <div className="flex-grow-1 overflow-hidden">
                                         <input
@@ -269,7 +314,7 @@ function Bucket() {
                                             value={searchText}
                                             onChange={(e) => handleSearch(e.target.value)}
                                             placeholder="Search..."
-                                            style={{width: "20%"}}
+                                            style={{ width: "20%" }}
                                         />
                                     </div>
                                     <div className="flex-shrink-0">
@@ -280,11 +325,11 @@ function Bucket() {
                                 </div>
                                 {loadingTable ? (
                                     <div className="text-center ">
-                                        <i className="mdi mdi-spin mdi-loading" style={{fontSize: "30px", color: "#991B1B"}}></i> <h6 className="m-0 loading-text">Please wait...</h6>
+                                        <i className="mdi mdi-spin mdi-loading" style={{ fontSize: "30px", color: "#991B1B" }}></i> <h6 className="m-0 loading-text">Please wait...</h6>
                                     </div>
                                 ) : (
 
-                                    
+
                                     <DataTable
                                         columns={columnsLsBucket}
                                         data={displayData}
@@ -295,7 +340,7 @@ function Bucket() {
                                         onSearch={handleSearch} // Menambahkan fungsi pencarian
                                     />
 
-                                ) }
+                                )}
                             </div>
                         </div>
                     </div>

@@ -22,9 +22,9 @@ import CryptoJS from 'crypto-js';
 
 const useStyles = makeStyles({
     noTableHover: {
-      '& tbody tr:hover': {
-        background: 'none', // Menghapus latar belakang pada hover
-      },
+        '& tbody tr:hover': {
+            background: 'none', // Menghapus latar belakang pada hover
+        },
     },
 });
 
@@ -36,7 +36,7 @@ const drawerWidth = 240;
 
 function Carlist() {
     const classes = useStyles();
-    
+
     const hariIni = new Date();
     const tanggal = hariIni.getDate();
     const bulanHariIni = hariIni.getMonth() + 1; // Perlu ditambah 1 karena indeks bulan dimulai dari 0
@@ -53,12 +53,15 @@ function Carlist() {
     const tahunlist = [];
     const [bulan, setBulan] = React.useState(bulanHariIni);
     const [tahun, setTahun] = React.useState(tahunHariIni);
+    const idCab = JSON.parse(localStorage.getItem("id_cabang"));
 
     const monthday = new Date();
     const firstDayOfMonth = `${monthday.getFullYear()}-${(monthday.getMonth() + 1).toString().padStart(2, '0')}`;
     const defEndDate = new Date().toISOString().split('T')[0];
-    const [startdate, setStartDate] = useState(firstDayOfMonth+'-01');
+    const [startdate, setStartDate] = useState(firstDayOfMonth + '-01');
     const [enddate, setEndDate] = useState(defEndDate);
+    const [refreshDt, setRefresh] = useState();
+    const [inputCabang, setInputCabang] = useState(idCab);
 
     function handleStartDate(event) {
         setStartDate(event.target.value);
@@ -66,6 +69,14 @@ function Carlist() {
 
     function handleEndDate(event) {
         setEndDate(event.target.value);
+    }
+
+    function handleTerapkan() {
+        setRefresh(new Date());
+    }
+
+    const handleChangeInputCabang = (event) => {
+        setInputCabang(event.target.value);
     }
 
     const handleChange = (event) => {
@@ -140,12 +151,12 @@ function Carlist() {
 
     const [lsDtCar, setLsDtCar] = useState([]);
     const [infoRange, setInfoRange] = useState();
-    
+
     useEffect(() => {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/car/list_car_sale?startdate=${startdate}&enddate=${enddate}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/car/list_car_sale?startdate=${startdate}&enddate=${enddate}&id_cabang=${inputCabang}`;
             try {
                 const response = await axios.get(url);
                 setLsDtCar(response.data.data);
@@ -157,14 +168,14 @@ function Carlist() {
             }
         };
         getData();
-    }, [startdate, enddate]);
+    }, [refreshDt]);
 
     const alertNotifSend = (event) => {
         swal({
             title: "Reminder berhasil terkirim",
             icon: "success",
             button: "OK",
-          });
+        });
     }
 
     // For List Data Customer
@@ -219,21 +230,21 @@ function Carlist() {
     const handleSearch = (text) => {
         setSearchText(text);
     };
-    
+
     // Logika pencarian, memfilter data berdasarkan beberapa kolom
     const filteredData = lsDtCar.filter(item =>
         Object.values(item).some(value =>
             value && value.toString().toLowerCase().includes(searchText.toLowerCase())
         )
     );
-    
+
     // Jika searchText kosong, tampilkan semua data
     const displayData = searchText ? filteredData : lsDtCar;
 
     function createBadgeHTML(data) {
         const statusValues = data.status.split(',').map(s => s.trim());
         const badgeHTML = statusValues.map(status => `<span className="badge">${status}</span>`).join(' ');
-        
+
         return badgeHTML;
     }
 
@@ -251,7 +262,7 @@ function Carlist() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card">
@@ -261,24 +272,36 @@ function Carlist() {
                                     <div className="flex-grow-1 overflow-hidden">
                                         <form action="">
                                             <div className="row">
-                                                <div className="col-lg-2 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Awal</label>
+                                                <div className="col-lg-1">
+                                                    <label htmlFor="nameInput" className="form-label" style={{ fontSize: 12 }}>Start Date</label>
+                                                </div>
+                                                <div className="col-lg-2">
+                                                    <input type="date" onChange={handleStartDate} value={startdate} className="form-control form-control-sm" id="nameInput" name="bulan" placeholder="Enter your name" />
+                                                </div>
+                                                <div className="col-lg-1">
+                                                    <label htmlFor="nameInput" className="form-label" style={{ fontSize: 12 }}>End Date</label>
+                                                </div>
+                                                <div className="col-lg-2">
+                                                    <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control form-control-sm" id="nameInput" name="tahun" placeholder="Enter your name" />
+                                                </div>
+                                                <div className="col-lg-2">
+                                                    <select type="file" name="cabang_id" id="cabang_id" onChange={handleChangeInputCabang} value={inputCabang} disabled={idCab === 5 ? false : true} className={`form-control form-control-sm `}>
+                                                        <option value={''}>-- Pilih Cabang --</option>
+                                                        <option value={1}>WML</option>
+                                                        <option value={2}>WLD</option>
+                                                        <option value={3}>WLP</option>
+                                                        <option value={4}>WLS</option>
+                                                    </select>
                                                 </div>
                                                 <div className="col-lg-3">
-                                                    <input type="date" onChange={handleStartDate} value={startdate} className="form-control" id="nameInput" name="bulan" placeholder="Enter your name" />
-                                                </div>
-                                                <div className="col-lg-2 mt-2">
-                                                    <label htmlFor="nameInput" className="form-label" style={{fontSize: 12}}>Pilih Tanggal Akhir</label>
-                                                </div>
-                                                <div className="col-lg-3">
-                                                    <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
+                                                    <button onClick={handleTerapkan} type="button" className="btn btn-sm btn-primary"><i className=" ri-user-search-line"></i> Go</button>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <div className="card-body" style={{padding: "15px"}}>
+                            <div className="card-body" style={{ padding: "15px" }}>
                                 <div className="d-flex align-items-center mb-2">
                                     <div className="flex-grow-1 overflow-hidden">
                                         Summary Penjualan Kendaraan <b> {infoRange}</b>
@@ -291,18 +314,18 @@ function Carlist() {
                                                 value={searchText}
                                                 onChange={(e) => handleSearch(e.target.value)}
                                                 placeholder="Search..."
-                                                style={{width: "100%"}}
+                                                style={{ width: "100%" }}
                                             />
                                         </div>
                                     </div>
                                 </div>
                                 {loadingTable ? (
                                     <div className="text-center ">
-                                        <i className="mdi mdi-spin mdi-loading" style={{fontSize: "30px", color: "#991B1B"}}></i> <h6 className="m-0 loading-text">Please wait...</h6>
+                                        <i className="mdi mdi-spin mdi-loading" style={{ fontSize: "30px", color: "#991B1B" }}></i> <h6 className="m-0 loading-text">Please wait...</h6>
                                     </div>
                                 ) : (
 
-                                    
+
                                     <DataTable
                                         columns={columnsLsCar}
                                         data={displayData}
@@ -313,7 +336,7 @@ function Carlist() {
                                         onSearch={handleSearch} // Menambahkan fungsi pencarian
                                     />
 
-                                ) }
+                                )}
                             </div>
                         </div>
                     </div>

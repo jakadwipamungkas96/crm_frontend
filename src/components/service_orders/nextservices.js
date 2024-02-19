@@ -75,7 +75,7 @@ function Nextservice() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/service/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/service/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
             try {
 
                 const response = await axios.get(url);
@@ -433,7 +433,7 @@ function Nextservice() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/services/save_service_pertama", inputServices)
+            .post("https://api.crm.wijayatoyota.co.id/api/services/save_service_pertama", inputServices)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -496,7 +496,7 @@ function Nextservice() {
 
     const getSa = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `http://127.0.0.1:8000/api/sa`;
+        const url = `https://api.crm.wijayatoyota.co.id/api/sa`;
         try {
             const response = await axios.get(url);
             setListSa(response.data.data);
@@ -534,7 +534,7 @@ function Nextservice() {
             ['type']: type
         }));
         axios
-            .post("http://127.0.0.1:8000/api/servicepertama/confirmation", dtConfirmation)
+            .post("https://api.crm.wijayatoyota.co.id/api/nextservice/confirmation", dtConfirmation)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -549,7 +549,7 @@ function Nextservice() {
                         timer: 2000,
                     });
 
-                    window.location.href = "/input/servicepertama";
+                    window.location.href = "/services/booking";
                 }
             });
 
@@ -565,11 +565,11 @@ function Nextservice() {
         setEndDate(resultRange.enddate);
 
         setopenRechedule(true);
-        setServiceNamaCustomer(event.nama_customer_stnk);
+        setServiceNamaCustomer(event.nama_customer);
         setServiceNorangka(event.no_rangka);
         setReTglDec(formatDateInput(event.tgl_dec));
         if (event.tgl_jatuh_tempo != '') {
-            setReTglService(formatDateInput(event.first_service));
+            setReTglService(formatDateInput(event.next_service));
         }
         setsaName(event.said);
         setEndDate(formatDateInput(event.tgl_jatuh_tempo));
@@ -578,9 +578,9 @@ function Nextservice() {
             ...values,
             ["no_rangka"]: event.no_rangka,
             ["nama_sa"]: event.said,
-            ["re_tgl_service_pertama"]: formatDateInput(event.first_service),
+            ["re_tgl_service_pertama"]: formatDateInput(event.next_service),
             ["re_tgl_dec"]: formatDateInput(event.tgl_dec),
-            ["tgl_service_pertama"]: formatDateInput(event.first_service)
+            ["tgl_service_pertama"]: formatDateInput(event.next_service)
         }));
     }
 
@@ -604,7 +604,7 @@ function Nextservice() {
         console.log(inpuReschedule);
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/servicepertama/reschedule", inpuReschedule)
+            .post("https://api.crm.wijayatoyota.co.id/api/nextservice/reschedule", inpuReschedule)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -619,7 +619,10 @@ function Nextservice() {
                         timer: 2000,
                     });
 
-                    window.location.href = "/input/servicepertama";
+                    setRefresh(new Date());
+                    setopenRechedule(false);
+                    setinpuReschedule([]);
+                    // window.location.href = "/input/servicepertama";
                 }
             });
     }
@@ -660,7 +663,7 @@ function Nextservice() {
         console.log(inputNextService);
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/service/save_next", inputNextService)
+            .post("https://api.crm.wijayatoyota.co.id/api/service/save_next", inputNextService)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -686,7 +689,7 @@ function Nextservice() {
                 <div className="row">
                     <div className="col-12">
                         <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 className="mb-sm-0">List Booking Service</h4>
+                            <h4 className="mb-sm-0">List Service Lainnya</h4>
 
                             <div className="page-title-right">
                                 <ol className="breadcrumb m-0">
@@ -812,16 +815,9 @@ function Nextservice() {
                                                                 </div>
                                                                 <div className="col-lg-6 mb-2">
                                                                     <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputDec} value={serviceTglDec} name="tgl_dec" id="tgl_dec" placeholder="Tanggal DEC" />
-                                                                        <label htmlFor="tgl_dec">Tanggal DEC</label>
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputTglService} value={serviceTglService} id="tgl_service_pertama" name="tgl_service_pertama" placeholder="Tanggal Service" />
+                                                                        <label htmlFor="tgl_service_pertama">Tanggal Service</label>
                                                                     </div>
-                                                                </div>
-                                                                <div className="col-lg-6 mb-2">
-                                                                    <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleChangeInputTglService} min={serviceTglDec} max={endDate} value={serviceTglService} id="tgl_service_pertama" name="tgl_service_pertama" placeholder="Tanggal Service Pertama" />
-                                                                        <label htmlFor="tgl_service_pertama">Tanggal Service Pertama</label>
-                                                                    </div>
-                                                                    <small style={{ fontSize: "10px" }}><i>Tanggal Jatuh Tempo adalah <b style={{ color: "red" }}>{endDate}</b></i></small>
                                                                 </div>
                                                                 <div className="col-lg-6 mb-2">
                                                                     <div className="form-floating">
@@ -910,16 +906,9 @@ function Nextservice() {
                                                                 </div>
                                                                 <div className="col-lg-6 mb-2">
                                                                     <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleReTglDec} value={reTglDec} name="re_tgl_dec" id="re_tgl_dec" placeholder="Tanggal DEC" />
-                                                                        <label htmlFor="tgl_dec">Tanggal DEC</label>
+                                                                        <input type="date" className="form-control form-control-sm" onChange={handleReTglService} value={reTglService} id="re_tgl_service_pertama" name="re_tgl_service_pertama" placeholder="Tanggal Service" />
+                                                                        <label htmlFor="tgl_service_pertama">Tanggal Service</label>
                                                                     </div>
-                                                                </div>
-                                                                <div className="col-lg-6 mb-2">
-                                                                    <div className="form-floating">
-                                                                        <input type="date" className="form-control form-control-sm" onChange={handleReTglService} min={startDate} max={endDate} value={reTglService} id="re_tgl_service_pertama" name="re_tgl_service_pertama" placeholder="Tanggal Service Pertama" />
-                                                                        <label htmlFor="tgl_service_pertama">Tanggal Service Pertama</label>
-                                                                    </div>
-                                                                    <small style={{ fontSize: "10px" }}><i>Tanggal Jatuh Tempo adalah <b style={{ color: "red" }}>{endDate}</b></i></small>
                                                                 </div>
                                                                 <div className="col-lg-6 mb-2">
                                                                     <div className="form-floating">

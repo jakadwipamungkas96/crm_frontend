@@ -184,7 +184,7 @@ function App() {
   // Variable
   const checkToken = () => {
     const token =  localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    axios.post('http://127.0.0.1:8000/api/logout', token)
+    axios.post('https://api.crm.wijayatoyota.co.id/api/logout', token)
         .then(response => {
 
             swal("Success", "Berhasil Logout", "success", {
@@ -205,7 +205,7 @@ function App() {
 
   const handleLogout = () => {
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    axios.post('http://127.0.0.1:8000/api/logout', {
+    axios.post('https://api.crm.wijayatoyota.co.id/api/logout', {
       "uid": uid
     })
         .then(response => {
@@ -353,10 +353,10 @@ function App() {
                   ) : (
                       <>
                         <li className="nav-item">
-                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                          <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
                         </li>
                         <li className="nav-item">
-                          <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
                         </li>
                         <li className="nav-item">
                           <NavLink className="nav-link menu-link" exact="true" to="/reason"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Master Reason</span></NavLink>
@@ -387,7 +387,7 @@ function App() {
                   {rulesName == "superadmin" ? (
                     <>
                       <li className="nav-item">
-                        <NavLink className="nav-link menu-link d-none" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                        <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
                       </li>
                       <li className="nav-item">
                           <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>

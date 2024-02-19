@@ -53,7 +53,7 @@ function Ulangtahun() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/area/sales/datacustomer?page=${page}&size=${pageSize}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/area/sales/datacustomer?page=${page}&size=${pageSize}`;
             try {
 
                 const response = await axios.get(url);
