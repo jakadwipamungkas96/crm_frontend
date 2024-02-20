@@ -93,7 +93,7 @@ function Datacustomers() {
         setLoading(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/customers/datacustomer?page=${currentPage}&size=${perPage}&startdate=${startdate}&enddate=${enddate}`;
+            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${currentPage}&size=${perPage}&startdate=${startdate}&enddate=${enddate}`;
             try {
 
                 const response = await axios.get(url);
@@ -245,7 +245,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -258,7 +258,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -269,7 +269,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -280,7 +280,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -291,7 +291,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("https://api.crm.wijayatoyota.co.id/api/mra/info?vin=" + event.no_rangka)
+                .get("http://127.0.0.1:8000/api/mra/info?vin=" + event.no_rangka)
                 .then((response) => {
                     setlsDtMraCard(response.data.data);
                 });
@@ -316,7 +316,7 @@ function Datacustomers() {
     function getKendaraanCust(singleID) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail?single_id=" + singleID)
+            .get("http://127.0.0.1:8000/api/customers/datacustomer/detail?single_id=" + singleID)
             .then((response) => {
                 setlsDtKendaraan(response.data.data);
                 setlsTenggatStnk(response.data.listStnk);
@@ -549,11 +549,11 @@ function Datacustomers() {
     ];
     // const urlExport = '';
     // if (rulesName == 'sales') {
-    //     urlExport = `https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&nama_sales=${personName}&rules=${rulesName}`;
+    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&nama_sales=${personName}&rules=${rulesName}`;
     // } else {
-    //     urlExport = `https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
+    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
     // }
-    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_form_update_data_customer`;
+    const urlDownloadForm = `http://127.0.0.1:8000/api/template_form_update_data_customer`;
 
     const [importExcel, setimportExcel] = React.useState(false);
     const [fileUpload, setFileUp] = React.useState([]);
@@ -610,7 +610,7 @@ function Datacustomers() {
         formData.append('fileCust', fileUpload);
 
         setLoading(true);
-        axios.post('https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/import_update', formData).then(function (response) {
+        axios.post('http://127.0.0.1:8000/api/customers/datacustomers/import_update', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -745,7 +745,7 @@ function Datacustomers() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/single_update", inputsUpdCust)
+            .post("http://127.0.0.1:8000/api/customers/datacustomers/single_update", inputsUpdCust)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -915,7 +915,7 @@ function Datacustomers() {
     function getDetailbyVin(vin) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("https://api.crm.wijayatoyota.co.id/api/delivery_orders/detail/vin?vin=" + vin)
+            .get("http://127.0.0.1:8000/api/delivery_orders/detail/vin?vin=" + vin)
             .then((response) => {
                 if (response.data.data.length == 0) {
                     setupdNoDoTam('');
@@ -991,7 +991,7 @@ function Datacustomers() {
     function getHistory(no_rangka) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("https://api.crm.wijayatoyota.co.id/api/services/history?no_rangka=" + no_rangka)
+            .get("http://127.0.0.1:8000/api/services/history?no_rangka=" + no_rangka)
             .then((response) => {
                 console.log(response);
                 setLsHistoryService(response.data.dtService);
@@ -1043,7 +1043,7 @@ function Datacustomers() {
     const handleSubmitNopol = () => {
 
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/update_nopol", inputNopol)
+            .post("http://127.0.0.1:8000/api/customers/datacustomers/update_nopol", inputNopol)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -1127,7 +1127,7 @@ function Datacustomers() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/customer/update_kendaraan", inputUpdFollow)
+            .post("http://127.0.0.1:8000/api/customer/update_kendaraan", inputUpdFollow)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -1245,7 +1245,7 @@ function Datacustomers() {
         setopenHistoryCar(true);
         sethistoryNoRangka(no_rangka);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `https://api.crm.wijayatoyota.co.id/api/customers/history_kendaraan?vin=${no_rangka}`;
+        const url = `http://127.0.0.1:8000/api/customers/history_kendaraan?vin=${no_rangka}`;
         try {
             const response = await axios.get(url);
             setListHistory(response.data.data);
@@ -1343,7 +1343,7 @@ function Datacustomers() {
                                                 <div className="col-lg-10 text-end">
                                                     {rulesName == 'sa' ? ("") : (
                                                         <>
-                                                            <a href={`https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}&startdate=${startdate}&enddate=${enddate}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
+                                                            <a href={`http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}&startdate=${startdate}&enddate=${enddate}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
                                                             <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{ marginLeft: "5px", cursor: "pointer" }}><i className="ri-edit-2-line"></i> Multi Update</a>
                                                         </>
                                                     )}

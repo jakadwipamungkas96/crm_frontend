@@ -75,7 +75,7 @@ function Nextservice() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/service/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
+            const url = `http://127.0.0.1:8000/api/service/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
             try {
 
                 const response = await axios.get(url);
@@ -133,7 +133,9 @@ function Nextservice() {
     const [inpuReschedule, setinpuReschedule] = useState([]);
     const [listSa, setListSa] = useState([]);
     const [serviceNamaCustomer, setServiceNamaCustomer] = useState('');
+    const [serviceNamaCustomerNext, setServiceNamaCustomerNext] = useState('');
     const [serviceNoRangka, setServiceNorangka] = useState('');
+    const [serviceNoRangkaNext, setServiceNorangkaNext] = useState('');
     const [serviceTglDec, setserviceTglDec] = useState('');
     const [serviceTglService, setserviceTglService] = useState('');
     const [saName, setsaName] = useState('');
@@ -191,7 +193,7 @@ function Nextservice() {
 
     const handleOpenDetailKendaraan = (event) => {
         setOpenServicePertama(true);
-        setServiceNamaCustomer(event.nama_customer_stnk);
+        setServiceNamaCustomer(event.nama_customer);
         setServiceNorangka(event.no_rangka);
         setserviceTglDec(formatDateInput(event.tgl_dec));
         if (event.tgl_jatuh_tempo != '') {
@@ -222,7 +224,7 @@ function Nextservice() {
                         }} type="button" className="btn btn-primary waves-effect waves-light">
                         <i className="ri-add-circle-line"></i> Booking Service
                     </button>
-                } else if (row.status_service === 'BOOKING') {
+                } else if (row.status_service == 'BOOKING') {
 
                         return <>
                             <div className="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -297,6 +299,8 @@ function Nextservice() {
                     return <>
                         <button onClick={(event) => { handleOpenUpSa(row); }} type="button" className="btn btn-info"><i className="ri ri-calendar-todo-fill"></i> Set SA</button>
                     </>
+                } else if(row.next_service == '') {
+                    return ''
                 } else {
                     return row.nama_sa
                 }
@@ -305,20 +309,14 @@ function Nextservice() {
             width: '200px',
         },
         {
-            name: 'Tanggal DO',
-            selector: row => row.tgl_do,
-            sortable: true,
-            width: '150px',
-        },
-        {
-            name: 'Tanggal DEC',
-            selector: row => row.tgl_dec,
+            name: 'Service Pertama',
+            selector: row => row.first_service,
             sortable: true,
             width: '200px',
         },
         {
-            name: 'Service Pertama',
-            selector: row => row.first_service,
+            name: 'Last Service',
+            selector: row => row.last_service,
             sortable: true,
             width: '200px',
         },
@@ -333,6 +331,12 @@ function Nextservice() {
             selector: row => row.no_rangka,
             sortable: true,
             width: '200px',
+        },
+        {
+            name: 'Tanggal DO',
+            selector: row => row.tgl_do,
+            sortable: true,
+            width: '150px',
         },
         {
             name: 'No Polisi',
@@ -351,15 +355,20 @@ function Nextservice() {
     const [upSaName, setUpSaName] = useState('');
     const [openFormSa, setOpenFormSa] = useState(false);
     const [inputUpdateSa, setInputUpdateSa] = useState([]);
-    const handleUpdateSaService = () => {
-        
+    const [settingSaName, setSettingSaName] = useState('');
+    
+    const handleChangeInputSaNameSetting = (event) => {
+        setSettingSaName(event.target.value);
+        setInputUpdateSa((values) => ({
+            ...values,
+            [event.target.name]: event.target.value
+        }));
     }
 
     const handleOpenUpSa = (event) => {
-        console.log(event);
         setInputUpdateSa((values) => ({
             ...values,
-            ['tgl_service']: formatDateInput(event.first_service),
+            ['tgl_service']: formatDateInput(event.next_service),
             ['no_rangka']: event.no_rangka
         }));
 
@@ -433,7 +442,7 @@ function Nextservice() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/services/save_service_pertama", inputServices)
+            .post("http://127.0.0.1:8000/api/services/save_service_pertama", inputServices)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -496,7 +505,7 @@ function Nextservice() {
 
     const getSa = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `https://api.crm.wijayatoyota.co.id/api/sa`;
+        const url = `http://127.0.0.1:8000/api/sa`;
         try {
             const response = await axios.get(url);
             setListSa(response.data.data);
@@ -524,17 +533,22 @@ function Nextservice() {
 
     const handleSubmitConfirm = (event, type) => {
         console.log(event);
-        console.log(type);
         setLoading(true);
-        setConfirmation((values) => ({
-            ...values,
-            ["single_id"]: event.single_id,
-            ["no_rangka"]: event.no_rangka,
-            ["first_service"]: formatDateInput(event.first_service),
-            ['type']: type
-        }));
+        // setConfirmation((values) => ({
+        //     ...values,
+        //     ["single_id"]: event.single_id,
+        //     ["no_rangka"]: event.no_rangka,
+        //     ["next_service"]: formatDateInput(event.next_service),
+        //     ['type']: type
+        // }));
+        // console.log(dtConfirmation);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/nextservice/confirmation", dtConfirmation)
+            .post("http://127.0.0.1:8000/api/nextservice/confirmation", {
+                single_id: event.single_id,
+                no_rangka: event.no_rangka,
+                next_service: formatDateInput(event.next_service),
+                type: type 
+            })
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -604,7 +618,7 @@ function Nextservice() {
         console.log(inpuReschedule);
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/nextservice/reschedule", inpuReschedule)
+            .post("http://127.0.0.1:8000/api/nextservice/reschedule", inpuReschedule)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -646,8 +660,8 @@ function Nextservice() {
 
     const handleOpenNextService = (event) => {
         setOpenNextService(true);
-        setServiceNamaCustomer(event.nama_customer_stnk);
-        setServiceNorangka(event.no_rangka);
+        setServiceNamaCustomerNext(event.nama_customer);
+        setServiceNorangkaNext(event.no_rangka);
 
         setinputNextService((values) => ({
             ...values,
@@ -663,7 +677,7 @@ function Nextservice() {
         console.log(inputNextService);
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/service/save_next", inputNextService)
+            .post("http://127.0.0.1:8000/api/service/save_next", inputNextService)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -721,6 +735,11 @@ function Nextservice() {
                                                 </div>
                                                 <div className="col-lg-3">
                                                     <input type="date" onChange={handleEndDate} value={enddatefilter} min={startdatefilter} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-lg-3 mt-1">
+                                                    <span className="badge rounded-pill bg-info-subtle text-danger" style={{fontSize: "12px"}}><b>Note:</b> Filter berdasarkan Tanggal Last Service</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -985,7 +1004,7 @@ function Nextservice() {
                                                             <div className="row">
                                                                 <div className="col-lg-12 mb-2">
                                                                     <div className="form-floating">
-                                                                        <select type="text" className="form-control form-control-sm" value={saName} onChange={handleChangeInputSaName} id="nama_sa" name="nama_sa">
+                                                                        <select type="text" className="form-control form-control-sm" value={settingSaName} onChange={handleChangeInputSaNameSetting} id="nama_sa" name="nama_sa">
                                                                             <option value={""}>-- Pilih --</option>
                                                                             {listSa.map((val, index) => (
                                                                                 <option key={index} value={val.id}>{val.nama_sa}</option>
@@ -1058,13 +1077,13 @@ function Nextservice() {
                                                             <div className="row">
                                                                 <div className="col-lg-6 mb-2">
                                                                     <div className="form-floating">
-                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNamaCustomer} id="nama_customer" placeholder="Nama Customer" />
+                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNamaCustomerNext} id="nama_customer" placeholder="Nama Customer" />
                                                                         <label htmlFor="nama_customer">Nama Customer</label>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-lg-6 mb-2">
                                                                     <div className="form-floating">
-                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNoRangka} id="no_rangka" placeholder="No Rangka" />
+                                                                        <input type="text" className="form-control form-control-sm" readOnly value={serviceNoRangkaNext} id="no_rangka" placeholder="No Rangka" />
                                                                         <label htmlFor="no_rangka">No Rangka</label>
                                                                     </div>
                                                                 </div>

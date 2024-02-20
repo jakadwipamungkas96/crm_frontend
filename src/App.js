@@ -184,7 +184,7 @@ function App() {
   // Variable
   const checkToken = () => {
     const token =  localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    axios.post('https://api.crm.wijayatoyota.co.id/api/logout', token)
+    axios.post('http://127.0.0.1:8000/api/logout', token)
         .then(response => {
 
             swal("Success", "Berhasil Logout", "success", {
@@ -205,7 +205,7 @@ function App() {
 
   const handleLogout = () => {
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    axios.post('https://api.crm.wijayatoyota.co.id/api/logout', {
+    axios.post('http://127.0.0.1:8000/api/logout', {
       "uid": uid
     })
         .then(response => {

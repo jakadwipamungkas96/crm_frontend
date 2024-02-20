@@ -50,7 +50,7 @@ function Services() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/select/option`;
+            const url = `http://127.0.0.1:8000/api/select/option`;
             try {
 
                 const response = await axios.get(url);
@@ -184,7 +184,7 @@ function Services() {
     function getDetailbyVin(vin) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("https://api.crm.wijayatoyota.co.id/api/services/vin?vin="+vin)
+            .get("http://127.0.0.1:8000/api/services/vin?vin="+vin)
             .then((response) => {
                 if (response.data.data.length == 0) {
                     setinpSingleID('');

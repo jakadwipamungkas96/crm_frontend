@@ -125,7 +125,7 @@ function Bucket() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/bucketlist?id_cabang=${inputCabang}`;
+            const url = `http://127.0.0.1:8000/api/bucketlist?id_cabang=${inputCabang}`;
             try {
                 const response = await axios.get(url);
                 setLsDtBucket(response.data.data);

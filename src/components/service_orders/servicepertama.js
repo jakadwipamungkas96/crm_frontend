@@ -75,7 +75,7 @@ function Servicepertama() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/service_pertama/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
+            const url = `http://127.0.0.1:8000/api/service_pertama/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
             try {
 
                 const response = await axios.get(url);
@@ -273,7 +273,7 @@ function Servicepertama() {
         {
             name: 'Nama SA',
             selector: row => {
-                if (row.nama_sa == null && row.status_service_pertama !== null) {
+                if (row.nama_sa == null && row.status_service_pertama !== null && row.status_service_pertama !== 'service') {
                     return <>
                         <button onClick={(event) => { handleOpenUpSa(row); }} type="button" className="btn btn-info"><i className="ri ri-calendar-todo-fill"></i> Set SA</button>
                     </>
@@ -413,7 +413,7 @@ function Servicepertama() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/services/save_service_pertama", inputServices)
+            .post("http://127.0.0.1:8000/api/services/save_service_pertama", inputServices)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -476,7 +476,7 @@ function Servicepertama() {
 
     const getSa = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `https://api.crm.wijayatoyota.co.id/api/sa`;
+        const url = `http://127.0.0.1:8000/api/sa`;
         try {
             const response = await axios.get(url);
             setListSa(response.data.data);
@@ -514,7 +514,7 @@ function Servicepertama() {
             ['type']: type
         }));
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/servicepertama/confirmation", dtConfirmation)
+            .post("http://127.0.0.1:8000/api/servicepertama/confirmation", dtConfirmation)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -584,7 +584,7 @@ function Servicepertama() {
         console.log(inpuReschedule);
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/servicepertama/reschedule", inpuReschedule)
+            .post("http://127.0.0.1:8000/api/servicepertama/reschedule", inpuReschedule)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);

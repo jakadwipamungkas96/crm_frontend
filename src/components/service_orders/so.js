@@ -52,6 +52,7 @@ function So() {
     const [dataProspek, setDataProspek] = useState([]);
     const [dataProspek2, setDataProspek2] = useState([]);
     const [refreshDt, setRefresh] = useState();
+    const [lastCallCronjob, setLastCallCronjob] = useState();
     const [pageSize, setPageSize] = useState(25);
     const [page, setPage] = useState(0);
     // const [isLoading, setLoading] = useState(true);
@@ -59,7 +60,6 @@ function So() {
     const [loadingTable, setLoadingTable] = useState(false);
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
     const rulesName = JSON.parse(localStorage.getItem("rules"));
-    console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
     
@@ -67,7 +67,7 @@ function So() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/service_order/list?page=${page}&size=${pageSize}`;
+            const url = `http://127.0.0.1:8000/api/service_order/list?page=${page}&size=${pageSize}`;
             try {
 
                 const response = await axios.get(url);
@@ -75,6 +75,7 @@ function So() {
                 setDataProspek2(response.data);
                 setLsDtCustomer(response.data.data);
                 setLoadingTable(false);
+                setLastCallCronjob(response.data.last_cronjob);
 
             } catch (error) {
                 console.log(error);
@@ -268,7 +269,7 @@ function So() {
         
         formData.append('fileSo',fileUpload);
         setLoading(true);
-        axios.post('https://api.crm.wijayatoyota.co.id/api/service_order/import', formData).then(function(response){
+        axios.post('http://127.0.0.1:8000/api/service_order/import', formData).then(function(response){
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -286,6 +287,7 @@ function So() {
             }
         });
     }
+    
 
     return (
         <div className="page-content">
@@ -332,10 +334,12 @@ function So() {
                                         <div id="" className='p-2'>
                                             {rulesName == 'sa' ? (
                                                 <>
-                                                    <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Service</button>
+                                                    {/* <button className="btn btn-sm btn-primary" style={{marginRight: "5px"}} onClick={linkToInputServices}><i className="ri-add-circle-line"></i> Add Service</button> */}
                                                 </>
                                              ) : ""}
-                                                <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
+                                                {/* <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button> */}
+
+                                            Last Update Data <span style={{fontSize: "12px"}} class="badge badge-label bg-dark"><i class="mdi mdi-circle-medium"></i>via RDMS: {lastCallCronjob}</span>
                                         </div>
                                     </div>
                                 </div>

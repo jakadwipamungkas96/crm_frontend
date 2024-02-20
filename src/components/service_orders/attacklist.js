@@ -68,7 +68,7 @@ function Attacklist() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/mra/attacklist?page=${page}&size=${pageSize}`;
+            const url = `http://127.0.0.1:8000/api/mra/attacklist?page=${page}&size=${pageSize}`;
             try {
 
                 const response = await axios.get(url);
@@ -302,7 +302,7 @@ function Attacklist() {
         formData.append('fileAttacklist', fileUpload);
         formData.append('id_cabang', inputCabang);
         setLoading(true);
-        axios.post('https://api.crm.wijayatoyota.co.id/api/mra/import_attacklist', formData).then(function (response) {
+        axios.post('http://127.0.0.1:8000/api/mra/import_attacklist', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -435,7 +435,7 @@ function Attacklist() {
     const [result_service, setresultservice] = useState([]);
     const [openHistoryService, setOpenHistoryService] = React.useState(false);
     function getDetailKendaraan(no_rangka) {
-        axios.get(`https://api.crm.wijayatoyota.co.id/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
+        axios.get(`http://127.0.0.1:8000/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
             var result = response.data;
             console.log(result.dtlso);
             setresultservice(result.dtlso);
@@ -468,7 +468,7 @@ function Attacklist() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/attacklist/save", inputFu)
+            .post("http://127.0.0.1:8000/api/attacklist/save", inputFu)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -489,14 +489,14 @@ function Attacklist() {
     }
 
     function getReason() {
-        axios.get('https://api.crm.wijayatoyota.co.id/api/list/reason').then(function (response) {
+        axios.get('http://127.0.0.1:8000/api/list/reason').then(function (response) {
             var result = response.data;
             setListReason(result.data);
         });
     }
 
     function getSa() {
-        axios.get('https://api.crm.wijayatoyota.co.id/api/sa').then(function (response) {
+        axios.get('http://127.0.0.1:8000/api/sa').then(function (response) {
             var result = response.data;
             setListSa(result.data);
         });
@@ -507,7 +507,7 @@ function Attacklist() {
         getReason();
     }, []);
 
-    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_import_attacklist`;
+    const urlDownloadForm = `http://127.0.0.1:8000/api/template_import_attacklist`;
 
     return (
         <div className="page-content">
