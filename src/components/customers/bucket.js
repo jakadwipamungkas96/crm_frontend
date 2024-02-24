@@ -5,6 +5,7 @@ import CryptoJS from 'crypto-js';
 import DataTable from 'react-data-table-component';
 
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const useStyles = makeStyles({
     noTableHover: {
@@ -112,6 +113,7 @@ function Bucket() {
     const [enddate, setEndDate] = useState(defEndDate);
     const [refreshDt, setRefresh] = useState();
     const [inputCabang, setInputCabang] = useState(idCab);
+    const rulesName = JSON.parse(localStorage.getItem("rules"));
 
     const handleChangeInputCabang = (event) => {
         setInputCabang(event.target.value);
@@ -159,14 +161,58 @@ function Bucket() {
         }
     };
 
+    const handleOpenKlaim = (event) => {
+        axios
+            .post("http://127.0.0.1:8000/api/bucket/klaim", {
+                single_id: event.single_id
+            })
+            .then(function (response) {
+                if (response.data.error == true) {
+                    swal("Error", 'Data gagal diklaim', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                } else {
+                    swal("Success", 'Customer Berhasil diklaim, segera lakukan Follow Up!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+
+                    setRefresh(new Date());
+                }
+            });
+    }
+
     const columnsLsBucket = [,
+        // {
+        //     name: 'Status Share',
+        //     selector: row => (
+        //         <span key={row.someUniqueKey} style={{ fontSize: "10px" }} className={`badge border ${parseInt(row.status_klaim) === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
+        //             {row.status_klaim === 0 ? 'Pending' : 'Done'}
+        //         </span>
+        //     ),
+        //     sortable: true,
+        //     width: '150px',
+        // },
         {
-            name: 'Status Klaim',
-            selector: row => (
-                <span key={row.someUniqueKey} style={{ fontSize: "10px" }} className={`badge border ${parseInt(row.status_klaim) === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
-                    {row.status_klaim === 0 ? 'Pending' : 'Done'}
-                </span>
-            ),
+            name: 'Status Buckets',
+            selector: row => {
+                if (rulesName == 'sales') {
+                    if (row.flagging_check === 1) {
+                        return <span className={`badge border border-success text-success`}>
+                            Terklaim
+                        </span>
+                    } else {
+                        return <button className={`btn btn-sm btn-primary`} onClick={(event) => handleOpenKlaim(row)}>
+                            Klaim
+                        </button>
+                    }
+                } else {
+                    return <span key={row.someUniqueKey} style={{ fontSize: "10px" }} className={`badge border ${parseInt(row.status_klaim) === 0 ? ' border-secondary text-secondary' : ' border-success text-success'}`}>
+                        {row.status_klaim === 0 ? 'Pending' : 'Done'}
+                    </span>
+                }
+            },
             sortable: true,
             width: '150px',
         },
@@ -180,18 +226,6 @@ function Bucket() {
             name: 'Nama Customer',
             selector: row => row.nama_customer,
             sortable: true,
-            width: '300px',
-        },
-        {
-            name: 'Alamat',
-            selector: row => row.alamat,
-            sortable: true,
-            width: '250px',
-        },
-        {
-            name: 'No Telepon',
-            selector: row => row.no_telp,
-            sortable: true,
             width: '250px',
         },
         {
@@ -201,10 +235,17 @@ function Bucket() {
             width: '250px',
         },
         {
-            name: 'Nama SPV',
-            selector: row => row.nama_spv,
+            name: 'Tanggal Expired Klaim',
+            selector: row => row.expired_at,
             sortable: true,
             width: '250px',
+        },
+        
+        {
+            name: 'Status Klaim',
+            selector: row => row.flagging_check,
+            sortable: true,
+            width: '150px',
         },
         {
             name: 'Tanggal Share',
@@ -213,16 +254,28 @@ function Bucket() {
             width: '200px',
         },
         {
-            name: 'Tanggal Expired',
-            selector: row => row.expired_at,
+            name: 'Alamat',
+            selector: row => row.alamat,
             sortable: true,
-            width: '200px',
+            width: '250px',
         },
         {
-            name: 'Status FU',
-            selector: row => row.flagging_check,
+            name: 'No Telepon',
+            selector: row => {
+                if (row.flagging_check === 1) {
+                    return row.no_telp
+                } else {
+                    return ""
+                }
+            },
             sortable: true,
-            width: '100px',
+            width: '250px',
+        },
+        {
+            name: 'Nama SPV',
+            selector: row => row.nama_spv,
+            sortable: true,
+            width: '250px',
         },
         {
             name: 'Tipe Kendaraan',
@@ -316,6 +369,7 @@ function Bucket() {
                                             placeholder="Search..."
                                             style={{ width: "20%" }}
                                         />
+                                        <i><small className="text-danger">Segera klaim customer sebelum melebihi tanggal expired</small></i>
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>

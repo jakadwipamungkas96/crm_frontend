@@ -49,11 +49,14 @@ const Login = () => {
             localStorage.setItem('rules', JSON.stringify(response.data.rules));
             localStorage.setItem('cabang_name', JSON.stringify(response.data.cabang_name));
             
-            if (response.data.rules == "superadmin" || response.data.rules == "spv" || response.data.rules == "administrator" || response.data.rules == "sales") {
+            if (response.data.rules == "superadmin" || response.data.rules == "spv" || response.data.rules == "administrator") {
                 window.location.href = "/dashboard";
             } else if (response.data.rules == "crc") {
                 window.location.href = "/dashboard";
             } else if (response.data.rules == "mra") {
+                window.location.href = "/dashboard"; 
+            } else if (response.data.rules == "sales") {
+                // window.location.href = "dashboard/sales";
                 window.location.href = "/dashboard"; 
             }
             // window.location.href = "/dashboard";

@@ -21,6 +21,7 @@ import Profile from './components/profile/profile';
 import Nextservices from './components/service_orders/nextservices';
 import Wablast from './components/service_orders/wablast';
 import Reason from './components/reason/reason';
+import DashboardSales from './components/dashboard/dashboardsales';
 
 function App() {
   useEffect(() => {
@@ -333,11 +334,14 @@ function App() {
                   <li className="nav-item">
                     <NavLink className="nav-link menu-link" exact="true" to="/dashboard"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
                   </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link menu-link" exact="true" to="/dashboard/sales"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard Sales</span></NavLink>
+                  </li>
                   <li className="menu-title"><span data-key="t-menu">Customers</span></li>
                   <li className="nav-item">
                     <NavLink className="nav-link menu-link" exact="true" to="/datacustomers"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
                   </li>
-                  {rulesName != "sales" && rulesName != "crc" ? (
+                  {rulesName != "crc" ? (
                       <li className="nav-item">
                         <NavLink className="nav-link menu-link" exact="true" to="/customers/bucket"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
                       </li>
@@ -639,6 +643,7 @@ function App() {
             <Route path="/services/booking" element={<Nextservices />}></Route>
             <Route path="/wablast" element={<Wablast />}></Route>
             <Route path="/reason" element={<Reason />}></Route>
+            <Route path="/dashboard/sales" element={<DashboardSales />}></Route>
           </Routes>
         </div>
       </div>
