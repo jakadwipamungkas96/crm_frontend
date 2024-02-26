@@ -42,7 +42,7 @@ const Profile = () => {
             setInputProfile((values) => ({
                 ...values,
                 ["uid"]: uid,
-                ["person"]: response.data.data.person,
+                ["sales_id"]: response.data.data.sales_id,
             }));
             setTelegramChatId(response.data.tchatid);
             setIsChatID(response.data.tchatid);

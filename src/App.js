@@ -28,30 +28,30 @@ function App() {
     function m() {
       feather.replace();
       var e = document.documentElement.clientWidth,
-      e = (e < 1025 && 767 < e
-        ? (document.body.classList.remove("twocolumn-panel"),
-          "twocolumn" === sessionStorage.getItem("data-layout") &&
+        e = (e < 1025 && 767 < e
+          ? (document.body.classList.remove("twocolumn-panel"),
+            "twocolumn" === sessionStorage.getItem("data-layout") &&
             (document.documentElement.setAttribute("data-layout", "twocolumn"), document.getElementById("customizer-layout03") && document.getElementById("customizer-layout03").click()),
-          "vertical" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", "sm"),
-          "semibox" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", "sm"),
-          document.querySelector(".hamburger-icon") && document.querySelector(".hamburger-icon").classList.add("open"))
-        : 1025 <= e
-        ? (document.body.classList.remove("twocolumn-panel"),
-          "twocolumn" === sessionStorage.getItem("data-layout") &&
-            (document.documentElement.setAttribute("data-layout", "twocolumn"), document.getElementById("customizer-layout03") && document.getElementById("customizer-layout03").click()),
-          "vertical" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", sessionStorage.getItem("data-sidebar-size")),
-          "semibox" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", sessionStorage.getItem("data-sidebar-size")),
-          document.querySelector(".hamburger-icon") && document.querySelector(".hamburger-icon").classList.remove("open"))
-        : e <= 767 &&
-          (document.body.classList.remove("vertical-sidebar-enable"),
-          document.body.classList.add("twocolumn-panel"),
-          "twocolumn" === sessionStorage.getItem("data-layout") && (document.documentElement.setAttribute("data-layout", "vertical")),
-          "horizontal" !== sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", "lg"),
-          document.querySelector(".hamburger-icon")) &&
-          document.querySelector(".hamburger-icon").classList.add("open"),
-      document.querySelectorAll("#navbar-nav > li.nav-item"));
+            "vertical" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", "sm"),
+            "semibox" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", "sm"),
+            document.querySelector(".hamburger-icon") && document.querySelector(".hamburger-icon").classList.add("open"))
+          : 1025 <= e
+            ? (document.body.classList.remove("twocolumn-panel"),
+              "twocolumn" === sessionStorage.getItem("data-layout") &&
+              (document.documentElement.setAttribute("data-layout", "twocolumn"), document.getElementById("customizer-layout03") && document.getElementById("customizer-layout03").click()),
+              "vertical" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", sessionStorage.getItem("data-sidebar-size")),
+              "semibox" === sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", sessionStorage.getItem("data-sidebar-size")),
+              document.querySelector(".hamburger-icon") && document.querySelector(".hamburger-icon").classList.remove("open"))
+            : e <= 767 &&
+            (document.body.classList.remove("vertical-sidebar-enable"),
+              document.body.classList.add("twocolumn-panel"),
+              "twocolumn" === sessionStorage.getItem("data-layout") && (document.documentElement.setAttribute("data-layout", "vertical")),
+              "horizontal" !== sessionStorage.getItem("data-layout") && document.documentElement.setAttribute("data-sidebar-size", "lg"),
+              document.querySelector(".hamburger-icon")) &&
+            document.querySelector(".hamburger-icon").classList.add("open"),
+          document.querySelectorAll("#navbar-nav > li.nav-item"));
     }
-    
+
     function O() {
       var e = document.documentElement.clientWidth;
       if (767 < e) {
@@ -122,13 +122,13 @@ function App() {
             var e = a.closest(".card"),
               t = e.querySelector(".live-preview"),
               e = e.querySelector(".code-view");
-              if (a.checked) {
-                t.classList.add("d-none");
-                e.classList.remove("d-none");
-              } else {
-                t.classList.remove("d-none");
-                e.classList.add("d-none");
-              }
+            if (a.checked) {
+              t.classList.add("d-none");
+              e.classList.remove("d-none");
+            } else {
+              t.classList.remove("d-none");
+              e.classList.add("d-none");
+            }
           });
         });
         feather.replace();
@@ -172,7 +172,7 @@ function App() {
   // SESSION STORAGE
   const personName = JSON.parse(localStorage.getItem("person"));
   const rulesName = JSON.parse(localStorage.getItem("rules"));
-  const token =  localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+  const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
   const id_cabang = JSON.parse(localStorage.getItem("id_cabang"));
   const uid = JSON.parse(localStorage.getItem("uid"));
   const usrCabangName = JSON.parse(localStorage.getItem("cabang_name"));
@@ -184,24 +184,24 @@ function App() {
 
   // Variable
   const checkToken = () => {
-    const token =  localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+    const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
     axios.post('http://127.0.0.1:8000/api/logout', token)
-        .then(response => {
+      .then(response => {
 
-            swal("Success", "Berhasil Logout", "success", {
-              buttons: false,
-              timer: 2000,
-            });
-
-            window.location.href = "/";
-
-        })
-        .catch(error => {
-            swal("Error", "Gagal Logout", "error", {
-              buttons: false,
-              timer: 2000,
-            });
+        swal("Success", "Berhasil Logout", "success", {
+          buttons: false,
+          timer: 2000,
         });
+
+        window.location.href = "/";
+
+      })
+      .catch(error => {
+        swal("Error", "Gagal Logout", "error", {
+          buttons: false,
+          timer: 2000,
+        });
+      });
   };
 
   const handleLogout = () => {
@@ -209,31 +209,31 @@ function App() {
     axios.post('http://127.0.0.1:8000/api/logout', {
       "uid": uid
     })
-        .then(response => {
+      .then(response => {
 
-            localStorage.removeItem("strul");
-            localStorage.removeItem("strtkn");
-            localStorage.removeItem("person");
-            localStorage.removeItem("rules");
-            localStorage.removeItem("cabang_name");
-            localStorage.removeItem("id_cabang");
+        localStorage.removeItem("strul");
+        localStorage.removeItem("strtkn");
+        localStorage.removeItem("person");
+        localStorage.removeItem("rules");
+        localStorage.removeItem("cabang_name");
+        localStorage.removeItem("id_cabang");
 
-            swal("Success", "Berhasil Logout", "success", {
-              buttons: false,
-              timer: 2000,
-            });
-
-            window.location.href = "/";
-
-        })
-        .catch(error => {
-            swal("Error", "Gagal Logout", "error", {
-              buttons: false,
-              timer: 2000,
-            });
+        swal("Success", "Berhasil Logout", "success", {
+          buttons: false,
+          timer: 2000,
         });
+
+        window.location.href = "/";
+
+      })
+      .catch(error => {
+        swal("Error", "Gagal Logout", "error", {
+          buttons: false,
+          timer: 2000,
+        });
+      });
   };
-  
+
   if (!token) {
     return <Login />;
   }
@@ -245,170 +245,178 @@ function App() {
           <div className="layout-width">
             <div className="navbar-header">
               <div className="d-flex">
-                  {/* LOGO */}
-                  <div className="navbar-brand-box horizontal-logo">
-                      <a href="index.html" className="logo logo-dark">
-                          <span className="logo-sm">
-                              <img src={domain + "/" + logoWL} alt="" height="17" />
-                          </span>
-                          <span className="logo-lg">
-                              <img src={domain + "/" + logoWL} alt="" height="17" />
-                          </span>
-                      </a>
+                {/* LOGO */}
+                <div className="navbar-brand-box horizontal-logo">
+                  <a href="index.html" className="logo logo-dark">
+                    <span className="logo-sm">
+                      <img src={domain + "/" + logoWL} alt="" height="17" />
+                    </span>
+                    <span className="logo-lg">
+                      <img src={domain + "/" + logoWL} alt="" height="17" />
+                    </span>
+                  </a>
 
-                      <a href="index.html" className="logo logo-light">
-                          <span className="logo-sm">
-                              <img src={domain + "/" + logoWL} alt="" height="17" />
-                          </span>
-                          <span className="logo-lg">
-                              <img src={domain + "/" + logoWL} alt="" height="17" />
-                          </span>
-                      </a>
-                  </div>
+                  <a href="index.html" className="logo logo-light">
+                    <span className="logo-sm">
+                      <img src={domain + "/" + logoWL} alt="" height="17" />
+                    </span>
+                    <span className="logo-lg">
+                      <img src={domain + "/" + logoWL} alt="" height="17" />
+                    </span>
+                  </a>
+                </div>
 
-                  <button type="button"
-                      className="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
-                      id="topnav-hamburger-icon">
-                      <span className="hamburger-icon">
-                          <span></span>
-                          <span></span>
-                          <span></span>
-                      </span>
-                  </button>
+                <button type="button"
+                  className="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
+                  id="topnav-hamburger-icon">
+                  <span className="hamburger-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </span>
+                </button>
               </div>
 
               <div className="d-flex align-items-center">
                 <div className="dropdown ms-sm-3 header-item topbar-user">
-                    <button type="button" className="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <span className="d-flex align-items-center">
-                            <img className="rounded-circle header-profile-user" src={domain + "/" + avaProfile} alt="Header Avatar" />
-                            <span className="text-start ms-xl-2">
-                                <span className="d-none d-xl-inline-block ms-1 fw-semibold user-name-text">{personName}</span>
-                                <span className="d-none d-xl-block ms-1 fs-13 user-name-sub-text">{rulesName}</span>
-                            </span>
-                        </span>
-                    </button>
-                    <div className="dropdown-menu dropdown-menu-end">
-                        <h6 className="dropdown-header">Welcome {personName}!</h6>
-                        <a className="dropdown-item" href="/profile"><i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span className="align-middle">Profile</span></a> <div className="dropdown-divider"></div>
-                        <a className="dropdown-item" onClick={handleLogout} style={{cursor: "pointer"}}><i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span className="align-middle" data-key="t-logout">Logout</span></a>
-                    </div>
+                  <button type="button" className="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <span className="d-flex align-items-center">
+                      <img className="rounded-circle header-profile-user" src={domain + "/" + avaProfile} alt="Header Avatar" />
+                      <span className="text-start ms-xl-2">
+                        <span className="d-none d-xl-inline-block ms-1 fw-semibold user-name-text">{personName}</span>
+                        <span className="d-none d-xl-block ms-1 fs-13 user-name-sub-text">{rulesName}</span>
+                      </span>
+                    </span>
+                  </button>
+                  <div className="dropdown-menu dropdown-menu-end">
+                    <h6 className="dropdown-header">Welcome {personName}!</h6>
+                    <a className="dropdown-item" href="/profile"><i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span className="align-middle">Profile</span></a> <div className="dropdown-divider"></div>
+                    <a className="dropdown-item" onClick={handleLogout} style={{ cursor: "pointer" }}><i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span className="align-middle" data-key="t-logout">Logout</span></a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="app-menu navbar-menu" style={{overflow: "auto"}}>
-        
-              <div className="navbar-brand-box">
-                <a href="index.html" className="logo logo-dark">
-                    <span className="logo-sm">
-                        <img src={domain + "/" + logoWL} alt="" height="22" />
-                    </span>
-                    <span className="logo-lg">
-                        <img src={domain + "/" + logoWL} alt="" height="17" />
-                    </span>
-                </a>
-                <a href="index.html" className="logo logo-light">
-                    <span className="logo-sm">
-                        <img src={domain + "/" + logoWL} alt="" height="22" />
-                    </span>
-                    <span className="logo-lg">
-                        <img src={domain + "/" + logoWL} alt="" height="17" />
-                    </span>
-                </a>
-                <button type="button" className="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-                    id="vertical-hover">
-                    <i className="ri-record-circle-line"></i>
-                </button>
-            </div>
+        <div className="app-menu navbar-menu" style={{ overflow: "auto" }}>
 
-            <div id="scrollbar">
-              <div className="container-fluid">
-                <div id="two-column-menu">
-                </div>
-                <ul className="navbar-nav" id="navbar-nav">
-                  <li className="menu-title mb-2" style={{background: "rgb(229, 231, 235)", color: "#000"}}><span><img src={domain + "/assets/images/icon_wijaya.png"} alt="" height="20" /> {usrCabangName}</span></li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link menu-link" exact="true" to="/dashboard"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link menu-link" exact="true" to="/dashboard/sales"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard Sales</span></NavLink>
-                  </li>
-                  <li className="menu-title"><span data-key="t-menu">Customers</span></li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link menu-link" exact="true" to="/datacustomers"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
-                  </li>
-                  {rulesName != "crc" ? (
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/customers/bucket"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
-                      </li>
-                  ) : (
-                      ""
-                  ) }
-                  {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact="true" to="/ulangtahun"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
-                    <li className="menu-title"><span data-key="t-menu">List</span></li>
-                  {rulesName != "mra" ? (
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/do"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
-                      </li>
-                  ) : (
-                      <>
-                        <li className="nav-item">
-                          <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
-                        </li>
-                        <li className="nav-item">
-                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
-                        </li>
-                        <li className="nav-item">
-                          <NavLink className="nav-link menu-link" exact="true" to="/reason"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Master Reason</span></NavLink>
-                        </li>
-                      </>
-                  ) }
+          <div className="navbar-brand-box">
+            <a href="index.html" className="logo logo-dark">
+              <span className="logo-sm">
+                <img src={domain + "/" + logoWL} alt="" height="22" />
+              </span>
+              <span className="logo-lg">
+                <img src={domain + "/" + logoWL} alt="" height="17" />
+              </span>
+            </a>
+            <a href="index.html" className="logo logo-light">
+              <span className="logo-sm">
+                <img src={domain + "/" + logoWL} alt="" height="22" />
+              </span>
+              <span className="logo-lg">
+                <img src={domain + "/" + logoWL} alt="" height="17" />
+              </span>
+            </a>
+            <button type="button" className="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
+              id="vertical-hover">
+              <i className="ri-record-circle-line"></i>
+            </button>
+          </div>
 
-                  {rulesName != "spv" ? (
-                    <>
-                      <li className="menu-title"><span data-key="t-menu">Service</span></li>
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/input/servicepertama"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
-                      </li>
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/services/booking"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Lainnya</span></NavLink>
-                      </li>
-                    </>
-                  ) : (
-                    ""
-                  ) }
+          <div id="scrollbar">
+            <div className="container-fluid">
+              <div id="two-column-menu">
+              </div>
+              <ul className="navbar-nav" id="navbar-nav">
+                <li className="menu-title mb-2" style={{ background: "rgb(229, 231, 235)", color: "#000" }}><span><img src={domain + "/assets/images/icon_wijaya.png"} alt="" height="20" /> {usrCabangName}</span></li>
 
-                  {rulesName == "crc" ? (
+                {rulesName == "sales" ? (
+                  <>
                     <li className="nav-item">
-                      <NavLink className="nav-link menu-link" exact="true" to="/list/bstb"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">DEC Tracking by BSTB</span></NavLink>
+                      <NavLink className="nav-link menu-link" exact="true" to="/dashboard/sales"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard Sales</span></NavLink>
                     </li>
-                  ) : ("") }
+                  </>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/dashboard"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
+                    </li>
+                  </>
+                )}
+                <li className="menu-title"><span data-key="t-menu">Customers</span></li>
+                <li className="nav-item">
+                  <NavLink className="nav-link menu-link" exact="true" to="/datacustomers"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
+                </li>
+                {rulesName != "crc" ? (
+                  <li className="nav-item">
+                    <NavLink className="nav-link menu-link" exact="true" to="/customers/bucket"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
+                  </li>
+                ) : (
+                  ""
+                )}
+                {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact="true" to="/ulangtahun"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
+                <li className="menu-title"><span data-key="t-menu">List</span></li>
+                {rulesName != "mra" ? (
+                  <li className="nav-item">
+                    <NavLink className="nav-link menu-link" exact="true" to="/do"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
+                  </li>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/reason"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Master Reason</span></NavLink>
+                    </li>
+                  </>
+                )}
 
-                  {rulesName == "superadmin" ? (
-                    <>
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
-                      </li>
-                      <li className="nav-item">
-                          <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
-                      </li>
-                    </>
-                  ) : ("") }
-                  
-                  {rulesName != "sales" ? (
-                    <>
-                      <li className="nav-item">
-                        <NavLink className="nav-link menu-link" exact="true" to="/so"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
-                      </li>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  {/* {rulesName == "administrator" ? (
+                {rulesName != "spv" ? (
+                  <>
+                    <li className="menu-title"><span data-key="t-menu">Service</span></li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/input/servicepertama"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/services/booking"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Lainnya</span></NavLink>
+                    </li>
+                  </>
+                ) : (
+                  ""
+                )}
+
+                {rulesName == "crc" ? (
+                  <li className="nav-item">
+                    <NavLink className="nav-link menu-link" exact="true" to="/list/bstb"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">DEC Tracking by BSTB</span></NavLink>
+                  </li>
+                ) : ("")}
+
+                {rulesName == "superadmin" ? (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                    </li>
+                  </>
+                ) : ("")}
+
+                {rulesName != "sales" ? (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/so"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
+                    </li>
+                  </>
+                ) : (
+                  ""
+                )}
+                {/* {rulesName == "administrator" ? (
                       <li className="menu-title"><span data-key="t-menu">Menu</span></li>
                       <li className="nav-item">
                         <a className="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse"
@@ -455,8 +463,8 @@ function App() {
                       </li>
                   ) : ""} */}
 
-                  {/* Menu ALL SPV - ADMINISTRATOR */}
-                  {/* {rulesName == "administrator" ? spv.map((val, idx) => (
+                {/* Menu ALL SPV - ADMINISTRATOR */}
+                {/* {rulesName == "administrator" ? spv.map((val, idx) => (
                       <li className="nav-item" key={idx}>
                         <a className="nav-link menu-link" href={"#team_"+val.nama_spv} data-bs-toggle="collapse"
                             role="button" aria-expanded="false" aria-controls={"team_"+val.nama_spv}>
@@ -511,7 +519,7 @@ function App() {
                       </li>
                   )) : ""} */}
 
-                  {/* {rulesName == "administrator" ? (
+                {/* {rulesName == "administrator" ? (
                     <li className="nav-item">
                       <a className="nav-link menu-link" href="#sidebarSales" data-bs-toggle="collapse"
                           role="button" aria-expanded="false" aria-controls="sidebarSales">
@@ -530,7 +538,7 @@ function App() {
                     </li>
                   ) : ""} */}
 
-                  {/* {rulesName == "administrator" ? (
+                {/* {rulesName == "administrator" ? (
                     <li className="nav-item">
                       <a className="nav-link menu-link" href="#sidebarKecamatan" data-bs-toggle="collapse"
                           role="button" aria-expanded="false" aria-controls="sidebarKecamatan">
@@ -549,7 +557,7 @@ function App() {
                     </li>
                   ) : ""} */}
 
-                  {/* {rulesName == "administrator" ? (
+                {/* {rulesName == "administrator" ? (
                     <li className="nav-item">
                       <a className="nav-link menu-link" href="#sidebarDtBengkel" data-bs-toggle="collapse"
                           role="button" aria-expanded="false" aria-controls="sidebarDtBengkel">
@@ -568,7 +576,7 @@ function App() {
                     </li>
                   ) : ""} */}
 
-                  {/* {rulesName == "administrator" ? (
+                {/* {rulesName == "administrator" ? (
                     <li className="nav-item">
                       <a className="nav-link menu-link" href="#sidebarDtPameran" data-bs-toggle="collapse"
                           role="button" aria-expanded="false" aria-controls="sidebarDtPameran">
@@ -587,7 +595,7 @@ function App() {
                     </li>
                   ) : ""} */}
 
-                  {/* {rulesName == "administrator" ? (
+                {/* {rulesName == "administrator" ? (
                     <li className="nav-item">
                       <a className="nav-link menu-link" href="#sidebarDtProspekSA" data-bs-toggle="collapse"
                           role="button" aria-expanded="false" aria-controls="sidebarDtProspekSA">
@@ -606,24 +614,24 @@ function App() {
                     </li>
                   ) : ""} */}
 
-                  {rulesName == "superadmin" ? (
-                    <li className="nav-item">
-                      <a className="nav-link menu-link" href="#sidebarDtUserManagement" data-bs-toggle="collapse"
-                          role="button" aria-expanded="false" aria-controls="sidebarDtUserManagement">
-                          <i className="ri-shield-user-line"></i> <span data-key="t-dashboards">User Management</span>
-                      </a>
-                      <div className="collapse menu-dropdown" id="sidebarDtUserManagement">
-                          <ul className="nav nav-sm flex-column">
-                              <li className="nav-item">
-                                  <a href="#" className="nav-link"> List User</a>
-                              </li>
-                          </ul>
-                      </div>
-                    </li>
-                  ) : ""}
-                </ul>
-              </div>
+                {rulesName == "superadmin" ? (
+                  <li className="nav-item">
+                    <a className="nav-link menu-link" href="#sidebarDtUserManagement" data-bs-toggle="collapse"
+                      role="button" aria-expanded="false" aria-controls="sidebarDtUserManagement">
+                      <i className="ri-shield-user-line"></i> <span data-key="t-dashboards">User Management</span>
+                    </a>
+                    <div className="collapse menu-dropdown" id="sidebarDtUserManagement">
+                      <ul className="nav nav-sm flex-column">
+                        <li className="nav-item">
+                          <a href="#" className="nav-link"> List User</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                ) : ""}
+              </ul>
             </div>
+          </div>
         </div>
         <div className="vertical-overlay"></div>
         <div className="main-content">

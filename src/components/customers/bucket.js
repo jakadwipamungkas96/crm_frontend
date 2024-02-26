@@ -240,13 +240,6 @@ function Bucket() {
             sortable: true,
             width: '250px',
         },
-        
-        {
-            name: 'Status Klaim',
-            selector: row => row.flagging_check,
-            sortable: true,
-            width: '150px',
-        },
         {
             name: 'Tanggal Share',
             selector: row => row.sharing_at,

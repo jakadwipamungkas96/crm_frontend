@@ -166,6 +166,10 @@ const DashboardSales = () => {
 
     const handleOpenFormTask = (event) => {
         setOpenForm(true);
+        setInputTask((values) => ({
+            ...values,
+            ["sid"]: JSON.parse(localStorage.getItem("sid")),
+        }));
     }
 
     const closeForm = (event) => {
