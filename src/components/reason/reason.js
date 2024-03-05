@@ -188,6 +188,7 @@ function Reason() {
         axios.post('http://127.0.0.1:8000/api/reason/save', inputReason).then(function(response){
             setRefresh(new Date());
             setReasonDesc('');
+            setInputReason([]);
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {

@@ -64,11 +64,21 @@ function Attacklist() {
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
 
+    const [chsKategori, setChsKategori] = useState('');
+    const [chsTipeCustomer, setChsTipeCustomer] = useState('');
+
+    const handleChangeChsTipeCustomer = (event) => {
+        setChsTipeCustomer(event.target.value);
+    }
+    const handleChangeChsKategori = (event) => {
+        setChsKategori(event.target.value);
+    }
+
     useEffect(() => {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/mra/attacklist?page=${page}&size=${pageSize}`;
+            const url = `http://127.0.0.1:8000/api/mra/attacklist?page=${page}&size=${pageSize}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`;
             try {
 
                 const response = await axios.get(url);
@@ -82,7 +92,7 @@ function Attacklist() {
             }
         };
         getData();
-    }, [page, pageSize, refreshDt]);
+    }, [page, pageSize, refreshDt, chsKategori, chsTipeCustomer]);
 
     const [rowCountState, setRowCountState] = React.useState(
         dataProspek2?.totalAll || 0
@@ -146,10 +156,16 @@ function Attacklist() {
             width: '250px',
         },
         {
-            name: 'Plan Re Follow Up Date',
-            selector: row => row.re_follow_up_date,
+            name: 'Tipe Customer',
+            selector: row => row.tipe_customer,
             sortable: true,
-            width: '250px',
+            width: '150px',
+        },
+        {
+            name: 'Kategori',
+            selector: row => row.kategori,
+            sortable: true,
+            width: '150px',
         },
         {
             name: 'No Telepon',
@@ -180,6 +196,18 @@ function Attacklist() {
             },
             sortable: true,
             width: '200px',
+        },
+        {
+            name: 'Tanggal Reminder',
+            selector: row => row.created_at,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Plan Re Follow Up Date',
+            selector: row => row.re_follow_up_date,
+            sortable: true,
+            width: '250px',
         },
         {
             name: 'Status Phone',
@@ -330,8 +358,11 @@ function Attacklist() {
     const [fuReason, setfuReason] = useState('');
     const [listReason, setListReason] = useState([]);
     const [listSa, setListSa] = useState([]);
+    const [listKategori, setListKategori] = useState([]);
+    const [listTipeCustomer, setListTipeCustomer] = useState([]);
     const [fuVerbatim, setfuVerbatim] = useState('');
     const [statusPhone, setstatusPhone] = useState();
+    const [statusNoteCustomer, setstatusNoteCustomer] = useState();
     const [statusContacted, setstatusContacted] = useState();
     const [fuBooking, setfuBooking] = useState('');
     const [openFormFU, setOpenFU] = useState(false);
@@ -394,6 +425,14 @@ function Attacklist() {
         }));
     }
 
+    const handleChangeNoteCustomer = (event) => {
+        setstatusNoteCustomer(event.target.value);
+        setInputFu((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
     const handleChangeStatusContacted = (event) => {
         setstatusContacted(event.target.value);
         setInputFu((values) => ({
@@ -415,6 +454,7 @@ function Attacklist() {
         setServiceNorangka(event.no_rangka);
         setfuCustomer(event.nama_customer);
         setstatusPhone(event.status_phone);
+        setstatusNoteCustomer(event.note);
         setstatusContacted(event.is_contacted);
         setfuBooking(event.status_booking_service);
         setfuReason(event.reason_id);
@@ -453,6 +493,7 @@ function Attacklist() {
         setServiceNorangka('');
         setfuCustomer('');
         setstatusPhone('');
+        setstatusNoteCustomer('');
         setstatusContacted('');
         setfuBooking('');
         setfuReason('');
@@ -502,9 +543,18 @@ function Attacklist() {
         });
     }
 
+    function getOption() {
+        axios.get('http://127.0.0.1:8000/api/mra/option_attacklist').then(function (response) {
+            var result = response.data;
+            setListKategori(result.kategori);
+            setListTipeCustomer(result.tipe_cust);
+        });
+    }
+
     useEffect(() => {
         getSa();
         getReason();
+        getOption();
     }, []);
 
     const urlDownloadForm = `http://127.0.0.1:8000/api/template_import_attacklist`;
@@ -546,20 +596,43 @@ function Attacklist() {
                             <div className="card-body" style={{ padding: "15px" }}>
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
-                                        <input
-                                            className="form-control form-control-sm mb-2"
-                                            type="text"
-                                            value={searchText}
-                                            onChange={(e) => handleSearch(e.target.value)}
-                                            placeholder="Search..."
-                                            style={{ width: "20%" }}
-                                        />
+                                        <div className="row">
+                                            <div className="col-md-2">
+                                                <input
+                                                    className="form-control form-control-sm mb-2"
+                                                    type="text"
+                                                    value={searchText}
+                                                    onChange={(e) => handleSearch(e.target.value)}
+                                                    placeholder="Search..."
+                                                    style={{ width: "100%" }}
+                                                />
+                                            </div>
+                                            {/* <div className="col-md-2">
+                                                <span className="text-small">Pilih Kategori</span>
+                                            </div> */}
+                                            <div className="col-md-2">
+                                                <select type="text" className="form-select form-select-sm" name="kategori" value={chsKategori} onChange={handleChangeChsKategori}>
+                                                    <option value={''}>{'Pilih Kategori'}</option>
+                                                    {listKategori.map((value, index) =>
+                                                        <option key={index} value={value.kategori}>{value.kategori}</option>
+                                                    )}
+                                                </select>
+                                            </div>
+                                            <div className="col-md-3">
+                                                <select type="text" className="form-select form-select-sm" name="kategori" value={chsKategori} onChange={handleChangeChsTipeCustomer}>
+                                                    <option value={''}>{'Pilih Tipe Customer'}</option>
+                                                    {listTipeCustomer.map((value, index) =>
+                                                        <option key={index} value={value.tipe_customer}>{value.tipe_customer}</option>
+                                                    )}
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            {rulesName == 'sa' || rulesName == 'superadmin' ? (
+                                            {rulesName == 'mra' || rulesName == 'superadmin' ? (
                                                 <>
-                                                    {/* <button className="btn btn-sm btn-primary" style={{ marginRight: "5px" }} onClick={showFormImport}><i className="ri-add-circle-line"></i> Import WA Blast</button> */}
+                                                    <a href={`http://127.0.0.1:8000/api/summary/export/attacklist?id_cabang=${idCab}&rules=${rulesName}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export</a>
                                                 </>
                                             ) : ""}
                                         </div>
@@ -729,6 +802,12 @@ function Attacklist() {
                                                                 <div className="form-floating">
                                                                     <input type="text" className="form-control form-control-sm" readOnly value={vehicleDecisionMaker} placeholder="Decision Maker" />
                                                                     <label htmlFor="decision maker">Decision Maker</label>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-12 mb-2">
+                                                                <div className="form-floating">
+                                                                    <input type="text" className="form-control form-control-sm" value={statusNoteCustomer} handleChange={handleChangeNoteCustomer} placeholder="Decision Maker" />
+                                                                    <label htmlFor="decision maker">Note</label>
                                                                 </div>
                                                             </div>
                                                             <div className="col-lg-6 mb-2">

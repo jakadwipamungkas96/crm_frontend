@@ -22,6 +22,7 @@ import Nextservices from './components/service_orders/nextservices';
 import Wablast from './components/service_orders/wablast';
 import Reason from './components/reason/reason';
 import DashboardSales from './components/dashboard/dashboardsales';
+import Users from './components/users/users';
 
 function App() {
   useEffect(() => {
@@ -291,7 +292,7 @@ function App() {
                   </button>
                   <div className="dropdown-menu dropdown-menu-end">
                     <h6 className="dropdown-header">Welcome {personName}!</h6>
-                    <a className="dropdown-item" href="/profile"><i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span className="align-middle">Profile</span></a> <div className="dropdown-divider"></div>
+                    <a className={`dropdown-item ${rulesName === "sales" ? '' : 'd-none'}`} href="/profile"><i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span className="align-middle">Profile</span></a> <div className="dropdown-divider"></div>
                     <a className="dropdown-item" onClick={handleLogout} style={{ cursor: "pointer" }}><i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span className="align-middle" data-key="t-logout">Logout</span></a>
                   </div>
                 </div>
@@ -623,7 +624,7 @@ function App() {
                     <div className="collapse menu-dropdown" id="sidebarDtUserManagement">
                       <ul className="nav nav-sm flex-column">
                         <li className="nav-item">
-                          <a href="#" className="nav-link"> List User</a>
+                          <a href="/users" className="nav-link"> List User</a>
                         </li>
                       </ul>
                     </div>
@@ -652,6 +653,7 @@ function App() {
             <Route path="/wablast" element={<Wablast />}></Route>
             <Route path="/reason" element={<Reason />}></Route>
             <Route path="/dashboard/sales" element={<DashboardSales />}></Route>
+            <Route path="/users" element={<Users />}></Route>
           </Routes>
         </div>
       </div>
