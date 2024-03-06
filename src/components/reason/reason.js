@@ -219,6 +219,27 @@ function Reason() {
     
     const handleDelete = (event) => {
         console.log(event.id);
+        axios.post('http://127.0.0.1:8000/api/reason/delete', {
+            id: event.id
+        }).then(function(response){
+            setRefresh(new Date());
+            if (response.data.error == true) {
+                setLoading(false);
+                swal("Error", 'Data tidak boleh kosong!', "error", {
+                    buttons: false,
+                    timer: 2000,
+                });   
+            } else {
+                setLoading(false);
+                swal("Success", 'Data Berhasil dihapus!', "success", {
+                    buttons: false,
+                    timer: 2000,
+                });
+
+                window.location.href = "/reason";
+                
+            }
+        });
     }
 
     const CustomBlockingOverlay = ({ isLoading, children }) => {

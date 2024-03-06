@@ -117,7 +117,7 @@ function Users() {
     const columnsLsUsers = [
         {
             name: 'ID',
-            selector: row => row.id,
+            selector: row => row.id_key,
             sortable: true,
             width: '100px',
         },
@@ -129,7 +129,7 @@ function Users() {
                         {/* <button onClick={(event) => { handleEdit(row); }} type="button" className="btn btn-info"><i className="ri ri-checkbox-circle-fill"></i> Update</button>
                         <button onClick={(event) => { handleDelete(row); }} type="button" className="btn btn-danger"><i className="ri ri-close-circle-fill"> </i>Delete</button> */}
                         <button type="button" data-toggle="tooltip" title="Edit Users" onClick={(event) => { handleEdit(row); }} class="btn btn-sm btn-success btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>
-                        <button type="button" data-toggle="tooltip" title="View Activity" onClick={(event) => { handleEdit(row); }} class="btn btn-sm btn-info btn-icon waves-effect waves-light"><i class="ri-search-eye-line"></i></button>
+                        <button type="button" data-toggle="tooltip" title="Reset Password" onClick={(event) => { handleEdit(row); }} class="btn btn-sm btn-info btn-icon waves-effect waves-light"><i class="ri-restart-line"></i></button>
                         <button type="button" data-toggle="tooltip" title="Delete Users" onClick={(event) => { handleDelete(row); }} className="btn btn-sm btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>
                     </div>
                 </>
@@ -169,10 +169,6 @@ function Users() {
         },
     ];
 
-    const handleEdit = (event) => {
-        console.log(event);
-    }
-
     const handleSearch = (text) => {
         setSearchText(text);
     };
@@ -187,7 +183,9 @@ function Users() {
     const displayData = searchText ? filteredData : lsDtUsers;
 
     const [openFormAdd, setOpenFormAdd] = useState(false);
+    const [openFormEdit, setOpenEdit] = useState(false);
     const [inputUsers, setInputUsers] = useState([]);
+    const [updateUsers, setUpdateUsers] = useState([]);
     const [listCabang, setListCabang] = useState([]);
     const [listSpv, setListSpv] = useState([]);
     const [addNamaLengkap, setNamaLengkap] = useState();
@@ -198,6 +196,15 @@ function Users() {
     const [addSalesId, setSalesId] = useState();
     const [addSpvId, setSpvId] = useState();
     const [addCabang, setCabang] = useState();
+
+    const [updateNamaLengkap, setUpdateNamaLengkap] = useState();
+    const [updateUsername, setUpdateUsername] = useState();
+    const [updatePassword, setUpdatePassword] = useState();
+    const [updateRole, setUpdateRole] = useState();
+    const [updateSpv, setUpdateSpv] = useState();
+    const [updateSalesId, setUpdateSalesId] = useState();
+    const [updateSpvId, setUpdateSpvId] = useState();
+    const [updateCabang, setUpdateCabang] = useState();
 
     // GET CABANG LIST
     const getCabang = async () => {
@@ -304,6 +311,125 @@ function Users() {
         event.preventDefault();
         console.log(inputUsers);
         axios.post('http://127.0.0.1:8000/api/users/create', inputUsers).then(function(response){
+            
+            if (response.data.error == true) {
+                setLoading(false);
+                swal("Error", 'Data tidak boleh kosong!', "error", {
+                    buttons: false,
+                    timer: 2000,
+                });   
+            } else {
+                setLoading(false);
+                swal("Success", 'Data Berhasil disimpan!', "success", {
+                    buttons: false,
+                    timer: 2000,
+                });
+
+                window.location.href = "/users";
+
+            }
+        });
+    }
+
+    
+
+    const handleEdit = (event) => {
+        console.log(event);
+        setOpenEdit(true);
+        setUpdateNamaLengkap(event.person);
+        setUpdateCabang(event.id_cabang);
+        setUpdateRole(event.rules);
+        setUpdateSalesId(event.sales_id);
+        setUpdateSpvId(event.spv_id);
+        setUpdateUsername(event.username);
+        getSpv(event.id_cabang);
+        setUpdateUsers((values) => ({
+            ...values,
+            ["id"]: event.id,
+            ["update_id_cabang"]: event.id_cabang,
+            ["update_person"]: event.person,
+            ["update_rules"]: event.rules,
+            ["update_username"]: event.username,
+            ["update_sales_id"]: event.sales_id,
+            ["update_spv_id"]: event.spv_id,
+            ["update_team_id"]: event.spv_id,
+        }));
+    }
+
+    const handleUpdateNamaLengkap = (event) => {
+        setUpdateNamaLengkap(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleUpdateUsername = (event) => {
+        setUpdateUsername(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleUpdatePassword = (event) => {
+        setUpdatePassword(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleUpdateRole = (event) => {
+        setUpdateRole(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleUpdateSpv = (event) => {
+        setUpdateSpvId(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleUpdateCabang = (event) => {
+        setUpdateCabang(event.target.value);
+        getSpv(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleUpdateSalesId = (event) => {
+        setUpdateSalesId(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleUpdateSpvId = (event) => {
+        setUpdateSpvId(event.target.value);
+        setUpdateUsers((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+    
+
+    const closeFormEdit = (event) => {
+        setOpenEdit(false);
+        setUpdateUsers([]);
+    }
+
+    const handleSubmitEdit = (event) => {
+        event.preventDefault();
+        axios.post('http://127.0.0.1:8000/api/users/update', updateUsers).then(function(response){
             
             if (response.data.error == true) {
                 setLoading(false);
@@ -468,6 +594,7 @@ function Users() {
                                                                             {listCabang.map((val, index) => (
                                                                                 <option key={index} value={val.id}>{val.cabang_name}</option>
                                                                             ))}
+                                                                            <option value={5}>Head Office Wijaya Toyota</option>
                                                                         </select>
                                                                         <label htmlFor="cabang">Pilih Cabang</label>
                                                                     </div>
@@ -552,6 +679,128 @@ function Users() {
                         </div>
                     </DialogContent>
                 </Dialog>
+
+                {/* Update Users */}
+                <Dialog
+                    open={openFormEdit}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={closeFormEdit}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{ border: "none" }}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>Edit Users</h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <CustomBlockingOverlay isLoading={loading}>
+                                                        </CustomBlockingOverlay>
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm" value={updateCabang} onChange={handleUpdateCabang} name="update_id_cabang" id="cabang" placeholder="cabang">
+                                                                            <option value={''}>-- Pilih Cabang --</option>
+                                                                            {listCabang.map((val, index) => (
+                                                                                <option key={index} value={val.id}>{val.cabang_name}</option>
+                                                                            ))}
+                                                                            <option value={5}>Head Office Wijaya Toyota</option>
+                                                                        </select>
+                                                                        <label htmlFor="cabang">Pilih Cabang</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" value={updateNamaLengkap} onChange={handleUpdateNamaLengkap} name="update_person" id="nama_lengkap" placeholder="Nama Lengkap" />
+                                                                        <label htmlFor="nama_lengkap">Nama Lengkap</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <select type="text" className="form-control form-control-sm" value={updateRole} onChange={handleUpdateRole} name="update_rules" id="role" placeholder="role">
+                                                                            <option value={''}>-- Pilih Role --</option>
+                                                                            <option value={'superadmin'}>Superadmin</option>
+                                                                            <option value={'administrator'}>Administrator</option>
+                                                                            <option value={'sales'}>Sales</option>
+                                                                            <option value={'spv'}>SPV</option>
+                                                                            <option value={'crc'}>CRC</option>
+                                                                            <option value={'mra'}>MRA</option>
+                                                                        </select>
+                                                                        <label htmlFor="role">Pilih Role Users</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${updateRole === 'sales' ? '' : 'd-none'}`}>
+                                                                    <div className={`form-floating`}>
+                                                                        <select type="text" className={`form-control form-control-sm`} value={updateSpvId} onChange={handleUpdateSpv} name="update_team_id" id="spv" placeholder="spv">
+                                                                            <option value={''}>-- Pilih Team SPV --</option>
+                                                                            {listSpv.map((val, index) => (
+                                                                                <option key={index} value={val.spv_id}>{val.nama_spv}</option>
+                                                                            ))}
+                                                                        </select>
+                                                                        <label htmlFor="spv">Pilih Team SPV</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${updateRole === 'sales' ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" value={updateSalesId} onChange={handleUpdateSalesId} name="update_sales_id" id="sales_id" placeholder="sales_id" />
+                                                                        <label htmlFor="sales_id">Sales ID</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={`col-lg-6 mb-2 ${updateRole === 'spv' ? '' : 'd-none'}`}>
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" value={updateSpvId} onChange={handleUpdateSpvId} name="update_spv_id" id="spv_id" placeholder="spv_id" />
+                                                                        <label htmlFor="spv_id">Spv ID</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-6 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="text" className="form-control form-control-sm" value={updateUsername} onChange={handleUpdateUsername} name="update_username" id="username" placeholder="username" />
+                                                                        <label htmlFor="username">Username</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-footer">
+                                                <div className="row mt-3">
+                                                    <div className="col-lg-6">
+
+                                                    </div>
+                                                    <div className="col-lg-6">
+                                                        <div className="text-end">
+                                                            <button onClick={handleSubmitEdit} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                            <button onClick={closeFormEdit} className="btn btn-danger btn-label btn-sm" style={{ marginLeft: "5px" }}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
             </div>
         </div>
     );
