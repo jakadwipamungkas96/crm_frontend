@@ -206,12 +206,12 @@ function App() {
   };
 
   const handleLogout = () => {
-    const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    axios.post('http://127.0.0.1:8000/api/logout', {
-      "uid": uid
-    })
-      .then(response => {
+    // const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
+    // axios.post('http://127.0.0.1:8000/api/logout')
+    //   .then(response => {
 
+        localStorage.removeItem("sid");
+        localStorage.removeItem("uid");
         localStorage.removeItem("strul");
         localStorage.removeItem("strtkn");
         localStorage.removeItem("person");
@@ -226,13 +226,13 @@ function App() {
 
         window.location.href = "/";
 
-      })
-      .catch(error => {
-        swal("Error", "Gagal Logout", "error", {
-          buttons: false,
-          timer: 2000,
-        });
-      });
+      // })
+      // .catch(error => {
+      //   swal("Error", "Gagal Logout", "error", {
+      //     buttons: false,
+      //     timer: 2000,
+      //   });
+      // });
   };
 
   if (!token) {

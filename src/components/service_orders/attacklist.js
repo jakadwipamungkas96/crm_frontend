@@ -234,6 +234,36 @@ function Attacklist() {
             width: '200px',
         },
         {
+            name: 'Reason',
+            selector: row => row.reason_desc,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Verbatim',
+            selector: row => row.verbatim,
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Booking Service',
+            selector: row => {
+                if (row.status_booking_service == 0) {
+                    return <span className="badge bg-danger-subtle text-danger">Not Booking</span>
+                } else if (row.status_booking_service == 1) {
+                    return <span className="badge bg-success-subtle text-success">Booking</span>
+                }
+            },
+            sortable: true,
+            width: '250px',
+        },
+        {
+            name: 'Tanggal Booking Service',
+            selector: row => row.tgl_service,
+            sortable: true,
+            width: '250px',
+        },
+        {
             name: 'Sender',
             selector: row => row.sender,
             sortable: true,
@@ -460,10 +490,20 @@ function Attacklist() {
         setfuReason(event.reason_id);
         setfuVerbatim(event.verbatim);
         setfuDate(event.re_follow_up_date);
+        setfuTglService(event.tgl_service);
+        setfuSa(event.sa);
         getDetailKendaraan(event.no_rangka);
         setInputFu((values) => ({
             ...values,
             ["no_rangka"]: event.no_rangka,
+            ["status_phone"]: event.status_phone,
+            ["is_contacted"]: event.is_contacted,
+            ["status_booking_service"]: event.status_booking_service,
+            ["reason_id"]: event.reason_id,
+            ["verbatim"]: event.verbatim,
+            ["re_follow_up_date"]: event.re_follow_up_date,
+            ["tgl_service"]: event.tgl_service,
+            ["sa"]: event.sa
         }));
     }
 
@@ -506,6 +546,7 @@ function Attacklist() {
     }
 
     const handleSubmitFu = (event) => {
+        console.log(inputFu);
         event.preventDefault();
         setLoading(true);
         axios
@@ -524,7 +565,9 @@ function Attacklist() {
                         timer: 2000,
                     });
 
-                    window.location.href = "/services/attacklist";
+                    // window.location.href = "/services/attacklist";
+                    setOpenFU(false);
+                    setRefresh(new Date());
                 }
             });
     }
@@ -619,7 +662,7 @@ function Attacklist() {
                                                 </select>
                                             </div>
                                             <div className="col-md-3">
-                                                <select type="text" className="form-select form-select-sm" name="kategori" value={chsKategori} onChange={handleChangeChsTipeCustomer}>
+                                                <select type="text" className="form-select form-select-sm" name="kategori" value={chsTipeCustomer} onChange={handleChangeChsTipeCustomer}>
                                                     <option value={''}>{'Pilih Tipe Customer'}</option>
                                                     {listTipeCustomer.map((value, index) =>
                                                         <option key={index} value={value.tipe_customer}>{value.tipe_customer}</option>
@@ -632,7 +675,7 @@ function Attacklist() {
                                         <div id="" className='p-2'>
                                             {rulesName == 'mra' || rulesName == 'superadmin' ? (
                                                 <>
-                                                    <a href={`http://127.0.0.1:8000/api/summary/export/attacklist?id_cabang=${idCab}&rules=${rulesName}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export</a>
+                                                    <a href={`http://127.0.0.1:8000/api/summary/export/attacklist?id_cabang=${idCab}&rules=${rulesName}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export</a>
                                                 </>
                                             ) : ""}
                                         </div>
@@ -806,7 +849,7 @@ function Attacklist() {
                                                             </div>
                                                             <div className="col-lg-12 mb-2">
                                                                 <div className="form-floating">
-                                                                    <input type="text" className="form-control form-control-sm" value={statusNoteCustomer} handleChange={handleChangeNoteCustomer} placeholder="Decision Maker" />
+                                                                    <input type="text" className="form-control form-control-sm" value={statusNoteCustomer} onChange={handleChangeNoteCustomer} placeholder="Decision Maker" />
                                                                     <label htmlFor="decision maker">Note</label>
                                                                 </div>
                                                             </div>

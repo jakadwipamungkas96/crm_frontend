@@ -29,7 +29,12 @@ const DashboardSales = () => {
 
     const handleEventClick = (arg) => {
         // Store the clicked event in state
-        setSelectedEvent(arg.event);
+        // setSelectedEvent(arg.event);
+        // Dapatkan properti dataCustomer dari event yang diklik
+        const dataCustomer = arg.event.extendedProps.dataCustomer;
+        
+        // Lakukan apa pun yang perlu Anda lakukan dengan dataCustomer di sini
+        console.log(dataCustomer);
     };
 
     const closeModal = () => {
@@ -66,7 +71,42 @@ const DashboardSales = () => {
             const url = `http://127.0.0.1:8000/api/calendar/agenda`;
             try {
                 const response = await axios.get(url);
+                // const dtdummy = [
+                //     {
+                //         "title": "Birthday",
+                //         "start": "2024-03-21",
+                //         "end": "2024-03-21",
+                //         "type": "birthday",
+                //         "dataCustomer": [
+                //             {
+                //                 "nama_customer": "Ahmad",
+                //                 "telepon": "0123"
+                //             },
+                //             {
+                //                 "nama_customer": "Abdul",
+                //                 "telepon": "0123"
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         "title": "Service",
+                //         "start": "2024-03-21",
+                //         "end": "2024-03-21",
+                //         "type": "service",
+                //         "dataCustomer": [
+                //             {
+                //                 "nama_customer": "Ahmad",
+                //                 "telepon": "0123"
+                //             },
+                //             {
+                //                 "nama_customer": "Abdul",
+                //                 "telepon": "0123"
+                //             }
+                //         ]
+                //     }
+                // ];
                 setEvents(response.data.data);
+                // setEvents(dtdummy);
             } catch (error) {
                 console.log(error);
             }
@@ -116,7 +156,7 @@ const DashboardSales = () => {
                 <div
                     className="custom-event"
                     style={{ backgroundColor: eventColor, textAlign: "left" }}
-                    onClick={() => handleEventClick(arg)}
+                    // onClick={() => handleEventClick(arg)}
                 >
                     <span style={{ marginLeft: "10px", marginBottom: "2px", fontSize: "10px" }}>{arg.event.title}</span>
                 </div>

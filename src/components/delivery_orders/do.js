@@ -224,7 +224,7 @@ function Do() {
         formData.append('fileDo',fileUpload);
 
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/delivery_order/import', formData).then(function(response){
+        axios.post('http://aaa.com/api/delivery_order/import', formData).then(function(response){
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -240,6 +240,13 @@ function Do() {
 
                 window.location.href = "/do";
             }
+        }).catch(function (error) {
+            // Handle API call failure or other errors here
+            setLoading(false);
+            swal("Error", 'Terjadi kesalahan silahkan hubungi IT HO !', "error", {
+              buttons: false,
+              timer: 2000,
+            });
         });
     }
     return (
@@ -285,7 +292,7 @@ function Do() {
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            {rulesName != 'crc' || rulesName != 'sales' ? (
+                                            {rulesName != 'crc' || rulesName != 'sales' || rulesName != 'spv' ? (
                                                 <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
                                             ) : ("")}
                                         </div>

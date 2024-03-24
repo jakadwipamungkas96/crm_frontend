@@ -80,6 +80,10 @@ const Profile = () => {
             });
     }
 
+    const handleOpenPanduan = () => {
+
+    }
+
     return (
         <div className="page-content">
             <div className="container-fluid">
@@ -99,7 +103,7 @@ const Profile = () => {
                                             <label htmlFor="namalengkap" className="form-label">Telegram Chat ID</label>
                                             <input type="text" className="form-control mb-2" id="namalengkap" name="telegram_chat_id" value={telegramChatId !== null ? telegramChatId : ''} onChange={handleTelegramChatId} />
                                             <i><small className={`text-danger ${isChatId != null ? 'd-none' : ''}`}>Telegram Chat ID masih kosong, silahkan untuk melihat panduan cara mendaftar dengan klik
-                                                <a className='text-primary' style={{ cursor: "pointer", textDecoration: "underline" }}> disini</a></small></i>
+                                                <a className='text-primary' href={"assets/User_Guide_Registrasi_Chat_ID_Telegram.pdf"} target={"_blank"} style={{ cursor: "pointer", textDecoration: "underline" }}> disini</a></small></i>
                                         </div>
                                     </div>
                                 </div>
