@@ -616,6 +616,7 @@ function Users() {
                                                                             <option value={'crc'}>CRC</option>
                                                                             <option value={'mra'}>MRA</option>
                                                                             <option value={'stock'}>Admin Stock</option>
+                                                                            <option value={'saas'}>Sales Assistant</option>
                                                                         </select>
                                                                         <label htmlFor="role">Pilih Role Users</label>
                                                                     </div>

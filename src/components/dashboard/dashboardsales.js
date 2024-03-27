@@ -6,6 +6,7 @@ import CryptoJS from 'crypto-js';
 import axios from 'axios';
 import { Dialog, DialogContent, Slide } from '@mui/material';
 import swal from 'sweetalert';
+import DataTable from 'react-data-table-component';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -27,21 +28,7 @@ const DashboardSales = () => {
 
     const [selectedEvent, setSelectedEvent] = useState(null);
 
-    const handleEventClick = (arg) => {
-        // Store the clicked event in state
-        // setSelectedEvent(arg.event);
-        // Dapatkan properti dataCustomer dari event yang diklik
-        const dataCustomer = arg.event.extendedProps.dataCustomer;
-        
-        // Lakukan apa pun yang perlu Anda lakukan dengan dataCustomer di sini
-        console.log(dataCustomer);
-    };
-
-    const closeModal = () => {
-        // Clear the selected event when the modal is closed
-        setSelectedEvent(null);
-    };
-
+    
     // const [events, setEvents] = useState([
     //     { title: 'Birthday', start: '2024-02-22', type: 'birthday' },
     //     { title: 'STNK Expiry', start: '2024-02-23', type: 'stnk' },
@@ -71,40 +58,40 @@ const DashboardSales = () => {
             const url = `http://127.0.0.1:8000/api/calendar/agenda`;
             try {
                 const response = await axios.get(url);
-                // const dtdummy = [
-                //     {
-                //         "title": "Birthday",
-                //         "start": "2024-03-21",
-                //         "end": "2024-03-21",
-                //         "type": "birthday",
-                //         "dataCustomer": [
-                //             {
-                //                 "nama_customer": "Ahmad",
-                //                 "telepon": "0123"
-                //             },
-                //             {
-                //                 "nama_customer": "Abdul",
-                //                 "telepon": "0123"
-                //             }
-                //         ]
-                //     },
-                //     {
-                //         "title": "Service",
-                //         "start": "2024-03-21",
-                //         "end": "2024-03-21",
-                //         "type": "service",
-                //         "dataCustomer": [
-                //             {
-                //                 "nama_customer": "Ahmad",
-                //                 "telepon": "0123"
-                //             },
-                //             {
-                //                 "nama_customer": "Abdul",
-                //                 "telepon": "0123"
-                //             }
-                //         ]
-                //     }
-                // ];
+                const dtdummy = [
+                    {
+                        "title": "Birthday",
+                        "start": "2024-03-21",
+                        "end": "2024-03-21",
+                        "type": "birthday",
+                        "dataCustomer": [
+                            {
+                                "nama_customer": "Ahmad",
+                                "telepon": "0123"
+                            },
+                            {
+                                "nama_customer": "Abdul",
+                                "telepon": "0123"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Service",
+                        "start": "2024-03-21",
+                        "end": "2024-03-21",
+                        "type": "service",
+                        "dataCustomer": [
+                            {
+                                "nama_customer": "Ahmad",
+                                "telepon": "0123"
+                            },
+                            {
+                                "nama_customer": "Abdul",
+                                "telepon": "0123"
+                            }
+                        ]
+                    }
+                ];
                 setEvents(response.data.data);
                 // setEvents(dtdummy);
             } catch (error) {
@@ -171,6 +158,8 @@ const DashboardSales = () => {
     const [taskLevel, settaskLevel] = useState();
     const [inputTask, setInputTask] = useState([]);
     const calendarRef = useRef(null);
+    const [listCalendar, setListCalendar] = useState([]);
+    const [labelCalendar, setLabelCalendar] = useState();
 
     const handleInputTask = (event) => {
         settaskDesc(event.target.value);
@@ -238,6 +227,7 @@ const DashboardSales = () => {
                 }
                 setOpenForm(false);
                 setInputTask([]);
+                window.location.href="/dashboard/sales";
                 setRefresh(new Date());
             });
     }
@@ -247,6 +237,63 @@ const DashboardSales = () => {
             calendarRef.current.getApi().updateSize(); // Update calendar size on window resize
         }
     };
+
+    // Ultah
+    const [openUltah, setopenUltah] = React.useState(false);
+    const showListUltah = (event) => {
+        setopenUltah(true);
+    }
+
+    const closeUltah = (event) => {
+        setopenUltah(false);
+    }
+
+    const handleClose = () => setopenUltah(false);
+
+    const handleEventClick = (arg) => {
+        // Store the clicked event in state
+        setSelectedEvent(arg.event);
+        setopenUltah(true);
+        console.log(arg.event.extendedProps.type);
+        setLabelCalendar(arg.event.extendedProps.type.toUpperCase());
+        // Dapatkan properti dataCustomer dari event yang diklik
+        const dataCustomer = arg.event.extendedProps.dataCustomer;
+        setListCalendar(dataCustomer);
+
+        
+        
+        // Lakukan apa pun yang perlu Anda lakukan dengan dataCustomer di sini
+        console.log(dataCustomer);
+    };
+
+    const closeModal = () => {
+        // Clear the selected event when the modal is closed
+        setSelectedEvent(null);
+    };
+
+    const customStylesUltah = {
+        rows: {
+            style: {
+                minHeight: '50px', // override the row height
+            },
+        },
+        headCells: {
+            style: {
+                background: "#EF4444",
+                color: "white",
+                textAlign: "center",
+                width: "200px"
+            },
+        }
+    };
+
+    const columnCalendar = [
+        {
+            name: 'Nama Customer',
+            selector: row => row.nama_customer,
+            sortable: true,
+        }
+    ];
 
     useEffect(() => {
         window.addEventListener('resize', handleWindowResize); // Add event listener for window resize
@@ -323,7 +370,7 @@ const DashboardSales = () => {
                 </div>
 
                 {/* Modal for displaying event details */}
-                <Modal
+                {/* <Modal
                     isOpen={selectedEvent !== null}
                     onRequestClose={closeModal}
                     contentLabel="Event Details"
@@ -331,7 +378,7 @@ const DashboardSales = () => {
                     <h2>{selectedEvent?.title}</h2>
                     <p>Date: {selectedEvent?.start?.toLocaleDateString()}</p>
                     <button onClick={closeModal}>Close</button>
-                </Modal>
+                </Modal> */}
             </div>
             {/* Start Import  */}
             <Dialog
@@ -408,6 +455,54 @@ const DashboardSales = () => {
                 </DialogContent>
             </Dialog>
             {/* End Import */}
+
+            <Dialog
+                open={openUltah}
+                TransitionComponent={Transition}
+                keepMounted
+                maxWidth="xl"
+                onClose={handleClose}
+                aria-describedby="alert-dialog-slide-description"
+                style={{ width: "100%", margin: "0 auto" }}
+            >
+                <DialogContent style={{
+                    background: "#ecf0f1"
+                }}>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="card">
+                                <div className="row g-0">
+                                    <div className="col-md-12">
+                                        <div className="card-header" style={{ border: "none" }}>
+                                            <div className="d-flex align-items-center">
+                                                <div className="flex-grow-1 overflow-hidden">
+                                                    <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>LIST {labelCalendar}</h5>
+                                                </div>
+                                                <div className="flex-shrink-0">
+                                                    <button type="button" className="btn btn-danger btn-sm" onClick={closeUltah}><i className="ri-close-circle-fill"></i> Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-md-12 mt-2 p-3">
+                                                    <DataTable
+                                                        columns={columnCalendar}
+                                                        data={listCalendar}
+                                                        pagination
+                                                        customStyles={customStylesUltah}
+                                                        defaultSortFieldId={1}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };
