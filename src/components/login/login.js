@@ -45,7 +45,7 @@ const Login = () => {
             // localStorage.setItem('access_token', response.data.access_token);
             localStorage.setItem('id_cabang', response.data.id_cabang);
             localStorage.setItem('uid', response.data.uid);
-            localStorage.setItem('sid', response.data.sid);
+            localStorage.setItem('sid', JSON.stringify(response.data.sid));
             localStorage.setItem('person', JSON.stringify(response.data.person));
             localStorage.setItem('rules', JSON.stringify(response.data.rules));
             localStorage.setItem('cabang_name', JSON.stringify(response.data.cabang_name));

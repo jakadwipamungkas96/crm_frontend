@@ -442,6 +442,21 @@ function Dashboard() {
             sortable: true,
         },
         {
+            name: 'Cabang',
+            selector: row => {
+                if (row.id_cabang === 1) {
+                    return "WML"
+                } else if (row.id_cabang === 2) {
+                    return "WLD"
+                } else if (row.id_cabang === 3) {
+                    return "WLP"
+                } else if (row.id_cabang === 4) {
+                    return "WLS"
+                }
+            },
+            sortable: true,
+        },
+        {
             name: 'Status',
             selector: row => (
                 <span key={row.someUniqueKey} style={{ fontSize: "10px" }} className={`badge ${row.reminder_status == "1" ? ' bg-success' : ' bg-dark'}`}>
@@ -525,6 +540,21 @@ function Dashboard() {
         {
             name: 'Nama Sales',
             selector: row => row.nama_sales,
+            sortable: true,
+        },
+        {
+            name: 'Cabang',
+            selector: row => {
+                if (row.id_cabang === 1) {
+                    return "WML"
+                } else if (row.id_cabang === 2) {
+                    return "WLD"
+                } else if (row.id_cabang === 3) {
+                    return "WLP"
+                } else if (row.id_cabang === 4) {
+                    return "WLS"
+                }
+            },
             sortable: true,
         },
         {
@@ -626,6 +656,21 @@ function Dashboard() {
         {
             name: 'Next service',
             selector: row => row.next_service,
+            sortable: true,
+        },
+        {
+            name: 'Cabang',
+            selector: row => {
+                if (row.id_cabang === 1) {
+                    return "WML"
+                } else if (row.id_cabang === 2) {
+                    return "WLD"
+                } else if (row.id_cabang === 3) {
+                    return "WLP"
+                } else if (row.id_cabang === 4) {
+                    return "WLS"
+                }
+            },
             sortable: true,
         },
         {

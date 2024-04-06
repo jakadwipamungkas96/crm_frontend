@@ -197,7 +197,7 @@ const DashboardSales = () => {
         setOpenForm(true);
         setInputTask((values) => ({
             ...values,
-            ["sid"]: JSON.parse(localStorage.getItem("sid")),
+            ["sid"]: JSON.stringify(localStorage.getItem("sid")),
         }));
     }
 
@@ -254,16 +254,16 @@ const DashboardSales = () => {
         // Store the clicked event in state
         setSelectedEvent(arg.event);
         setopenUltah(true);
-        console.log(arg.event.extendedProps.type);
         setLabelCalendar(arg.event.extendedProps.type.toUpperCase());
         // Dapatkan properti dataCustomer dari event yang diklik
-        const dataCustomer = arg.event.extendedProps.dataCustomer;
-        setListCalendar(dataCustomer);
-
         
-        
-        // Lakukan apa pun yang perlu Anda lakukan dengan dataCustomer di sini
-        console.log(dataCustomer);
+        if (arg.event.extendedProps.type === "LOW" || arg.event.extendedProps.type == "MEDIUM" || arg.event.extendedProps.type == "HIGH") {
+            const dataTasking = arg.event.extendedProps.tasking;
+            setListCalendar(dataTasking);
+        } else {
+            const dataCustomer = arg.event.extendedProps.dataCustomer;
+            setListCalendar(dataCustomer);
+        }
     };
 
     const closeModal = () => {
@@ -287,12 +287,58 @@ const DashboardSales = () => {
         }
     };
 
+    const handleDeleteTask = (event) => {
+        console.log(event);
+        swal({
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin ingin menghapus " + event.title + " ?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willProceed) => {
+            if (willProceed) {
+              // Panggilan API disini
+                axios.post(`http://127.0.0.1:8000/api/calendar/delete/task/${event.id}`).then(function(response){
+                    if (response.data.error == true) {
+                        
+                        swal("Error", 'Data gagalh dihapus!', "error", {
+                            buttons: false,
+                            timer: 2000,
+                        });   
+                    } else {
+                        
+                        swal("Success", 'Data Berhasil dihapus!', "success", {
+                            buttons: false,
+                            timer: 2000,
+                        });
+        
+                        window.location.href = "/dashboard/sales";
+        
+                    }
+                });
+            } else {
+              swal("Menghapus data dibatalkan.");
+            }
+          });
+    }
+
     const columnCalendar = [
         {
-            name: 'Nama Customer',
-            selector: row => row.nama_customer,
+            name: labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? 'Tasking' : 'Nama Customer',
+            selector: row => labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? row.title : row.nama_customer,
             sortable: true,
-        }
+        },
+        {
+            name: labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? 'Aksi' : 'Aksi',
+            cell: row => (
+                <>
+                    <a href={"https://wa.me/" + row.no_telp + "?text=Halo, Bapak/Ibu " + row.nama_customer} target="__blank" type="button" className={`${labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? 'd-none' : ''} btn btn-info btn-sm`}><i className="ri-mail-send-fill"></i></a>
+                    <a style={{cursor: "pointer"}} onClick={() => handleDeleteTask(row)} type="button" className={`${labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? '' : 'd-none'} btn btn-danger btn-sm`}><i className="ri-delete-bin-5-line"></i></a>
+                </>
+
+            ),
+        },
     ];
 
     useEffect(() => {
@@ -430,6 +476,7 @@ const DashboardSales = () => {
                                                         <div className="col-lg-12 mb-2">
                                                             <div className="form-floating">
                                                                 <select type="text" className="form-control form-control-sm" placeholder="Task Date" onChange={handleInputTaskLevel} value={taskLevel} name="type">
+                                                                    <option value={''}>--PILIH LEVEL--</option>
                                                                     <option value={'LOW'}>LOW</option>
                                                                     <option value={'MEDIUM'}>MEDIUM</option>
                                                                     <option value={'HIGH'}>HIGH</option>
