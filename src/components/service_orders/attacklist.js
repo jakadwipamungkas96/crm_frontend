@@ -60,7 +60,7 @@ function Attacklist() {
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
     const rulesName = JSON.parse(localStorage.getItem("rules"));
     const idCab = JSON.parse(localStorage.getItem("id_cabang"));
-    console.log(token);
+    // console.log(token);
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
 
@@ -78,7 +78,7 @@ function Attacklist() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/mra/attacklist?page=${page}&size=${pageSize}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/mra/attacklist?page=${page}&size=${pageSize}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`;
             try {
 
                 const response = await axios.get(url);
@@ -88,7 +88,7 @@ function Attacklist() {
                 setLoadingTable(false);
 
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         };
         getData();
@@ -144,6 +144,24 @@ function Attacklist() {
 
     const columnsLsCustomer = [
         {
+            name: 'Status',
+            selector: row => {
+                if (row.status === 'open') {
+                    return <><span className="badge badge-label bg-light text-body"><i className="mdi mdi-circle-medium"></i> Open</span></>
+                } else if (row.status === 'done_wa') {
+                    return <><span className="badge badge-label bg-success"><i className="mdi mdi-circle-medium"></i> Done WA</span></>
+                } else if (row.status === 'done_phone') {
+                    return <><span className="badge badge-label bg-primary"><i className="mdi mdi-circle-medium"></i> Done Phone</span></>
+                } else if (row.status === 'booking') {
+                    return <><span className="badge badge-label bg-warning"><i className="mdi mdi-circle-medium"></i> Booking</span></>
+                } else if (row.status === 'not_booking') {
+                    return <><span className="badge badge-label bg-danger"><i className="mdi mdi-circle-medium"></i> Not Booking</span></>
+                }
+            },
+            sortable: true,
+            width: '150px',
+        },
+        {
             name: 'No Rangka',
             selector: row => <span style={{ cursor: "pointer", color: "#2563EB" }} onClick={(event) => { handleOpenFormFu(row); }}>{row.no_rangka}</span>,
             sortable: true,
@@ -177,9 +195,9 @@ function Attacklist() {
             name: 'Status WA Blast',
             selector: row => {
                 if (row.status_fu == 1) {
-                    return <span className="badge bg-success-subtle text-success">Done</span>
+                    return <span className="badge bg-success text-white">Done</span>
                 } else {
-                    return <span className="badge bg-danger-subtle text-danger">Not</span>
+                    return <span className="badge bg-danger text-white">Not</span>
                 }
             },
             sortable: true,
@@ -189,9 +207,9 @@ function Attacklist() {
             name: 'Status Follow Up',
             selector: row => {
                 if (row.status_follow_up == 1) {
-                    return <span className="badge bg-success-subtle text-success">Done</span>
+                    return <span className="badge bg-success text-white">Done</span>
                 } else {
-                    return <span className="badge bg-danger-subtle text-danger">Not</span>
+                    return <span className="badge bg-danger text-white">Not</span>
                 }
             },
             sortable: true,
@@ -213,9 +231,9 @@ function Attacklist() {
             name: 'Status Phone',
             selector: row => {
                 if (row.status_phone == 1) {
-                    return <span className="badge bg-success-subtle text-success">Connected</span>
+                    return <span className="badge bg-success text-white">Connected</span>
                 } else if (row.status_phone == 0) {
-                    return <span className="badge bg-danger-subtle text-danger">Not Connected</span>
+                    return <span className="badge bg-danger text-white">Not Connected</span>
                 }
             },
             sortable: true,
@@ -225,9 +243,9 @@ function Attacklist() {
             name: 'Status Contacted',
             selector: row => {
                 if (row.is_contacted == 1) {
-                    return <span className="badge bg-success-subtle text-success">Contacted</span>
+                    return <span className="badge bg-success text-white">Contacted</span>
                 } else if (row.is_contacted == 0) {
-                    return <span className="badge bg-danger-subtle text-danger">Not Contacted</span>
+                    return <span className="badge bg-danger text-white">Not Contacted</span>
                 }
             },
             sortable: true,
@@ -249,9 +267,9 @@ function Attacklist() {
             name: 'Booking Service',
             selector: row => {
                 if (row.status_booking_service == 0) {
-                    return <span className="badge bg-danger-subtle text-danger">Not Booking</span>
+                    return <span className="badge bg-danger text-white">Not Booking</span>
                 } else if (row.status_booking_service == 1) {
-                    return <span className="badge bg-success-subtle text-success">Booking</span>
+                    return <span className="badge bg-success text-white">Booking</span>
                 }
             },
             sortable: true,
@@ -312,8 +330,8 @@ function Attacklist() {
     const [inputsImport, setInputs] = React.useState([]);
 
     const hChangeInputFile = (event) => {
-        console.log(event.target.files[0]);
-        console.log(event.target.name);
+        // console.log(event.target.files[0]);
+        // console.log(event.target.name);
         setFileUp(event.target.files[0]);
         setInputs(values => ({ ...values, [event.target.name]: fileUpload }));
     }
@@ -360,7 +378,7 @@ function Attacklist() {
         formData.append('fileAttacklist', fileUpload);
         formData.append('id_cabang', inputCabang);
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/mra/import_attacklist', formData).then(function (response) {
+        axios.post('https://api.crm.wijayatoyota.co.id/api/mra/import_attacklist', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -515,16 +533,15 @@ function Attacklist() {
     const [result_service, setresultservice] = useState([]);
     const [openHistoryService, setOpenHistoryService] = React.useState(false);
     function getDetailKendaraan(no_rangka) {
-        axios.get(`http://127.0.0.1:8000/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
+        axios.get(`https://api.crm.wijayatoyota.co.id/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
             var result = response.data;
-            console.log(result.dtlso);
-            setresultservice(result.dtlso);
+            setresultservice(result.dtlso == null ? [] : result.dtlso);
             setDetailKendaraan(result.dtlcar);
             setvehicleNoPolisi(result.dtlcar.no_pol);
             setvehicleNamaCustomer(result.dtlcar.nama_customer);
             setvehicleNoTelp(result.dtlcar.no_telp);
             setvehicleTipe(result.dtlcar.tipe);
-            setvehicleDecisionMaker(result.dtlso[0].decision_maker);
+            setvehicleDecisionMaker(result.dtlso == null ? "" : result.dtlso.decision_maker);
         });
     }
 
@@ -546,11 +563,11 @@ function Attacklist() {
     }
 
     const handleSubmitFu = (event) => {
-        console.log(inputFu);
+        // console.log(inputFu);
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/attacklist/save", inputFu)
+            .post("https://api.crm.wijayatoyota.co.id/api/attacklist/save", inputFu)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -573,21 +590,21 @@ function Attacklist() {
     }
 
     function getReason() {
-        axios.get('http://127.0.0.1:8000/api/list/reason').then(function (response) {
+        axios.get('https://api.crm.wijayatoyota.co.id/api/list/reason').then(function (response) {
             var result = response.data;
             setListReason(result.data);
         });
     }
 
     function getSa() {
-        axios.get('http://127.0.0.1:8000/api/sa').then(function (response) {
+        axios.get('https://api.crm.wijayatoyota.co.id/api/sa').then(function (response) {
             var result = response.data;
             setListSa(result.data);
         });
     }
 
     function getOption() {
-        axios.get('http://127.0.0.1:8000/api/mra/option_attacklist').then(function (response) {
+        axios.get('https://api.crm.wijayatoyota.co.id/api/mra/option_attacklist').then(function (response) {
             var result = response.data;
             setListKategori(result.kategori);
             setListTipeCustomer(result.tipe_cust);
@@ -600,7 +617,7 @@ function Attacklist() {
         getOption();
     }, []);
 
-    const urlDownloadForm = `http://127.0.0.1:8000/api/template_import_attacklist`;
+    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_import_attacklist`;
 
     return (
         <div className="page-content">
@@ -675,7 +692,7 @@ function Attacklist() {
                                         <div id="" className='p-2'>
                                             {rulesName == 'mra' || rulesName == 'superadmin' ? (
                                                 <>
-                                                    <a href={`http://127.0.0.1:8000/api/summary/export/attacklist?id_cabang=${idCab}&rules=${rulesName}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export</a>
+                                                    <a href={`https://api.crm.wijayatoyota.co.id/api/summary/export/attacklist?id_cabang=${idCab}&rules=${rulesName}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export</a>
                                                 </>
                                             ) : ""}
                                         </div>

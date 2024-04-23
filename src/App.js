@@ -170,6 +170,7 @@ function App() {
     G();
   }, []);
 
+
   // SESSION STORAGE
   const personName = JSON.parse(localStorage.getItem("person"));
   const rulesName = JSON.parse(localStorage.getItem("rules"));
@@ -186,7 +187,7 @@ function App() {
   // Variable
   const checkToken = () => {
     const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    axios.post('http://127.0.0.1:8000/api/logout', token)
+    axios.post('https://api.crm.wijayatoyota.co.id/api/logout', token)
       .then(response => {
 
         swal("Success", "Berhasil Logout", "success", {
@@ -207,7 +208,7 @@ function App() {
 
   const handleLogout = () => {
     // const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    // axios.post('http://127.0.0.1:8000/api/logout')
+    // axios.post('https://api.crm.wijayatoyota.co.id/api/logout')
     //   .then(response => {
 
         localStorage.removeItem("sid");
@@ -267,7 +268,325 @@ function App() {
                   </a>
                 </div>
 
-                <button type="button"
+                <div className="dropdown ms-1 topbar-head-dropdown header-item topnav-hamburger">
+                    <button type="button" className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span className='ri-apps-fill'></span>
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-end">
+                        {/* <a href="javascript:void(0);" className="dropdown-item notify-item language py-2" data-lang="en" title="English"> */}
+                            {/* <span className="align-middle">English</span> */}
+                        {/* </a> */}
+                        <div id="scrollbar">
+            <div className="container-fluid">
+              <div id="two-column-menu">
+              </div>
+              <ul className="navbar-nav" id="navbar-nav">
+                <li className="menu-title mb-2" style={{ background: "rgb(229, 231, 235)", color: "#000" }}><span><img src={domain + "/assets/images/icon_wijaya.png"} alt="" height="20" /> {usrCabangName}</span></li>
+
+                {rulesName == "sales" ? (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/dashboard/sales"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard Sales</span></NavLink>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/dashboard"><i className="ri-dashboard-line"></i> <span data-key="t-widgets">Dashboard</span></NavLink>
+                    </li>
+                  </>
+                )}
+                <li className="menu-title"><span data-key="t-menu">Customers</span></li>
+                <li className="nav-item">
+                  <NavLink className="nav-link menu-link" exact="true" to="/datacustomers"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
+                </li>
+                {rulesName != "crc" || rulesName != "kacab" ? (
+                  <li className="nav-item">
+                    <NavLink className="nav-link menu-link" exact="true" to="/customers/bucket"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
+                  </li>
+                ) : (
+                  ""
+                )}
+                {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact="true" to="/ulangtahun"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
+                <li className="menu-title"><span data-key="t-menu">List</span></li>
+                {rulesName != "mra" ? (
+                  <li className="nav-item">
+                    <NavLink className="nav-link menu-link" exact="true" to="/do"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Delivery Order</span></NavLink>
+                  </li>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/reason"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Master Reason</span></NavLink>
+                    </li>
+                  </>
+                )}
+
+                {rulesName != "spv" && rulesName != "kacab" ? (
+                  <>
+                    <li className="menu-title"><span data-key="t-menu">Service</span></li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/input/servicepertama"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Pertama</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/services/booking"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Service Lainnya</span></NavLink>
+                    </li>
+                  </>
+                ) : (
+                  ""
+                )}
+
+                {rulesName == "crc" ? (
+                  <li className="nav-item">
+                    <NavLink className="nav-link menu-link" exact="true" to="/list/bstb"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">DEC Tracking by BSTB</span></NavLink>
+                  </li>
+                ) : ("")}
+
+                {rulesName == "superadmin" ? (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/services/attacklist"><i className="ri-file-list-3-fill"></i> <span data-key="t-widgets">Attacklist</span></NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/wablast"><i className="ri-whatsapp-line"></i> <span data-key="t-widgets">WA Blast</span></NavLink>
+                    </li>
+                  </>
+                ) : ("")}
+
+                {rulesName != "sales" ? (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link menu-link" exact="true" to="/so"><i className="ri-list-check-2"></i> <span data-key="t-widgets">Service Order</span></NavLink>
+                    </li>
+                  </>
+                ) : (
+                  ""
+                )}
+                {/* {rulesName == "administrator" ? (
+                      <li className="menu-title"><span data-key="t-menu">Menu</span></li>
+                      <li className="nav-item">
+                        <a className="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse"
+                            role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                            <i className="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Summary</span>
+                        </a>
+                        <div className="collapse menu-dropdown" id="sidebarDashboards">
+                            <ul className="nav nav-sm flex-column">
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Overview </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data Prospek </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data SPK </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data DO </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data CR 1 </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data CR 2 </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Funneling Prospek </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Laporan Sales - Kategori </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Laporan Sales - Sumber </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Penyebaran Kecamatan </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Data Follow UP DO </a>
+                                </li>
+                            </ul>
+                        </div>
+                      </li>
+                  ) : ""} */}
+
+                {/* Menu ALL SPV - ADMINISTRATOR */}
+                {/* {rulesName == "administrator" ? spv.map((val, idx) => (
+                      <li className="nav-item" key={idx}>
+                        <a className="nav-link menu-link" href={"#team_"+val.nama_spv} data-bs-toggle="collapse"
+                            role="button" aria-expanded="false" aria-controls={"team_"+val.nama_spv}>
+                            <i className="ri-group-2-line"></i> <span data-key="t-dashboards">{"Team " + val.nama_spv}</span>
+                        </a>
+                        <div className="collapse menu-dropdown" id={"team_"+val.nama_spv}>
+                            <ul className="nav nav-sm flex-column">
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Overview </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data Prospek </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data SPK </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data DO </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data CR 1 </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data CR 2 </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Funneling Prospek Team </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Funneling Prospek Sales </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Penyebaran Kecamatan </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Laporan Bulanan </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> Laporan Sales </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data Bengkel </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Data Prospek SA </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link"> List Booking </a>
+                                </li>
+                            </ul>
+                        </div>
+                      </li>
+                  )) : ""} */}
+
+                {/* {rulesName == "administrator" ? (
+                    <li className="nav-item">
+                      <a className="nav-link menu-link" href="#sidebarSales" data-bs-toggle="collapse"
+                          role="button" aria-expanded="false" aria-controls="sidebarSales">
+                          <i className="ri-file-user-line"></i> <span data-key="t-dashboards">Sales</span>
+                      </a>
+                      <div className="collapse menu-dropdown" id="sidebarSales">
+                          <ul className="nav nav-sm flex-column">
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> List Data Prospek </a>
+                              </li>
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> Funneling Prospek </a>
+                              </li>
+                          </ul>
+                      </div>
+                    </li>
+                  ) : ""} */}
+
+                {/* {rulesName == "administrator" ? (
+                    <li className="nav-item">
+                      <a className="nav-link menu-link" href="#sidebarKecamatan" data-bs-toggle="collapse"
+                          role="button" aria-expanded="false" aria-controls="sidebarKecamatan">
+                          <i className="ri-user-location-line"></i> <span data-key="t-dashboards">Kecamatan</span>
+                      </a>
+                      <div className="collapse menu-dropdown" id="sidebarKecamatan">
+                          <ul className="nav nav-sm flex-column">
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> List Data Prospek </a>
+                              </li>
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> Funneling Prospek </a>
+                              </li>
+                          </ul>
+                      </div>
+                    </li>
+                  ) : ""} */}
+
+                {/* {rulesName == "administrator" ? (
+                    <li className="nav-item">
+                      <a className="nav-link menu-link" href="#sidebarDtBengkel" data-bs-toggle="collapse"
+                          role="button" aria-expanded="false" aria-controls="sidebarDtBengkel">
+                          <i className="ri-user-settings-fill"></i> <span data-key="t-dashboards">Data Bengkel</span>
+                      </a>
+                      <div className="collapse menu-dropdown" id="sidebarDtBengkel">
+                          <ul className="nav nav-sm flex-column">
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> Overview </a>
+                              </li>
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> List Data Bengkel </a>
+                              </li>
+                          </ul>
+                      </div>
+                    </li>
+                  ) : ""} */}
+
+                {/* {rulesName == "administrator" ? (
+                    <li className="nav-item">
+                      <a className="nav-link menu-link" href="#sidebarDtPameran" data-bs-toggle="collapse"
+                          role="button" aria-expanded="false" aria-controls="sidebarDtPameran">
+                          <i className="ri-coupon-4-line"></i> <span data-key="t-dashboards">Data Pameran</span>
+                      </a>
+                      <div className="collapse menu-dropdown" id="sidebarDtPameran">
+                          <ul className="nav nav-sm flex-column">
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> Overview </a>
+                              </li>
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> List Data Pameran </a>
+                              </li>
+                          </ul>
+                      </div>
+                    </li>
+                  ) : ""} */}
+
+                {/* {rulesName == "administrator" ? (
+                    <li className="nav-item">
+                      <a className="nav-link menu-link" href="#sidebarDtProspekSA" data-bs-toggle="collapse"
+                          role="button" aria-expanded="false" aria-controls="sidebarDtProspekSA">
+                          <i className="ri-list-settings-line"></i> <span data-key="t-dashboards">Data Prospek SA</span>
+                      </a>
+                      <div className="collapse menu-dropdown" id="sidebarDtProspekSA">
+                          <ul className="nav nav-sm flex-column">
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> List Data Prospek </a>
+                              </li>
+                              <li className="nav-item">
+                                  <a href="#" className="nav-link"> Funneling </a>
+                              </li>
+                          </ul>
+                      </div>
+                    </li>
+                  ) : ""} */}
+
+                {rulesName == "superadmin" ? (
+                  <li className="nav-item">
+                    <a className="nav-link menu-link" href="#sidebarDtUserManagement" data-bs-toggle="collapse"
+                      role="button" aria-expanded="false" aria-controls="sidebarDtUserManagement">
+                      <i className="ri-shield-user-line"></i> <span data-key="t-dashboards">User Management</span>
+                    </a>
+                    <div className="collapse menu-dropdown" id="sidebarDtUserManagement">
+                      <ul className="nav nav-sm flex-column">
+                        <li className="nav-item">
+                          <a href="/users" className="nav-link"> List User</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                ) : ""}
+              </ul>
+            </div>
+          </div>
+
+                    </div>
+                </div>
+                {/* <button type="button"
                   className="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
                   id="topnav-hamburger-icon">
                   <span className="hamburger-icon">
@@ -275,7 +594,7 @@ function App() {
                     <span></span>
                     <span></span>
                   </span>
-                </button>
+                </button> */}
               </div>
 
               <div className="d-flex align-items-center">
@@ -350,7 +669,7 @@ function App() {
                 <li className="nav-item">
                   <NavLink className="nav-link menu-link" exact="true" to="/datacustomers"><i className="ri-honour-line"></i> <span data-key="t-widgets">Database Customers</span></NavLink>
                 </li>
-                {rulesName != "crc" ? (
+                {rulesName != "kacab" && rulesName != "crc" ? (
                   <li className="nav-item">
                     <NavLink className="nav-link menu-link" exact="true" to="/customers/bucket"><i className="ri-indent-increase"></i> <span data-key="t-widgets">Sharing Data Bucket</span></NavLink>
                   </li>
@@ -377,7 +696,7 @@ function App() {
                   </>
                 )}
 
-                {rulesName != "spv" ? (
+                {rulesName != "spv" && rulesName != "kacab" ? (
                   <>
                     <li className="menu-title"><span data-key="t-menu">Service</span></li>
                     <li className="nav-item">

@@ -64,7 +64,7 @@ function Users() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/users`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/users`;
             try {
 
                 const response = await axios.get(url);
@@ -122,6 +122,18 @@ function Users() {
             width: '100px',
         },
         {
+            name: 'Status',
+            selector: row => {
+                if (row.status === 'aktif') {
+                    return <span className="badge bg-success-subtle text-success">Active</span>
+                } else {
+                    return <span className="badge bg-danger-subtle text-danger">Inactive</span>
+                }
+            },
+            sortable: true,
+            width: '100px',
+        },
+        {
             name: 'Aksi',
             selector: row => {
                 return <>
@@ -129,7 +141,7 @@ function Users() {
                         {/* <button onClick={(event) => { handleEdit(row); }} type="button" className="btn btn-info"><i className="ri ri-checkbox-circle-fill"></i> Update</button>
                         <button onClick={(event) => { handleDelete(row); }} type="button" className="btn btn-danger"><i className="ri ri-close-circle-fill"> </i>Delete</button> */}
                         <button type="button" data-toggle="tooltip" title="Edit Users" onClick={(event) => { handleEdit(row); }} class="btn btn-sm btn-success btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>
-                        <button type="button" data-toggle="tooltip" title="Reset Password" onClick={(event) => { handleEdit(row); }} class="btn btn-sm btn-info btn-icon waves-effect waves-light"><i class="ri-restart-line"></i></button>
+                        <button type="button" data-toggle="tooltip" title="Reset Password" onClick={(event) => { handleResetPassword(row); }} class="btn btn-sm btn-info btn-icon waves-effect waves-light"><i class="ri-restart-line"></i></button>
                         <button type="button" data-toggle="tooltip" title="Delete Users" onClick={(event) => { handleDelete(row); }} className="btn btn-sm btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>
                     </div>
                 </>
@@ -209,7 +221,7 @@ function Users() {
     // GET CABANG LIST
     const getCabang = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `http://127.0.0.1:8000/api/users/opt/cabang`;
+        const url = `https://api.crm.wijayatoyota.co.id/api/users/opt/cabang`;
         try {
             const response = await axios.get(url);
             setListCabang(response.data.data);
@@ -220,7 +232,7 @@ function Users() {
 
     const getSpv = async (id_cabang) => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `http://127.0.0.1:8000/api/users/data/getspv?id_cabang=${id_cabang}`;
+        const url = `https://api.crm.wijayatoyota.co.id/api/users/data/getspv?id_cabang=${id_cabang}`;
         try {
             const response = await axios.get(url);
             setListSpv(response.data.data);
@@ -310,7 +322,7 @@ function Users() {
     const handleSubmitUsers = (event) => {
         event.preventDefault();
         console.log(inputUsers);
-        axios.post('http://127.0.0.1:8000/api/users/create', inputUsers).then(function(response){
+        axios.post('https://api.crm.wijayatoyota.co.id/api/users/create', inputUsers).then(function(response){
             
             if (response.data.error == true) {
                 setLoading(false);
@@ -429,7 +441,7 @@ function Users() {
 
     const handleSubmitEdit = (event) => {
         event.preventDefault();
-        axios.post('http://127.0.0.1:8000/api/users/update', updateUsers).then(function(response){
+        axios.post('https://api.crm.wijayatoyota.co.id/api/users/update', updateUsers).then(function(response){
             
             if (response.data.error == true) {
                 setLoading(false);
@@ -450,8 +462,80 @@ function Users() {
         });
     }
 
+    const [openReset, setOpenReset] = useState(false);
+    const [resetPassword, setResetPassword] = useState();
+    const [arrReset, setArrReset] = useState([]);
+
+    const handleChangeReset = (event) => {
+        setResetPassword(event.target.value);
+        setArrReset((values) => ({
+            ...values,
+            [event.target.name]: event.target.value,
+        }));
+    }
+
+    const handleResetPassword = (event) => {
+        setOpenReset(true);
+        setArrReset((values) => ({
+            ...values,
+            ["id"]: event.id,
+        }));
+    }
+
+    const closeReset = () => {
+        setOpenReset(false);
+    }
+
+    const handleSubmitNewPassword = (event) => {
+        console.log(arrReset);
+        try {
+            axios
+            .post("https://api.crm.wijayatoyota.co.id/api/users/reset/password", arrReset)
+            .then(function (response) {
+                if (response.data.error == true) {
+                    swal("Error", 'Data gagal diupdate', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                } else {
+                    swal("Success", 'Password Berhasil di Update, tunggu 1-2 menit', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+
+                    setRefresh(new Date());
+                }
+
+                window.location.href = "/users";
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const handleDelete = (event) => {
-        console.log(event.id);
+        
+        axios
+            .post("https://api.crm.wijayatoyota.co.id/api/users/inactive", {
+                uid: event.id
+            })
+            .then(function (response) {
+                if (response.data.error == true) {
+                    swal("Error", 'Data gagal diklaim', "error", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                } else {
+                    swal("Success", 'Customer Berhasil diklaim, segera lakukan Follow Up!', "success", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+
+                    setRefresh(new Date());
+                }
+
+                // window.location.href = "/customers/bucket";
+            });
     }
 
     const CustomBlockingOverlay = ({ isLoading, children }) => {
@@ -611,6 +695,7 @@ function Users() {
                                                                             <option value={''}>-- Pilih Role --</option>
                                                                             <option value={'superadmin'}>Superadmin</option>
                                                                             <option value={'administrator'}>Administrator</option>
+                                                                            <option value={'kacab'}>Kepala Cabang</option>
                                                                             <option value={'sales'}>Sales</option>
                                                                             <option value={'spv'}>SPV</option>
                                                                             <option value={'crc'}>CRC</option>
@@ -803,6 +888,69 @@ function Users() {
                     </DialogContent>
                 </Dialog>
 
+                {/* Start Reset Password  */}
+                <Dialog
+                    open={openReset}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth="xl"
+                    onClose={closeReset}
+                    aria-describedby="alert-dialog-slide-description"
+                    style={{ width: "100%", margin: "0 auto" }}
+                >
+                    <DialogContent style={{
+                        background: "#ecf0f1"
+                    }}>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card">
+                                    <div className="row g-0">
+                                        <div className="col-md-12">
+                                            <div className="card-header" style={{ border: "none" }}>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="flex-grow-1 overflow-hidden">
+                                                        <h5 className="card-title mb-0" style={{ fontSize: "17px" }}>Reset Password</h5>
+                                                    </div>
+                                                    <div className="flex-shrink-0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <form>
+                                                            <div className="row">
+                                                                <div className="col-lg-12 mb-2">
+                                                                    <div className="form-floating">
+                                                                        <input type="password" className="form-control form-control-sm" value={resetPassword} onChange={handleChangeReset} name="password_reset" id="password_reset" placeholder="Password Baru" />
+                                                                        <label htmlFor="password_reset">Password Baru</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-footer">
+                                                <div className="row mt-3">
+                                                    <div className="col-lg-6">
+
+                                                    </div>
+                                                    <div className="col-lg-12">
+                                                        <div className="text-end">
+                                                            <button onClick={handleSubmitNewPassword} className="btn btn-primary btn-label btn-sm" ><i className="ri-save-3-line label-icon align-middle fs-16 me-2"></i> Save</button>
+                                                            <button onClick={closeReset} className="btn btn-danger btn-label btn-sm" style={{ marginLeft: "5px" }}><i className="ri-close-circle-line label-icon align-middle fs-16 me-2"></i> Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     );

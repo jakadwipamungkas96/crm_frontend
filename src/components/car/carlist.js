@@ -156,7 +156,7 @@ function Carlist() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/car/list_car_sale?startdate=${startdate}&enddate=${enddate}&id_cabang=${inputCabang}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/car/list_car_sale?startdate=${startdate}&enddate=${enddate}&id_cabang=${inputCabang}`;
             try {
                 const response = await axios.get(url);
                 setLsDtCar(response.data.data);

@@ -35,7 +35,7 @@ const Profile = () => {
 
     const getDetailUser = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `http://127.0.0.1:8000/api/users/${uid}`;
+        const url = `https://api.crm.wijayatoyota.co.id/api/users/${uid}`;
         try {
             const response = await axios.get(url);
             console.log(response.data.data.person);
@@ -60,7 +60,7 @@ const Profile = () => {
         event.preventDefault();
         setLoading(true);
         await axios
-            .post("http://127.0.0.1:8000/api/users/update/sales", inputsProfile)
+            .post("https://api.crm.wijayatoyota.co.id/api/users/update/sales", inputsProfile)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -103,7 +103,13 @@ const Profile = () => {
                                             <label htmlFor="namalengkap" className="form-label">Telegram Chat ID</label>
                                             <input type="text" className="form-control mb-2" id="namalengkap" name="telegram_chat_id" value={telegramChatId !== null ? telegramChatId : ''} onChange={handleTelegramChatId} />
                                             <i><small className={`text-danger ${isChatId != null ? 'd-none' : ''}`}>Telegram Chat ID masih kosong, silahkan untuk melihat panduan cara mendaftar dengan klik
-                                                <a className='text-primary' href={"assets/User_Guide_Registrasi_Chat_ID_Telegram.pdf"} target={"_blank"} style={{ cursor: "pointer", textDecoration: "underline" }}> disini</a></small></i>
+                                                <a className='text-primary' href={"assets/panduan_setting_telegram_CROW.pdf"} target={"_blank"} style={{ cursor: "pointer", textDecoration: "underline" }}> disini</a></small></i> <br></br>
+                                                <div class="video-container">
+                                                    <video controls className='mt-3'>
+                                                        <source src={"assets/video6138581651325718393.mp4"} type="video/mp4" />
+                                                            Browsermu tidak mendukung tag ini
+                                                    </video>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>

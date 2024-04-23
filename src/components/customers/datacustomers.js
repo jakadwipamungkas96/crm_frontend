@@ -80,7 +80,7 @@ function Datacustomers() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
-    const [totalRows, setTotalRows] = useState(0);
+    const [totalRows, setTotalRows] = useState();
 
     const [lsDtCustomer, setLsDtCustomer] = useState([]);
     const monthday = new Date();
@@ -88,18 +88,22 @@ function Datacustomers() {
     const defEndDate = new Date().toISOString().split('T')[0];
     const [startdate, setStartDate] = useState(firstDayOfMonth + '-01');
     const [enddate, setEndDate] = useState(defEndDate);
+    
+    const [filterCustomerName, setFilterCustomerName] = useState('');
+    const [filterSingleId, setFilterSingleId] = useState('');
 
     useEffect(() => {
         setLoading(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${currentPage}&size=${perPage}&startdate=${startdate}&enddate=${enddate}`;
+            // const url = `https://api.crm.wijayatoyota.co.id/api/customers/datacustomer?page=${currentPage}&size=${perPage}&startdate=${startdate}&enddate=${enddate}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/customers/datacustomer?page=${currentPage}&size=${perPage}&customer_name=${filterCustomerName}&single_id=${filterSingleId}`;
             try {
 
                 const response = await axios.get(url);
                 setLoading(false);
                 setLsDtCustomer(response.data.data);
-                // setTotalRows(response.data.pagination.total);
+                setTotalRows(response.data.total);
 
             } catch (error) {
                 console.log(error);
@@ -109,11 +113,13 @@ function Datacustomers() {
     }, [currentPage, perPage, refreshDt]);
 
     const handleRowsPerPageChange = (newPerPage, currentPage) => {
+        console.log("sini");
         setPerPage(newPerPage);
         setCurrentPage(currentPage);
     };
 
     const handlePageChange = (page) => {
+        console.log("sana");
         console.log(page);
         setCurrentPage(page);
     };
@@ -239,13 +245,13 @@ function Datacustomers() {
     }
 
     const handleOpenDetailKendaraan = (event) => {
-        if (rulesName == "superadmin") {
+        if (rulesName == "superadmin" || rulesName == "crc") {
 
             setIsCardShow(true);
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -258,7 +264,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -269,7 +275,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -280,7 +286,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail/infokendaraan?vin=" + event.no_rangka)
                 .then((response) => {
                     setInfoDtCar(response.data.dtKendaraan);
                     setInfoDtPenjualan(response.data.dtPenjualan);
@@ -291,7 +297,7 @@ function Datacustomers() {
             setDtCar(event);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             axios
-                .get("http://127.0.0.1:8000/api/mra/info?vin=" + event.no_rangka)
+                .get("https://api.crm.wijayatoyota.co.id/api/mra/info?vin=" + event.no_rangka)
                 .then((response) => {
                     setlsDtMraCard(response.data.data);
                 });
@@ -316,7 +322,7 @@ function Datacustomers() {
     function getKendaraanCust(singleID) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("http://127.0.0.1:8000/api/customers/datacustomer/detail?single_id=" + singleID)
+            .get("https://api.crm.wijayatoyota.co.id/api/customers/datacustomer/detail?single_id=" + singleID)
             .then((response) => {
                 setlsDtKendaraan(response.data.data);
                 setlsTenggatStnk(response.data.listStnk);
@@ -549,11 +555,11 @@ function Datacustomers() {
     ];
     // const urlExport = '';
     // if (rulesName == 'sales') {
-    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&nama_sales=${personName}&rules=${rulesName}`;
+    //     urlExport = `https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&nama_sales=${personName}&rules=${rulesName}`;
     // } else {
-    //     urlExport = `http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
+    //     urlExport = `https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}`;
     // }
-    const urlDownloadForm = `http://127.0.0.1:8000/api/template_form_update_data_customer`;
+    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_form_update_data_customer`;
 
     const [importExcel, setimportExcel] = React.useState(false);
     const [fileUpload, setFileUp] = React.useState([]);
@@ -610,7 +616,7 @@ function Datacustomers() {
         formData.append('fileCust', fileUpload);
 
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/customers/datacustomers/import_update', formData).then(function (response) {
+        axios.post('https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/import_update', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -745,7 +751,7 @@ function Datacustomers() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/customers/datacustomers/single_update", inputsUpdCust)
+            .post("https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/single_update", inputsUpdCust)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -915,7 +921,7 @@ function Datacustomers() {
     function getDetailbyVin(vin) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("http://127.0.0.1:8000/api/delivery_orders/detail/vin?vin=" + vin)
+            .get("https://api.crm.wijayatoyota.co.id/api/delivery_orders/detail/vin?vin=" + vin)
             .then((response) => {
                 if (response.data.data.length == 0) {
                     setupdNoDoTam('');
@@ -991,7 +997,7 @@ function Datacustomers() {
     function getHistory(no_rangka) {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         axios
-            .get("http://127.0.0.1:8000/api/services/history?no_rangka=" + no_rangka)
+            .get("https://api.crm.wijayatoyota.co.id/api/services/history?no_rangka=" + no_rangka)
             .then((response) => {
                 console.log(response);
                 setLsHistoryService(response.data.dtService);
@@ -1043,7 +1049,7 @@ function Datacustomers() {
     const handleSubmitNopol = () => {
 
         axios
-            .post("http://127.0.0.1:8000/api/customers/datacustomers/update_nopol", inputNopol)
+            .post("https://api.crm.wijayatoyota.co.id/api/customers/datacustomers/update_nopol", inputNopol)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -1074,6 +1080,15 @@ function Datacustomers() {
 
     function handleTerapkan() {
         setRefresh(new Date());
+    }
+
+    // FILTER BY CUSTOMER NAME / SINGLE ID
+    function handleChangeCustomerName(event) {
+        setFilterCustomerName(event.target.value);
+    }
+
+    function handleChangeSingleId(event) {
+        setFilterSingleId(event.target.value);
     }
 
     // For MRA
@@ -1127,7 +1142,7 @@ function Datacustomers() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/customer/update_kendaraan", inputUpdFollow)
+            .post("https://api.crm.wijayatoyota.co.id/api/customer/update_kendaraan", inputUpdFollow)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -1245,7 +1260,7 @@ function Datacustomers() {
         setopenHistoryCar(true);
         sethistoryNoRangka(no_rangka);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `http://127.0.0.1:8000/api/customers/history_kendaraan?vin=${no_rangka}`;
+        const url = `https://api.crm.wijayatoyota.co.id/api/customers/history_kendaraan?vin=${no_rangka}`;
         try {
             const response = await axios.get(url);
             setListHistory(response.data.data);
@@ -1300,7 +1315,7 @@ function Datacustomers() {
                         <div className="card">
                             <div className="card-header">
                                 {/* <h5 className="card-title mb-0">List Data Customer</h5> */}
-                                <div className="d-flex align-items-center">
+                                {/* <div className="d-flex align-items-center">
                                     <div className="flex-grow-1 overflow-hidden">
                                         <form action="">
                                             <div className="row">
@@ -1315,6 +1330,30 @@ function Datacustomers() {
                                                 </div>
                                                 <div className="col-lg-2">
                                                     <input type="date" onChange={handleEndDate} value={enddate} min={startdate} className="form-control" id="nameInput" name="tahun" placeholder="Enter your name" />
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    <button onClick={handleTerapkan} type="button" className="btn btn-sm btn-primary"><i className=" ri-user-search-line"></i> Go</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div> */}
+
+                                <div className="d-flex align-items-center mt-2">
+                                    <div className="flex-grow-1 overflow-hidden">
+                                        <form action="">
+                                            <div className="row">
+                                                <div className="col-lg-2 mt-2">
+                                                    <label htmlFor="nameCustomer" className="form-label" style={{ fontSize: 12 }}>Customer Name</label>
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    <input type="text" className="form-control" onChange={handleChangeCustomerName} value={filterCustomerName} id="nameCustomer" name="customer_name" placeholder="Enter your customer name" />
+                                                </div>
+                                                <div className="col-lg-1 mt-2">
+                                                    <label htmlFor="singleId" className="form-label" style={{ fontSize: 12 }}>Single ID</label>
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    <input type="text" className="form-control" onChange={handleChangeSingleId} value={filterSingleId} id="singleId" name="single_id" placeholder="Enter customer single id" />
                                                 </div>
                                                 <div className="col-lg-3">
                                                     <button onClick={handleTerapkan} type="button" className="btn btn-sm btn-primary"><i className=" ri-user-search-line"></i> Go</button>
@@ -1343,8 +1382,8 @@ function Datacustomers() {
                                                 <div className="col-lg-10 text-end">
                                                     {rulesName == 'sa' ? ("") : (
                                                         <>
-                                                            <a href={`http://127.0.0.1:8000/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}&startdate=${startdate}&enddate=${enddate}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
-                                                            <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{ marginLeft: "5px", cursor: "pointer" }}><i className="ri-edit-2-line"></i> Multi Update</a>
+                                                            <a href={`https://api.crm.wijayatoyota.co.id/api/summary/export/customers?cabang_name=${cleanedCabangName}&id_cabang=${idCab}&person=${personName}&rules=${rulesName}&startdate=${startdate}&enddate=${enddate}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export Excel</a>
+                                                            {/* <a onClick={handleOpenFormImport} className="btn btn-sm btn-info" style={{ marginLeft: "5px", cursor: "pointer" }}><i className="ri-edit-2-line"></i> Multi Update</a> */}
                                                         </>
                                                     )}
                                                 </div>
@@ -1365,15 +1404,29 @@ function Datacustomers() {
                                         data={displayData}
                                         key={currentPage}
                                         pagination
-                                        paginationPerPage={perPage} // Jumlah item per halaman
-                                        paginationRowsPerPageOptions={[10, 20, 30]} // Opsi jumlah item per halaman
-                                        paginationTotalRows={totalRows} // Total jumlah data
-                                        onChangeRowsPerPage={handleRowsPerPageChange}
-                                        onChangePage={handlePageChange}
+                                        paginationPerPage={perPage}
+                                        paginationRowsPerPageOptions={[10, 20, 30]}
+                                        paginationTotalRows={totalRows}
+                                        onChangeRowsPerPage={(currentRows, currentPage) => handleRowsPerPageChange(currentRows, currentPage)}
+                                        onChangePage={(page) => handlePageChange(page)}
                                         customStyles={customStyles}
                                         defaultSortFieldId={1}
-                                        onSearch={handleSearch} // Menambahkan fungsi pencarian
+                                        onSearch={handleSearch}
                                     />
+                                    // <DataTable
+                                    //     columns={columnsLsCustomer}
+                                    //     data={displayData}
+                                    //     key={currentPage}
+                                    //     pagination
+                                    //     paginationPerPage={perPage} // Jumlah item per halaman
+                                    //     paginationRowsPerPageOptions={[10, 20, 30]} // Opsi jumlah item per halaman
+                                    //     paginationTotalRows={totalRows} // Total jumlah data
+                                    //     onChangeRowsPerPage={handleRowsPerPageChange}
+                                    //     onChangePage={handlePageChange}
+                                    //     customStyles={customStyles}
+                                    //     defaultSortFieldId={1}
+                                    //     onSearch={handleSearch} // Menambahkan fungsi pencarian
+                                    // />
                                 )}
                             </div>
                         </div>

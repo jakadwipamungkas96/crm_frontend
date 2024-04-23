@@ -16,7 +16,7 @@ const Login = () => {
             password: password
         };
     
-        axios.post('http://127.0.0.1:8000/api/login', data)
+        axios.post('https://api.crm.wijayatoyota.co.id/api/login', data)
         .then(response => {
             setLoading(false);
             swal("Success", "Berhasil Login", "success", {
@@ -24,25 +24,10 @@ const Login = () => {
                 timer: 2000,
             });
             
-            // window.location.reload();
-
-            
-            const enkripUrl    = CryptoJS.AES.encrypt("http://127.0.0.1:8000/", "w1j4y4#t0y0T4");
+            const enkripUrl    = CryptoJS.AES.encrypt("https://api.crm.wijayatoyota.co.id/", "w1j4y4#t0y0T4");
             const enkripToken  = CryptoJS.AES.encrypt(response.data.access_token, "w1j4y4#t0y0T4");
-            // const enkripCabangId= CryptoJS.AES.encrypt(response.data.id_cabang, "w1j4y4#t0y0T4");
-            // const enkripPerson = CryptoJS.AES.encrypt(JSON.stringify(response.data.person), "w1j4y4#t0y0T4");
-            // const enkripRules = CryptoJS.AES.encrypt(JSON.stringify(response.data.rules), "w1j4y4#t0y0T4");
-            // const enkripCabangName = CryptoJS.AES.encrypt(JSON.stringify(response.data.cabang_name), "w1j4y4#t0y0T4");
-            // console.log(enkripToken.toString());
             localStorage.setItem('strul', enkripUrl.toString());
             localStorage.setItem('strtkn', enkripToken.toString());
-            // localStorage.setItem('strtkn', enkripToken.toString());
-            // localStorage.setItem('strcid', enkripCabangId.toString());
-            // localStorage.setItem('strprsn', enkripPerson.toString());
-            // localStorage.setItem('strrls', enkripRules.toString());
-            // localStorage.setItem('strcbn', enkripCabangName.toString());
-            // localStorage.setItem('apiUrl', "http://127.0.0.1:8000/");
-            // localStorage.setItem('access_token', response.data.access_token);
             localStorage.setItem('id_cabang', response.data.id_cabang);
             localStorage.setItem('uid', response.data.uid);
             localStorage.setItem('sid', JSON.stringify(response.data.sid));
@@ -50,7 +35,7 @@ const Login = () => {
             localStorage.setItem('rules', JSON.stringify(response.data.rules));
             localStorage.setItem('cabang_name', JSON.stringify(response.data.cabang_name));
             
-            if (response.data.rules == "superadmin" || response.data.rules == "spv" || response.data.rules == "administrator") {
+            if (response.data.rules == "superadmin" || response.data.rules == "spv" || response.data.rules == "administrator" || response.data.rules == "kacab") {
                 window.location.href = "/dashboard";
             } else if (response.data.rules == "crc") {
                 window.location.href = "/dashboard";
@@ -58,7 +43,6 @@ const Login = () => {
                 window.location.href = "/dashboard"; 
             } else if (response.data.rules == "sales") {
                 window.location.href = "/dashboard/sales";
-                // window.location.href = "/dashboard"; 
             }
             // window.location.href = "/dashboard";
 
@@ -119,8 +103,8 @@ const Login = () => {
                                     <div className="col-lg-6">
                                         <div className="p-lg-5 p-4">
                                             <div>
-                                                <span className="text-uppercase" style={{fontWeight: "bold", fontSize: "20px"}}>SID Wijaya Toyota </span>
-                                                <p className="text-muted">Database Single ID Wijaya Toyota</p>
+                                                <span className="text-uppercase" style={{fontWeight: "bold", fontSize: "20px"}}>CROW </span>
+                                                <p className="text-muted">Customer Relationship Optimization Wijaya</p>
                                             </div>
 
                                             <div className="mt-4">
@@ -168,7 +152,7 @@ const Login = () => {
                                             </div>
 
                                             <div className="mt-5 text-center">
-                                                <p className="mb-0">Belum punya akun ? <a href="https://wa.me/6289626481645?text=Selamat Pagi, saya .... divisi .... Nomor Pekerja .... belum mempunyai akun untuk mengakses CRM" target='__blank' className="fw-semibold text-primary text-decoration-underline"> Silahkan Hubungi IT HO</a> </p>
+                                                <p className="mb-0">Belum punya akun ? <a href="https://wa.me/6289637341801?text=Selamat Pagi, saya .... divisi .... Nomor Pekerja .... belum mempunyai akun untuk mengakses CRM" target='__blank' className="fw-semibold text-primary text-decoration-underline"> Silahkan Hubungi IT HO</a> </p>
                                             </div>
                                         </div>
                                     </div>

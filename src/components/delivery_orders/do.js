@@ -65,7 +65,7 @@ function Do() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/delivery_orders/list?page=${page}&size=${pageSize}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/delivery_orders/list?page=${page}&size=${pageSize}`;
             try {
                 const response = await axios.get(url);
                 setLsDtCustomer(response.data.data);
@@ -287,12 +287,12 @@ function Do() {
                                             value={searchText}
                                             onChange={(e) => handleSearch(e.target.value)}
                                             placeholder="Search..."
-                                            style={{width: "20%"}}
+                                            style={{width: "20%", marginBottom: "10px"}}
                                         />
                                     </div>
                                     <div className="flex-shrink-0">
                                         <div id="" className='p-2'>
-                                            {rulesName != 'crc' || rulesName != 'sales' || rulesName != 'spv' ? (
+                                            {rulesName != 'crc' && rulesName != 'sales' && rulesName != 'spv' && rulesName != "kacab" ? (
                                                 <button className="btn btn-sm btn-success" onClick={showFormImport}><i className=" ri-download-2-fill"></i> Import Excel</button>
                                             ) : ("")}
                                         </div>
