@@ -65,7 +65,7 @@ function Do() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/delivery_orders/list?page=${page}&size=${pageSize}`;
+            const url = `http://127.0.0.1:8000/api/delivery_orders/list?page=${page}&size=${pageSize}`;
             try {
                 const response = await axios.get(url);
                 setLsDtCustomer(response.data.data);

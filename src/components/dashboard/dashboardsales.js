@@ -55,7 +55,7 @@ const DashboardSales = () => {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/calendar/agenda`;
+            const url = `http://127.0.0.1:8000/api/calendar/agenda`;
             try {
                 const response = await axios.get(url);
                 const dtdummy = [
@@ -209,7 +209,7 @@ const DashboardSales = () => {
         event.preventDefault();
         
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/calendar/add/task", inputTask)
+            .post("http://127.0.0.1:8000/api/calendar/add/task", inputTask)
             .then(function (response) {
                 if (response.data.error == true) {
                     
@@ -299,7 +299,7 @@ const DashboardSales = () => {
           .then((willProceed) => {
             if (willProceed) {
               // Panggilan API disini
-                axios.post(`https://api.crm.wijayatoyota.co.id/api/calendar/delete/task/${event.id}`).then(function(response){
+                axios.post(`http://127.0.0.1:8000/api/calendar/delete/task/${event.id}`).then(function(response){
                     if (response.data.error == true) {
                         
                         swal("Error", 'Data gagalh dihapus!', "error", {
@@ -333,7 +333,7 @@ const DashboardSales = () => {
             name: labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? 'Aksi' : 'Aksi',
             cell: row => (
                 <>
-                    <a href={"https://wa.me/" + row.no_telp + "?text=Halo, Bapak/Ibu " + row.nama_customer} target="__blank" type="button" className={`${labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? 'd-none' : ''} btn btn-info btn-sm`}><i className="ri-mail-send-fill"></i></a>
+                    <a href={"https://wa.me/" + row.no_telp + "?text=Halo, Bapak/Ibu " + row.nama_customer} target="__blank" type="button" className={`${labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" || labelCalendar === 'BUCKETS' ? 'd-none' : ''} btn btn-info btn-sm`}><i className="ri-mail-send-fill"></i></a>
                     <a style={{cursor: "pointer"}} onClick={() => handleDeleteTask(row)} type="button" className={`${labelCalendar === "LOW" || labelCalendar === "MEDIUM" || labelCalendar === "HIGH" ? '' : 'd-none'} btn btn-danger btn-sm`}><i className="ri-delete-bin-5-line"></i></a>
                     <a style={{cursor: "pointer"}} onClick={() => handleOpenKlaim(row)} type="button" className={`${labelCalendar === "BUCKETS" && row.flagging_check == 0 ? '' : 'd-none'} btn btn-primary btn-sm`}>Klaim</a>
                 </>
@@ -344,7 +344,7 @@ const DashboardSales = () => {
 
     const handleOpenKlaim = (event) => {
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/bucket/klaim", {
+            .post("http://127.0.0.1:8000/api/bucket/klaim", {
                 single_id: event.single_id
             })
             .then(function (response) {

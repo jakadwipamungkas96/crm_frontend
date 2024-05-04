@@ -78,7 +78,7 @@ function Attacklist() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/mra/attacklist?page=${page}&size=${pageSize}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`;
+            const url = `http://127.0.0.1:8000/api/mra/attacklist?page=${page}&size=${pageSize}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`;
             try {
 
                 const response = await axios.get(url);
@@ -114,6 +114,8 @@ function Attacklist() {
         });
     }
 
+    console.log(token);
+
     // For List Data Customer
     const [searchText, setSearchText] = useState('');
     const customStyles = {
@@ -129,11 +131,11 @@ function Attacklist() {
         },
         // headCells: {
         //     style: {
-        //         background: "#DC2626",
-        //         color: "white",
-        //         textAlign: "center"
+        //         position: 'sticky',
+        //         top: 0,
+        //         zIndex: 1020, // Higher than cell z-index to keep header on top
         //     },
-        // }
+        // },
         headRow: {
             style: {
                 background: "linear-gradient(to right, #141e30, #243b55)", // Warna latar belakang untuk thead
@@ -147,15 +149,15 @@ function Attacklist() {
             name: 'Status',
             selector: row => {
                 if (row.status === 'open') {
-                    return <><span className="badge badge-label bg-light text-body"><i className="mdi mdi-circle-medium"></i> Open</span></>
+                    return <><span className="sticky-column badge badge-label bg-light text-body"><i className="mdi mdi-circle-medium"></i> Open</span></>
                 } else if (row.status === 'done_wa') {
-                    return <><span className="badge badge-label bg-success"><i className="mdi mdi-circle-medium"></i> Done WA</span></>
+                    return <><span className="sticky-column badge badge-label bg-success"><i className="mdi mdi-circle-medium"></i> Done WA</span></>
                 } else if (row.status === 'done_phone') {
-                    return <><span className="badge badge-label bg-primary"><i className="mdi mdi-circle-medium"></i> Done Phone</span></>
+                    return <><span className="sticky-column badge badge-label bg-primary"><i className="mdi mdi-circle-medium"></i> Done Phone</span></>
                 } else if (row.status === 'booking') {
-                    return <><span className="badge badge-label bg-warning"><i className="mdi mdi-circle-medium"></i> Booking</span></>
+                    return <><span className="sticky-column badge badge-label bg-warning"><i className="mdi mdi-circle-medium"></i> Booking</span></>
                 } else if (row.status === 'not_booking') {
-                    return <><span className="badge badge-label bg-danger"><i className="mdi mdi-circle-medium"></i> Not Booking</span></>
+                    return <><span className="sticky-column badge badge-label bg-danger"><i className="mdi mdi-circle-medium"></i> Not Booking</span></>
                 }
             },
             sortable: true,
@@ -188,6 +190,12 @@ function Attacklist() {
         {
             name: 'No Telepon',
             selector: row => row.no_telp,
+            sortable: true,
+            width: '200px',
+        },
+        {
+            name: 'Tanggal Jatuh Tempo',
+            selector: row => row.tgl_jatuh_tempo,
             sortable: true,
             width: '200px',
         },
@@ -378,7 +386,7 @@ function Attacklist() {
         formData.append('fileAttacklist', fileUpload);
         formData.append('id_cabang', inputCabang);
         setLoading(true);
-        axios.post('https://api.crm.wijayatoyota.co.id/api/mra/import_attacklist', formData).then(function (response) {
+        axios.post('http://127.0.0.1:8000/api/mra/import_attacklist', formData).then(function (response) {
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -498,6 +506,7 @@ function Attacklist() {
     }
 
     const handleOpenFormFu = (event) => {
+        console.log(event);
         setOpenFU(true);
         setServiceNorangka(event.no_rangka);
         setfuCustomer(event.nama_customer);
@@ -514,9 +523,9 @@ function Attacklist() {
         setInputFu((values) => ({
             ...values,
             ["no_rangka"]: event.no_rangka,
-            ["status_phone"]: event.status_phone,
+            ["callbyphone"]: event.status_phone,
             ["is_contacted"]: event.is_contacted,
-            ["status_booking_service"]: event.status_booking_service,
+            ["followup_booking"]: event.status_booking_service,
             ["reason_id"]: event.reason_id,
             ["verbatim"]: event.verbatim,
             ["re_follow_up_date"]: event.re_follow_up_date,
@@ -533,7 +542,7 @@ function Attacklist() {
     const [result_service, setresultservice] = useState([]);
     const [openHistoryService, setOpenHistoryService] = React.useState(false);
     function getDetailKendaraan(no_rangka) {
-        axios.get(`https://api.crm.wijayatoyota.co.id/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
+        axios.get(`http://127.0.0.1:8000/api/attacklist/infokendaraan?no_rangka=${no_rangka}`).then(function (response) {
             var result = response.data;
             setresultservice(result.dtlso == null ? [] : result.dtlso);
             setDetailKendaraan(result.dtlcar);
@@ -563,11 +572,10 @@ function Attacklist() {
     }
 
     const handleSubmitFu = (event) => {
-        // console.log(inputFu);
         event.preventDefault();
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/attacklist/save", inputFu)
+            .post("http://127.0.0.1:8000/api/attacklist/save", inputFu)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -590,21 +598,21 @@ function Attacklist() {
     }
 
     function getReason() {
-        axios.get('https://api.crm.wijayatoyota.co.id/api/list/reason').then(function (response) {
+        axios.get('http://127.0.0.1:8000/api/list/reason').then(function (response) {
             var result = response.data;
             setListReason(result.data);
         });
     }
 
     function getSa() {
-        axios.get('https://api.crm.wijayatoyota.co.id/api/sa').then(function (response) {
+        axios.get('http://127.0.0.1:8000/api/sa').then(function (response) {
             var result = response.data;
             setListSa(result.data);
         });
     }
 
     function getOption() {
-        axios.get('https://api.crm.wijayatoyota.co.id/api/mra/option_attacklist').then(function (response) {
+        axios.get('http://127.0.0.1:8000/api/mra/option_attacklist').then(function (response) {
             var result = response.data;
             setListKategori(result.kategori);
             setListTipeCustomer(result.tipe_cust);
@@ -617,7 +625,7 @@ function Attacklist() {
         getOption();
     }, []);
 
-    const urlDownloadForm = `https://api.crm.wijayatoyota.co.id/api/template_import_attacklist`;
+    const urlDownloadForm = `http://127.0.0.1:8000/api/template_import_attacklist`;
 
     return (
         <div className="page-content">
@@ -692,7 +700,7 @@ function Attacklist() {
                                         <div id="" className='p-2'>
                                             {rulesName == 'mra' || rulesName == 'superadmin' ? (
                                                 <>
-                                                    <a href={`https://api.crm.wijayatoyota.co.id/api/summary/export/attacklist?id_cabang=${idCab}&rules=${rulesName}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export</a>
+                                                    <a href={`http://127.0.0.1:8000/api/summary/export/attacklist?id_cabang=${idCab}&rules=${rulesName}&kategori=${chsKategori}&tipe_customer=${chsTipeCustomer}`} className="btn btn-sm btn-success"><i className="ri-file-excel-2-fill"></i> Export</a>
                                                 </>
                                             ) : ""}
                                         </div>
@@ -891,7 +899,7 @@ function Attacklist() {
                                                             </div>
                                                             <div className="col-lg-6 mb-2">
                                                                 <div className="form-floating">
-                                                                    <select type="text" className="form-control form-control-sm" onChange={handleChangeStatusContacted} value={statusContacted} name="iscontacted" id="iscontacted">
+                                                                    <select type="text" className="form-control form-control-sm" onChange={handleChangeStatusContacted} value={statusContacted} name="is_contacted" id="is_contacted">
                                                                         <option value={""}>-- Pilih --</option>
                                                                         <option value={1}>Contacted</option>
                                                                         <option value={0}>Not Contacted</option>

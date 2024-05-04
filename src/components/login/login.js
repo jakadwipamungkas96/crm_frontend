@@ -16,7 +16,7 @@ const Login = () => {
             password: password
         };
     
-        axios.post('https://api.crm.wijayatoyota.co.id/api/login', data)
+        axios.post('http://127.0.0.1:8000/api/login', data)
         .then(response => {
             setLoading(false);
             swal("Success", "Berhasil Login", "success", {
@@ -24,7 +24,7 @@ const Login = () => {
                 timer: 2000,
             });
             
-            const enkripUrl    = CryptoJS.AES.encrypt("https://api.crm.wijayatoyota.co.id/", "w1j4y4#t0y0T4");
+            const enkripUrl    = CryptoJS.AES.encrypt("http://127.0.0.1:8000/", "w1j4y4#t0y0T4");
             const enkripToken  = CryptoJS.AES.encrypt(response.data.access_token, "w1j4y4#t0y0T4");
             localStorage.setItem('strul', enkripUrl.toString());
             localStorage.setItem('strtkn', enkripToken.toString());
@@ -43,6 +43,8 @@ const Login = () => {
                 window.location.href = "/dashboard"; 
             } else if (response.data.rules == "sales") {
                 window.location.href = "/dashboard/sales";
+            } else if (response.data.rules == "sales") {
+                window.location.href = "/stock/overview";
             }
             // window.location.href = "/dashboard";
 

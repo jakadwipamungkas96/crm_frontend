@@ -75,7 +75,7 @@ function Nextservice() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/service/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
+            const url = `http://127.0.0.1:8000/api/service/list?startdate=${startdatefilter}&enddate=${enddatefilter}`;
             try {
 
                 const response = await axios.get(url);
@@ -442,7 +442,7 @@ function Nextservice() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/services/save_service_pertama", inputServices)
+            .post("http://127.0.0.1:8000/api/services/save_service_pertama", inputServices)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -505,7 +505,7 @@ function Nextservice() {
 
     const getSa = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `https://api.crm.wijayatoyota.co.id/api/sa`;
+        const url = `http://127.0.0.1:8000/api/sa`;
         try {
             const response = await axios.get(url);
             setListSa(response.data.data);
@@ -543,7 +543,7 @@ function Nextservice() {
         // }));
         // console.log(dtConfirmation);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/nextservice/confirmation", {
+            .post("http://127.0.0.1:8000/api/nextservice/confirmation", {
                 single_id: event.single_id,
                 no_rangka: event.no_rangka,
                 next_service: formatDateInput(event.next_service),
@@ -618,7 +618,7 @@ function Nextservice() {
         console.log(inpuReschedule);
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/nextservice/reschedule", inpuReschedule)
+            .post("http://127.0.0.1:8000/api/nextservice/reschedule", inpuReschedule)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -677,7 +677,7 @@ function Nextservice() {
         console.log(inputNextService);
         setLoading(true);
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/service/save_next", inputNextService)
+            .post("http://127.0.0.1:8000/api/service/save_next", inputNextService)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);

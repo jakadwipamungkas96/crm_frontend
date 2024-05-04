@@ -58,7 +58,7 @@ function Datacustomers() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/customers/datacustomer?page=${page}&size=${pageSize}`;
+            const url = `http://127.0.0.1:8000/api/customers/datacustomer?page=${page}&size=${pageSize}`;
             try {
 
                 const response = await axios.get(url);

@@ -64,7 +64,7 @@ function Users() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `https://api.crm.wijayatoyota.co.id/api/users`;
+            const url = `http://127.0.0.1:8000/api/users`;
             try {
 
                 const response = await axios.get(url);
@@ -221,7 +221,7 @@ function Users() {
     // GET CABANG LIST
     const getCabang = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `https://api.crm.wijayatoyota.co.id/api/users/opt/cabang`;
+        const url = `http://127.0.0.1:8000/api/users/opt/cabang`;
         try {
             const response = await axios.get(url);
             setListCabang(response.data.data);
@@ -232,7 +232,7 @@ function Users() {
 
     const getSpv = async (id_cabang) => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `https://api.crm.wijayatoyota.co.id/api/users/data/getspv?id_cabang=${id_cabang}`;
+        const url = `http://127.0.0.1:8000/api/users/data/getspv?id_cabang=${id_cabang}`;
         try {
             const response = await axios.get(url);
             setListSpv(response.data.data);
@@ -322,7 +322,7 @@ function Users() {
     const handleSubmitUsers = (event) => {
         event.preventDefault();
         console.log(inputUsers);
-        axios.post('https://api.crm.wijayatoyota.co.id/api/users/create', inputUsers).then(function(response){
+        axios.post('http://127.0.0.1:8000/api/users/create', inputUsers).then(function(response){
             
             if (response.data.error == true) {
                 setLoading(false);
@@ -441,7 +441,7 @@ function Users() {
 
     const handleSubmitEdit = (event) => {
         event.preventDefault();
-        axios.post('https://api.crm.wijayatoyota.co.id/api/users/update', updateUsers).then(function(response){
+        axios.post('http://127.0.0.1:8000/api/users/update', updateUsers).then(function(response){
             
             if (response.data.error == true) {
                 setLoading(false);
@@ -490,7 +490,7 @@ function Users() {
         console.log(arrReset);
         try {
             axios
-            .post("https://api.crm.wijayatoyota.co.id/api/users/reset/password", arrReset)
+            .post("http://127.0.0.1:8000/api/users/reset/password", arrReset)
             .then(function (response) {
                 if (response.data.error == true) {
                     swal("Error", 'Data gagal diupdate', "error", {
@@ -516,7 +516,7 @@ function Users() {
     const handleDelete = (event) => {
         
         axios
-            .post("https://api.crm.wijayatoyota.co.id/api/users/inactive", {
+            .post("http://127.0.0.1:8000/api/users/inactive", {
                 uid: event.id
             })
             .then(function (response) {
