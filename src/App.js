@@ -31,6 +31,7 @@ import Users from "./components/users/users";
 import Overview from "./components/stock/onhand";
 import Inputstock from "./components/stock/inputstock";
 import Onhand from "./components/stock/onhand";
+import DashboardMra from "./components/dashboard/dashboardmra";
 
 function App() {
   useEffect(() => {
@@ -326,6 +327,9 @@ function App() {
     return <Login />;
   }
 
+  
+  console.log(rulesName);
+
   return (
     <Router>
       <div id="layout-wrapper">
@@ -389,6 +393,26 @@ function App() {
                             </span>
                           </li>
 
+                          {rulesName == "mra" ? (
+                            <>
+                              <li className="nav-item">
+                                <NavLink
+                                  className="nav-link menu-link"
+                                  exact="true"
+                                  to="/dashboard/mra"
+                                >
+                                  <i className="ri-dashboard-line"></i>{" "}
+                                  <span data-key="t-widgets">
+                                    Dashboard MRA
+                                  </span>
+                                </NavLink>
+                              </li>
+                            </>
+                          ) : (
+                            ""
+                          )
+                          }
+
                           {rulesName == "sales" ? (
                             <>
                               <li className="nav-item">
@@ -404,9 +428,24 @@ function App() {
                                 </NavLink>
                               </li>
                             </>
-                          ) : (
+                          ) : rulesName == "mra" ? (
                             <>
                               <li className="nav-item">
+                                <NavLink
+                                  className="nav-link menu-link"
+                                  exact="true"
+                                  to="/dashboard/mra"
+                                >
+                                  <i className="ri-dashboard-line"></i>{" "}
+                                  <span data-key="t-widgets">
+                                    Dashboard MRA
+                                  </span>
+                                </NavLink>
+                              </li>
+                            </>
+                          ) : (
+                            <>
+                              <li className={`nav-item`}>
                                 <NavLink
                                   className="nav-link menu-link"
                                   exact="true"
@@ -737,6 +776,26 @@ function App() {
                   </span>
                 </li>
 
+                {rulesName == "mra" ? (
+                    <>
+                      <li className="nav-item">
+                        <NavLink
+                          className="nav-link menu-link"
+                          exact="true"
+                          to="/dashboard/mra"
+                        >
+                          <i className="ri-dashboard-line"></i>{" "}
+                          <span data-key="t-widgets">
+                            Dashboard MRA
+                          </span>
+                        </NavLink>
+                      </li>
+                    </>
+                  ) : (
+                    ""
+                  )
+                }
+
                 {rulesName == "sales" ? (
                   <>
                     <li className="nav-item">
@@ -754,7 +813,7 @@ function App() {
                   <>
                     <li className={`nav-item`}>
                       <NavLink
-                        className={`nav-link menu-link ${rulesName == "stock" ? 'd-none' : ''}`}
+                        className={`nav-link menu-link ${rulesName == "stock" || rulesName == "mra" ? 'd-none' : ''}`}
                         exact="true"
                         to="/dashboard"
                       >
@@ -1032,6 +1091,7 @@ function App() {
             <Route path="/reason" element={<Reason />}></Route>
             <Route path="/dashboard/sales" element={<DashboardSales />}></Route>
             <Route path="/users" element={<Users />}></Route>
+            <Route path="/dashboard/mra" element={<DashboardMra />}></Route>
             <Route path="/stock/overview" element={<Overview />}></Route>
             <Route path="/stock/input" element={<Inputstock />}></Route>
             <Route path="/stock/onhand" element={<Onhand />}></Route>

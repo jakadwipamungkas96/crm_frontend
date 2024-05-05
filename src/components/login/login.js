@@ -40,7 +40,7 @@ const Login = () => {
             } else if (response.data.rules == "crc") {
                 window.location.href = "/dashboard";
             } else if (response.data.rules == "mra") {
-                window.location.href = "/dashboard"; 
+                window.location.href = "/dashboard/mra"; 
             } else if (response.data.rules == "sales") {
                 window.location.href = "/dashboard/sales";
             } else if (response.data.rules == "sales") {
