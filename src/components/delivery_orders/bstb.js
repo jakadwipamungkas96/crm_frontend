@@ -66,7 +66,7 @@ function Bstb() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/delivery_orders/list?page=${page}&size=${pageSize}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/delivery_orders/list?page=${page}&size=${pageSize}`;
             try {
                 const response = await axios.get(url);
                 setDataProspek(response.data.data);
@@ -255,7 +255,7 @@ function Bstb() {
         formData.append('fileDo',fileUpload);
 
         setLoading(true);
-        axios.post('http://127.0.0.1:8000/api/delivery_order/import', formData).then(function(response){
+        axios.post('https://api.crm.wijayatoyota.co.id/api/delivery_order/import', formData).then(function(response){
             if (response.data.error == true) {
                 setLoading(false);
                 swal("Error", 'Data tidak boleh kosong!', "error", {
@@ -424,7 +424,7 @@ function Bstb() {
         event.preventDefault();
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/services/dectracking/save", inputsDec)
+            .post("https://api.crm.wijayatoyota.co.id/api/services/dectracking/save", inputsDec)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);

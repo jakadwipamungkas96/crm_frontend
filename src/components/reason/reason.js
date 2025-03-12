@@ -67,7 +67,7 @@ function Reason() {
         setLoadingTable(true);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getData = async () => {
-            const url = `http://127.0.0.1:8000/api/list/reason`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/list/reason`;
             try {
 
                 const response = await axios.get(url);
@@ -185,7 +185,7 @@ function Reason() {
 
     const handleSubmitReason = (event) => {
         event.preventDefault();
-        axios.post('http://127.0.0.1:8000/api/reason/save', inputReason).then(function(response){
+        axios.post('https://api.crm.wijayatoyota.co.id/api/reason/save', inputReason).then(function(response){
             setRefresh(new Date());
             setReasonDesc('');
             setInputReason([]);
@@ -219,7 +219,7 @@ function Reason() {
     
     const handleDelete = (event) => {
         console.log(event.id);
-        axios.post('http://127.0.0.1:8000/api/reason/delete', {
+        axios.post('https://api.crm.wijayatoyota.co.id/api/reason/delete', {
             id: event.id
         }).then(function(response){
             setRefresh(new Date());

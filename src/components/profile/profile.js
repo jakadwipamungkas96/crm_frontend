@@ -35,7 +35,7 @@ const Profile = () => {
 
     const getDetailUser = async () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        const url = `http://127.0.0.1:8000/api/users/${uid}`;
+        const url = `https://api.crm.wijayatoyota.co.id/api/users/${uid}`;
         try {
             const response = await axios.get(url);
             console.log(response.data.data.person);
@@ -60,7 +60,7 @@ const Profile = () => {
         event.preventDefault();
         setLoading(true);
         await axios
-            .post("http://127.0.0.1:8000/api/users/update/sales", inputsProfile)
+            .post("https://api.crm.wijayatoyota.co.id/api/users/update/sales", inputsProfile)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);

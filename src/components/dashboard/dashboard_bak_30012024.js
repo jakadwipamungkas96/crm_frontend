@@ -158,7 +158,7 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getUltah = async () => {
-            const url = `http://127.0.0.1:8000/api/list/notif_birthday`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/list/notif_birthday`;
             try {
                 const response = await axios.get(url);
                 setTotalUltah(response.data.total);
@@ -300,7 +300,7 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getTopSales = async () => {
-            const url = `http://127.0.0.1:8000/api/chart/topfive/sales?bulan=${bulan}&tahun=${tahun}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/chart/topfive/sales?bulan=${bulan}&tahun=${tahun}`;
             try {
                 const response = await axios.get(url);
                 setTopSalesName(response.data.top_sales);
@@ -346,7 +346,7 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getTopCar = async () => {
-            const url = `http://127.0.0.1:8000/api/chart/topfive/car?startdate=${startdate}&enddate=${enddate}`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/chart/topfive/car?startdate=${startdate}&enddate=${enddate}`;
             try {
                 const response = await axios.get(url);
                 setTopCarName(response.data.top_car);
@@ -466,7 +466,7 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getStnk = async () => {
-            const url = `http://127.0.0.1:8000/api/list/notif_stnk`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/list/notif_stnk`;
             try {
                 const response = await axios.get(url);
                 setTotalStnk(response.data.total);
@@ -571,7 +571,7 @@ function Dashboard() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         const getservice = async () => {
-            const url = `http://127.0.0.1:8000/api/list/notif_service`;
+            const url = `https://api.crm.wijayatoyota.co.id/api/list/notif_service`;
             try {
                 const response = await axios.get(url);
                 setTotalservice(response.data.total);
@@ -656,7 +656,7 @@ function Dashboard() {
         
         setLoading(true);
         axios
-            .get(`http://127.0.0.1:8000/api/customers/update/reminders?single_id=${single_id}&type=${type}`)
+            .get(`https://api.crm.wijayatoyota.co.id/api/customers/update/reminders?single_id=${single_id}&type=${type}`)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -690,7 +690,7 @@ function Dashboard() {
 
         setLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/customers/update/reminders", inputRemindersStnk)
+            .post("https://api.crm.wijayatoyota.co.id/api/customers/update/reminders", inputRemindersStnk)
             .then(function (response) {
                 if (response.data.error == true) {
                     setLoading(false);
@@ -725,7 +725,7 @@ function Dashboard() {
 
         setLoading(true);
         // axios
-        //     .post("http://127.0.0.1:8000/api/customers/update/reminders", inputRemindersService)
+        //     .post("https://api.crm.wijayatoyota.co.id/api/customers/update/reminders", inputRemindersService)
         //     .then(function (response) {
         //         if (response.data.error == true) {
         //             setLoading(false);

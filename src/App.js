@@ -36,6 +36,10 @@ import List from "./components/spk/list";
 import Inputspk from "./components/spk/inputspk";
 import Liststock from "./components/stock/liststock";
 import Pengajuancancel from "./components/spk/pengajuancancel";
+import Validasido from "./components/stock/validasido";
+import Validasimatching from "./components/stock/validasimatching";
+import Validasiinternal from "./components/stock/validasiinternal";
+import Validasiafi from "./components/stock/validasiafi";
 
 function App() {
   useEffect(() => {
@@ -280,7 +284,7 @@ function App() {
             "w1j4y4#t0y0T4"
           ).toString(CryptoJS.enc.Utf8);
     axios
-      .post("http://127.0.0.1:8000/api/logout", token)
+      .post("https://api.crm.wijayatoyota.co.id/api/logout", token)
       .then((response) => {
         swal("Success", "Berhasil Logout", "success", {
           buttons: false,
@@ -299,7 +303,7 @@ function App() {
 
   const handleLogout = () => {
     // const token = localStorage.getItem("strtkn") == null ? "" : CryptoJS.AES.decrypt(localStorage.getItem("strtkn"), "w1j4y4#t0y0T4").toString(CryptoJS.enc.Utf8);
-    // axios.post('http://127.0.0.1:8000/api/logout')
+    // axios.post('https://api.crm.wijayatoyota.co.id/api/logout')
     //   .then(response => {
 
     localStorage.removeItem("sid");
@@ -473,7 +477,7 @@ function App() {
                               </span>
                             </NavLink>
                           </li>
-                          {rulesName != "crc" || rulesName != "kacab" || rulesName != 'sas' ? (
+                          {rulesName != "crc" || rulesName != 'sas' ? (
                             <li className="nav-item">
                               <NavLink
                                 className="nav-link menu-link"
@@ -815,7 +819,7 @@ function App() {
                   <>
                     <li className={`nav-item`}>
                       <NavLink
-                        className={`nav-link menu-link ${rulesName == "stock" || rulesName == "mra" ? 'd-none' : ''}`}
+                        className={`nav-link menu-link ${rulesName == "stock" || rulesName == "mra" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}
                         exact="true"
                         to="/dashboard"
                       >
@@ -826,7 +830,7 @@ function App() {
                   </>
                 )}
 
-                {rulesName != "stock" ? (
+                {rulesName != "stock" && rulesName != "do" && rulesName != "afi" ? (
                     <>
 
                       <li className="menu-title">
@@ -848,10 +852,10 @@ function App() {
                   ""
                 )}
 
-                {rulesName != "kacab" && rulesName != "crc" && rulesName != 'sas' ? (
+                {rulesName != "crc" && rulesName != 'sas' ? (
                   <li className="nav-item">
                     <NavLink
-                      className={`nav-link menu-link ${rulesName == "stock" ? 'd-none' : ''}`}
+                      className={`nav-link menu-link ${rulesName == "stock" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}
                       exact="true"
                       to="/customers/bucket"
                     >
@@ -863,13 +867,13 @@ function App() {
                   ""
                 )}
                 {/* <li className="nav-item"><NavLink className="nav-link menu-link"exact="true" to="/ulangtahun"><i className="ri-cake-line"></i> <span data-key="t-widgets">List Ulang Tahun</span></NavLink></li> */}
-                <li className={`menu-title ${rulesName == "stock" ? 'd-none' : ''}`}>
+                <li className={`menu-title ${rulesName == "stock" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}>
                   <span data-key="t-menu">List</span>
                 </li>
                 {rulesName != "mra" ? (
                   <li className="nav-item">
                     <NavLink
-                      className={`nav-link menu-link ${rulesName == "stock" ? 'd-none' : ''}`}
+                      className={`nav-link menu-link ${rulesName == "stock" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}
                       exact="true"
                       to="/do"
                     >
@@ -914,12 +918,12 @@ function App() {
 
                 {rulesName != "spv" && rulesName != "kacab" ? (
                   <>
-                    <li className={`menu-title ${rulesName == "stock" ? 'd-none' : ''}`}>
+                    <li className={`menu-title ${rulesName == "stock" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}>
                       <span data-key="t-menu">Service</span>
                     </li>
                     <li className="nav-item">
                       <NavLink
-                        className={`nav-link menu-link ${rulesName == "stock" ? 'd-none' : ''}`}
+                        className={`nav-link menu-link ${rulesName == "stock" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}
                         exact="true"
                         to="/input/servicepertama"
                       >
@@ -929,7 +933,7 @@ function App() {
                     </li>
                     <li className="nav-item">
                       <NavLink
-                        className={`nav-link menu-link ${rulesName == "stock" ? 'd-none' : ''}`}
+                        className={`nav-link menu-link ${rulesName == "stock" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}
                         exact="true"
                         to="/services/booking"
                       >
@@ -988,7 +992,7 @@ function App() {
                   <>
                     <li className="nav-item">
                       <NavLink
-                        className={`nav-link menu-link ${rulesName == "stock" ? 'd-none' : ''}`}
+                        className={`nav-link menu-link ${rulesName == "stock" || rulesName == "do" || rulesName == "afi" ? 'd-none' : ''}`}
                         exact="true"
                         to="/so"
                       >
@@ -1044,7 +1048,7 @@ function App() {
                         exact="true"
                         to="/stock/masterdata"
                       >
-                        <i className="ri-list-check-2"></i>{" "}
+                        <i className="ri-database-2-line"></i>{" "}
                         <span data-key="t-widgets">Master Data</span>
                       </NavLink>
                     </li>
@@ -1059,12 +1063,23 @@ function App() {
                         <span data-key="t-widgets">Input Data</span>
                       </NavLink>
                     </li>
+
+                    <li className="nav-item">
+                      <NavLink
+                        className={`nav-link menu-link`}
+                        exact="true"
+                        to="/stock/validasi/matching"
+                      >
+                        <i className="ri-checkbox-circle-line"></i>{" "}
+                        <span data-key="t-widgets">Validasi Matching Unit</span>
+                      </NavLink>
+                    </li>
                   </>
                 ) : (
                   ""
                 )}
 
-                {rulesName == "sales" || rulesName == "spv" ? (
+                {rulesName == "sales" || rulesName == "spv"  || rulesName == "superadmin" || rulesName == "stock" ? (
                     <>
                     <li className={`menu-title`}>
                       <span data-key="t-menu">SPK</span>
@@ -1084,7 +1099,58 @@ function App() {
                   ) : ("")
                 }
 
-                {rulesName == "spv" ? (
+                {rulesName == "do" ? (
+                    <>
+                    <li className={`menu-title`}>
+                      <span data-key="t-menu">DO</span>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink
+                        className={`nav-link menu-link`}
+                        exact="true"
+                        to="/validasi/do/internal"
+                      >
+                        <i className="ri-list-check-2"></i>{" "}
+                        <span data-key="t-widgets">Validasi DO INTERNAL</span>
+                      </NavLink>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink
+                        className={`nav-link menu-link`}
+                        exact="true"
+                        to="/validasi/do/fisik"
+                      >
+                        <i className="ri-list-check-2"></i>{" "}
+                        <span data-key="t-widgets">Validasi DO FISIK</span>
+                      </NavLink>
+                    </li>
+                  </>
+                  ) : ("")
+                }
+
+                {rulesName == "afi" ? (
+                    <>
+                    <li className={`menu-title`}>
+                      <span data-key="t-menu">AFI</span>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink
+                        className={`nav-link menu-link`}
+                        exact="true"
+                        to="/validasi/afi"
+                      >
+                        <i className="ri-list-check-2"></i>{" "}
+                        <span data-key="t-widgets">Validasi AFI</span>
+                      </NavLink>
+                    </li>
+                  </>
+                  ) : ("")
+                }
+
+                {rulesName == "spv" || rulesName == "superadmin" || rulesName == "stock" ? (
                     <>
                     <li className="nav-item">
                       <NavLink
@@ -1119,6 +1185,7 @@ function App() {
                       </NavLink>
                     </li>
                   </>
+
               </ul>
             </div>
           </div>
@@ -1154,6 +1221,10 @@ function App() {
             <Route path="/spk/inputspk" element={<Inputspk />}></Route>
             <Route path="/stock/list" element={<Liststock />}></Route>
             <Route path="/spk/pengajuancancel" element={<Pengajuancancel />}></Route>
+            <Route path="/validasi/do/fisik" element={<Validasido />}></Route>
+            <Route path="/stock/validasi/matching" element={<Validasimatching />}></Route>
+            <Route path="/validasi/do/internal" element={<Validasiinternal />}></Route>
+            <Route path="/validasi/afi" element={<Validasiafi />}></Route>
           </Routes>
         </div>
       </div>
