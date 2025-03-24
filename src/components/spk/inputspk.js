@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import CryptoJS from 'crypto-js';
+import { Dialog, DialogContent, Slide } from '@mui/material';
 import axios from 'axios';
-import { Dialog, DialogContent, Slide, TextField } from '@mui/material';
-import swal from 'sweetalert';
+import CryptoJS from 'crypto-js';
+import React, { useEffect, useState } from 'react';
 import Select2 from 'react-select2-wrapper';
 import 'react-select2-wrapper/css/select2.css';
+import swal from 'sweetalert';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -107,8 +107,6 @@ function Inputspk() {
     };
 
     const handleSubmitSpk = async (event) => {
-        // setLoading(true);
-        console.log(arrInput);
         
         const url = `https://api.crm.wijayatoyota.co.id/api/spk/create`;
         
@@ -420,7 +418,7 @@ function Inputspk() {
                                             <label htmlFor="katashiki_suffix">katashiki suffix</label>
                                         </div>
                                     </div>
-                                    <div className="col-md-6 mb-2">
+                                    {/* <div className="col-md-6 mb-2">
                                         <label>Katashiki</label>
                                         <Select2
                                             data={optionsModelRangka}
@@ -431,13 +429,13 @@ function Inputspk() {
                                                 placeholder: 'All',
                                             }}
                                         />
-                                    </div>
-                                    <div className="col-md-6 mb-2">
+                                    </div> */}
+                                    {/* <div className="col-md-6 mb-2">
                                         <div className="form-floating">
                                             <input type="text" className="form-control form-control-sm" onChange={handleChangeInput} value={arrInput.suffix} name="suffix" id="suffix" placeholder="" required />
                                             <label htmlFor="suffix">suffix</label>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div className="col-md-6 mb-2">
                                         <label>Color</label>
                                         <Select2
@@ -450,12 +448,12 @@ function Inputspk() {
                                             }}
                                         />
                                     </div>
-                                    <div className="col-md-6 mb-2">
+                                    {/* <div className="col-md-6 mb-2">
                                         <div className="form-floating">
                                             <input type="text" className="form-control form-control-sm" value={arrInput.color_code} onChange={handleChangeInput} name="color_code" id="color_code" placeholder="" required />
                                             <label htmlFor="color_code">color code</label>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div className="col-md-6 mb-2">
                                         <div className="form-floating">
                                             <input type="date" className="form-control form-control-sm" onChange={handleChangeInput} name="tanggal_spk" id="tanggal_spk" placeholder="" required />
@@ -519,12 +517,6 @@ function Inputspk() {
                                             <option value="20% - <30%">{"20% - <30%"}</option>
                                             <option value=">30%">{">30%"}</option>
                                         </select>
-                                    </div>
-                                    <div className="col-md-6 mb-2">
-                                        <div className="form-floating">
-                                            <input type="text" className="form-control form-control-sm" onChange={handleChangeInput} name="booking_fee" id="booking_fee" placeholder="" required />
-                                            <label htmlFor="booking_fee">Booking Fee</label>
-                                        </div>
                                     </div>
                                     <div className="col-md-6 mb-2">
                                         <div className="form-floating">
